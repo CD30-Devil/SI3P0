@@ -67,26 +67,25 @@ insert into m.infos_carte (id, texte_info) values ('$identifiant', '$([System.We
 }
 
 # -----------------------------------------------------------------------------
-# Génération d'une carte Leaflet sur la base de 1 à 5 vues/tables
-# géographiques.
+# Génération d'une carte Leaflet sur la base de vues/tables géographiques.
 #
-# $sources : Les vues/tables (5 maxi) décrivant les couches de la cartes.
-#            Si un couche ligne ou polygone existe, la mettre en premier pour
-#            que le zoom fonctionne.
+# $sources : Les vues/tables décrivant les couches de la cartes.
 # $carte : Le chemin de sauvegarde de la carte.
 # $titre : Le titre de la carte.
 # $daterTitre : Pour demander l'ajout de la date de génération dans le titre.
-# $descriptionCouches : La description des couches dans l'ordre de $sources.
 # $fondDePlan : Le fond de plan à afficher par défaut.
 # $idInfo : L'identifiant du texte d'information à afficher sur le bouton
 #           d'aide.
+# $nbCouchesActives : Nombre de couches actives par défaut.
 # $activerInfosBulles : Pour activer l'affichage des informations au survol.
 # $replierBoiteControle : Pour replier la boîte de contrôle en haut à droite.
 # $activerZoomClic : Pour activer le zoom auto lors du clic sur un élément
 #                    d'une couche.
 # $activerPermaliens : Pour activer la gestion des permaliens.
-# $afficherNbEntites : Pour demander l'affichage du nombre d'entités de la
-#                      couche à côté de sa description.
+# $activerPegman : Pour activer "Pegman", le bonhomme d'accès aux sites
+#                  externes dont StreetView.
+# $actualisationAuto : Délai pour l'actualisation automatique de la carte, 0
+#                      pour désactiver.
 # $utilisateur : L'utilisateur pour la connexion à la base de données.
 # -----------------------------------------------------------------------------
 function SI3P0-Generer-Carte {
@@ -95,63 +94,40 @@ function SI3P0-Generer-Carte {
         [parameter(Mandatory=$true)] [string] $carte,
         [string] $titre = 'Carte DGAML',
         [bool] $daterTitre = $false,
-        [string[]] $descriptionCouches,
         [string] $fondDePlan = 'cartoDB',
         [string] $idInfo = 'vue_defaut',
+        [int] $nbCouchesActives = $null,
         [bool] $activerInfosBulles = $true,
         [bool] $replierBoiteControle = $false,
         [bool] $activerZoomClic = $true,
         [bool] $activerPermaliens = $false,
-        [bool] $afficherNbEntites = $true,
+        [bool] $activerPegman = $true,
+        [int] $actualisationAuto = 0,
         [string] $utilisateur = $sigUtilisateur
     )
 
     Afficher-Message-Date "Génération de la carte HTML issue de ($sources) vers $carte."
 
-    $tableauSources = "array[$([string]::Join(', ', ($sources | select -First 5 | foreach {"'$($_.ToLower())'"})))]"
-    $descrEncodeeCouches = New-Object System.Collections.ArrayList
+    $tableauSources = "array[$([string]::Join(', ', ($sources | foreach {"'$($_.ToLower())'"})))]"
 
-    # encode les descriptions et aligne leur nombre sur celui des couches
-    for ($i = 0; $i -lt 5; $i++) {
-        if ($i -le $descriptionCouches.Count - 1) {
-            [void]$descrEncodeeCouches.Add("'$([System.Web.HttpUtility]::HtmlEncode($descriptionCouches[$i]))'")
-        }
-        else {
-            [void]$descrEncodeeCouches.Add("'Couche $($i + 1)'")
-        }
-    }
-
-    # pour ajouter le nombre d'entités, génération d'une requête sql de comptage des données de la table/vue
-    if ($afficherNbEntites) {
-        for ($i = 0; $i -lt 5 -and $i -lt $sources.Count; $i++) {
-            $descrEncodeeCouches[$i] = "$($descrEncodeeCouches[$i]) || ' (' || (select count(*) from $($sources[$i])) || ')'"
-        }
+    if (!$nbCouchesActives) {
+        $nbCouchesActives = $sources.Count
     }
 
     $commande = `@"
         select vershtml_n(
             $tableauSources,
-            (
-                select count(*)::integer
-                from pg_catalog.pg_class c
-                inner join pg_catalog.pg_attribute a on a.attrelid = c.oid
-                where c.relname = any($tableauSources)
-                and a.attname = 'geom'
-                and (pg_catalog.format_type(a.atttypid, a.atttypmod) ilike '%line%' or pg_catalog.format_type(a.atttypid, a.atttypmod) ilike '%polygon%')
-            ),
             '$([System.Web.HttpUtility]::HtmlEncode($titre))',
-            $($descrEncodeeCouches[0]),
-            $($descrEncodeeCouches[1]),
-            $($descrEncodeeCouches[2]),
-            $($descrEncodeeCouches[3]),
-            $($descrEncodeeCouches[4]),
             '$fondDePlan',
             $activerInfosBulles,
             $daterTitre,
             $replierBoiteControle,
             $activerZoomClic,
             $activerPermaliens,
-            '$idInfo')
+            '$idInfo',
+            $actualisationAuto,
+            $activerPegman,
+            $nbCouchesActives)
 "@
 
     # passe par un fichier temporaire pour que la carte reste disponible à l'utilisateur le temps de la génération

@@ -3,7 +3,7 @@
 # -----------------------------------------------------------------------------
 
 # -----------------------------------------------------------------------------
-# Job de génération d'une carte Leaflet sur la base de 1 à 5 vues/tables
+# Job de génération d'une carte Leaflet sur la base de vues/tables
 # géographiques.
 #
 # Format attendu de $parametres :
@@ -14,7 +14,7 @@
 # .carte : Le chemin de sauvegarde de la carte.
 # .titre : Le titre de la carte.
 # .daterTitre : Pour demander l'ajout de la date de génération dans le titre.
-# .descriptionCouches : La description des couches dans l'ordre de $sources.
+# .nbCouchesActives : Nombre de couches actives par défaut.
 # .fondDePlan : Le fond de plan à afficher par défaut.
 # .idInfo : L'identifiant du texte d'information à afficher sur le bouton
 #           d'aide.
@@ -23,8 +23,8 @@
 # .activerZoomClic : Pour activer le zoom auto lors du clic sur un élément
 #                    d'une couche.
 # .activerPermaliens : Pour activer la gestion des permaliens.
-# .afficherNbEntites : Pour demander l'affichage du nombre d'entités de la
-#                      couche à côté de sa description.
+# .actualisationAuto : Délai pour l'actualisation automatique de la carte, 0
+#                      pour désactiver.
 # .utilisateur : L'utilisateur pour la connexion à la base de données.
 # -----------------------------------------------------------------------------
 $Job_SI3P0_Generer_Carte = {
@@ -39,39 +39,42 @@ $Job_SI3P0_Generer_Carte = {
         -carte $parametres.carte `
         -titre $parametres.titre `
         -daterTitre $parametres.daterTitre `
-        -descriptionCouches $parametres.descriptionCouches `
         -fondDePlan $parametres.fondDePlan `
         -idInfo $parametres.idInfo `
+        -nbCouchesActives $parametres.nbCouchesActives `
         -activerInfosBulles $parametres.activerInfosBulles `
         -replierBoiteControle $parametres.replierBoiteControle `
         -activerZoomClic $parametres.activerZoomClic `
         -activerPermaliens $parametres.activerPermaliens `
-        -afficherNbEntites $parametres.afficherNbEntites `
+        -activerPegman $parametres.activerPegman `
+        -actualisationAuto $parametres.actualisationAuto `
         -utilisateur $parametres.utilisateur
 }
 
 # -----------------------------------------------------------------------------
-# Paramètrage d'un job de génération d'une carte Leaflet sur la base de 1 à 5
+# Paramètrage d'un job de génération d'une carte Leaflet sur la base de
 # vues/tables géographiques.
 #
 # $racineAPI : Le chemin vers le dossier racine de l'API PowerShell.
 # $sources : Les vues/tables (5 maxi) décrivant les couches de la cartes.
-#            Si un couche ligne existe, la mettre en premier pour que le zoom
-#            fonctionne.
+#            Si un couche ligne ou polygone existe, la mettre en premier pour
+#            que le zoom fonctionne.
 # $carte : Le chemin de sauvegarde de la carte.
 # $titre : Le titre de la carte.
 # $daterTitre : Pour demander l'ajout de la date de génération dans le titre.
-# $descriptionCouches : La description des couches dans l'ordre de $sources.
 # $fondDePlan : Le fond de plan à afficher par défaut.
 # $idInfo : L'identifiant du texte d'information à afficher sur le bouton
 #           d'aide.
+# $nbCouchesActives : Nombre de couches actives par défaut.
 # $activerInfosBulles : Pour activer l'affichage des informations au survol.
 # $replierBoiteControle : Pour replier la boîte de contrôle en haut à droite.
 # $activerZoomClic : Pour activer le zoom auto lors du clic sur un élément
 #                    d'une couche.
 # $activerPermaliens : Pour activer la gestion des permaliens.
-# $afficherNbEntites : Pour demander l'affichage du nombre d'entités de la
-#                      couche à côté de sa description.
+# $activerPegman : Pour activer "Pegman", le bonhomme d'accès aux sites
+#                  externes dont StreetView.
+# $actualisationAuto : Délai pour l'actualisation automatique de la carte, 0
+#                      pour désactiver.
 # $utilisateur : L'utilisateur pour la connexion à la base de données.
 # -----------------------------------------------------------------------------
 function Parametrer-Job-SI3P0-Generer-Carte {
@@ -81,15 +84,18 @@ function Parametrer-Job-SI3P0-Generer-Carte {
         [parameter(Mandatory=$true)] [string] $carte,
         [string] $titre = 'Carte DGAML',
         [bool] $daterTitre = $false,
-        [string[]] $descriptionCouches,
         [string] $fondDePlan = 'cartoDB',
         [string] $idInfo = 'vue_defaut',
+        [int] $nbCouchesActives = $null,
         [bool] $activerInfosBulles = $true,
         [bool] $replierBoiteControle = $false,
         [bool] $activerZoomClic = $true,
         [bool] $activerPermaliens = $false,
-        [bool] $afficherNbEntites = $true,
-        [string] $utilisateur = $sigUtilisateur
+        [bool] $activerPegman = $true,
+        [int] $actualisationAuto = 0,
+        [string] $utilisateur = $sigUtilisateur,
+        [string[]] $descriptionCouches,
+        [bool] $afficherNbEntites = $true
     )
 
     @{
@@ -99,14 +105,15 @@ function Parametrer-Job-SI3P0-Generer-Carte {
         carte = $carte
         titre = $titre
         daterTitre = $daterTitre
-        descriptionCouches = $descriptionCouches
         fondDePlan = $fondDePlan
         idInfo = $idInfo
+        nbCouchesActives = $nbCouchesActives
         activerInfosBulles = $activerInfosBulles
         replierBoiteControle = $replierBoiteControle
         activerZoomClic = $activerZoomClic
         activerPermaliens = $activerPermaliens
-        afficherNbEntites = $afficherNbEntites
+        activerPegman = $activerPegman
+        actualisationAuto = $actualisationAuto
         utilisateur = $utilisateur
     }
 }
