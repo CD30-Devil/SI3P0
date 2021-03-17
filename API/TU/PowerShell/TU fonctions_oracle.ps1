@@ -2,6 +2,17 @@
 
 . ("$PSScriptRoot\..\..\Powershell\fonctions_oracle.ps1")
 
+$testOracleTNS = $null
+$testOracleUtilisateur = $null
+$testOracleMDP = $null
+
+# Test des variables nécessaires aux tests des fonctions Oracle qui suivent
+Assert-Script -message 'Si ce test est en erreur, vous devez vérifier les variables $testOracleTNS, $testOracleUtilisateur et $testOracleMDP' `
+-test {
+    $testOracleTNS -and $testOracleUtilisateur -and $testOracleMDP
+} 
+
+
 # Test de la fonction Executer-SQLPLUS-Fichier
 Assert-Script -message 'Executer-SQLPLUS-Fichier' `
 -avant {
@@ -12,7 +23,7 @@ Assert-Script -message 'Executer-SQLPLUS-Fichier' `
     "quit;" | Out-File "$bas\requete.sql" -Encoding default -Append
     "/" | Out-File "$bas\requete.sql" -Encoding default -Append
 
-    Executer-SQLPLUS-Fichier -utilisateur 'test' -mdp 'test' -tnsname 'test' -fichier "$bas\requete.sql"
+    Executer-SQLPLUS-Fichier -utilisateur $testOracleUtilisateur -mdp $testOracleMDP -tnsname $testOracleTNS -fichier "$bas\requete.sql"
 } `
 -test {
     (Get-Content "$bas\test.txt") -ilike '*test Executer-SQLPLUS-Fichier*'
@@ -25,7 +36,7 @@ Assert-Script -message 'Executer-SQLPLUS-Fichier' `
 Assert-Script -message 'Exporter-CSV-Oracle' `
 -avant {
     Vider-BacASable
-    Exporter-CSV-Oracle -utilisateur 'test' -mdp 'test' -tnsname 'test' -csv "$bas\test.csv" -requete 'select ''test Exporter-CSV-Oracle'' from dual'
+    Exporter-CSV-Oracle -utilisateur $testOracleUtilisateur -mdp $testOracleMDP -tnsname $testOracleTNS -csv "$bas\test.csv" -requete 'select ''test Exporter-CSV-Oracle'' from dual'
 } `
 -test {
     (Get-Content "$bas\test.csv") -ilike '*test Exporter-CSV-Oracle*'
