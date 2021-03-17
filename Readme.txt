@@ -63,6 +63,7 @@ Ils sont partiellement spécifiques aux besoins du Département du Gard mais ser
 - Adresses : Agrégation dans une unique table des adresses BAN et fictives Cadastre (DGFiP) avec mise à disposition de fonctions PL/pgSQL de géocodage
 - BDTopo : Import des données de la version SQL L93 de la BDTopo IGN
 - Cadastre : Téléchargement et import des données de cadastre.data.gouv.fr
+- QPV : Téléchargement et import des limites des Quartiers Prioritaires de la politique de la Ville
 
 
 Aucune contribution n’est attendue pour ce projet.
