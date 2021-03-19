@@ -23,7 +23,7 @@ function Executer-SQLPLUS-Fichier {
     Afficher-Message-Date -message "Exécution de $fichier sur $tnsname."
 
     $parametres = New-Object System.Collections.ArrayList
-    [void]$parametres.Add("$utilisateur/$mdp@$tnsname")
+    [void]$parametres.Add("-L $utilisateur/$mdp@$tnsname")
     [void]$parametres.Add("`"@$fichier`"")
     
     

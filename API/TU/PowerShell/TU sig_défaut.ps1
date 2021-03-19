@@ -10,7 +10,7 @@ Assert-Script -message 'SIg-Executer-Fichier' `
     SIg-Executer-Fichier -fichier "$bas\requete.sql" -sortie "$bas\test.txt"
 } `
 -test {
-    (Get-Content "$bas\test.txt") -ilike '*test SIg-Executer-Fichier*'
+    (Test-Path "$bas\test.txt") -and (Get-Content "$bas\test.txt") -ilike '*test SIg-Executer-Fichier*'
 } `
 -apres {
     Vider-BacASable
@@ -23,7 +23,7 @@ Assert-Script -message 'SIg-Executer-Commande' `
     SIg-Executer-Commande -commande "select 'test SIg-Executer-Commande';" -sortie "$bas\test.txt"
 } `
 -test {
-    (Get-Content "$bas\test.txt") -ilike '*test SIg-Executer-Commande*'
+    (Test-Path "$bas\test.txt") -and (Get-Content "$bas\test.txt") -ilike '*test SIg-Executer-Commande*'
 } `
 -apres {
     Vider-BacASable
@@ -38,8 +38,13 @@ Assert-Script -message 'SIg-Creer-Table-Temp' `
     SIg-Executer-Commande -commande "select * from information_schema.columns where table_name = 'table_tu_sig_defaut' order by ordinal_position" -sortie "$bas\test.txt"
 } `
 -test {
-    $contenu = Get-Content "$bas\test.txt"
-    $contenu -ilike '*col1*' -and $contenu -ilike '*col2*' -and $contenu -ilike '*col3*'
+    if (Test-Path "$bas\test.txt") {
+        $contenu = Get-Content "$bas\test.txt"
+        $contenu -ilike '*col1*' -and $contenu -ilike '*col2*' -and $contenu -ilike '*col3*'
+    }
+    else {
+        $false
+    }
 } `
 -apres {
     Vider-BacASable
@@ -55,7 +60,7 @@ Assert-Script -message 'SIg-Effacer-Table' `
     SIg-Executer-Commande -commande "select count(*) from information_schema.tables where table_name = 'table_tu_sig_defaut'" -sortie "$bas\test.txt"
 } `
 -test {
-    (Get-Content "$bas\test.txt") -ilike '*0*'
+    (Test-Path "$bas\test.txt") -and (Get-Content "$bas\test.txt") -ilike '*0*'
 } `
 -apres {
     Vider-BacASable
@@ -70,7 +75,7 @@ Assert-Script -message 'SIg-Effacer-Vue' `
     SIg-Executer-Commande -commande "select count(*) from information_schema.views where table_name = 'vue_tu_sig_defaut'" -sortie "$bas\test.txt"
 } `
 -test {
-    (Get-Content "$bas\test.txt") -ilike '*0*'
+    (Test-Path "$bas\test.txt") -and (Get-Content "$bas\test.txt") -ilike '*0*'
 } `
 -apres {
     Vider-BacASable
@@ -86,8 +91,7 @@ Assert-Script -message 'SIg-Importer-CSV' `
     SIg-Executer-Commande -commande "select case when count(*) > 0 then 'ok' else 'ko' end from table_tu_sig_defaut" -sortie "$bas\test.txt"
 } `
 -test {
-    $contenu = Get-Content "$bas\test.txt"
-    $contenu -ilike '*ok*'
+    (Test-Path "$bas\test.txt") -and (Get-Content "$bas\test.txt") -ilike '*ok*'
 } `
 -apres {
     Vider-BacASable
@@ -103,8 +107,13 @@ Assert-Script -message 'SIg-Importer-GeoJSON' `
     SIg-Executer-Commande -commande "select * from information_schema.columns where table_name = 'table_tu_sig_defaut' order by ordinal_position" -sortie "$bas\test.txt"
 } `
 -test {
-    $contenu = Get-Content "$bas\test.txt"
-    $contenu -ilike '*idtroncon*' -and $contenu -ilike '*numeroroute*' -and $contenu -ilike '*geom*'
+    if (Test-Path "$bas\test.txt") {
+        $contenu = Get-Content "$bas\test.txt"
+        $contenu -ilike '*idtroncon*' -and $contenu -ilike '*numeroroute*' -and $contenu -ilike '*geom*'
+    }
+    else {
+        $false
+    }
 } `
 -apres {
     Vider-BacASable
@@ -120,8 +129,13 @@ Assert-Script -message 'SIg-Importer-SHP' `
     SIg-Executer-Commande -commande "select * from information_schema.columns where table_name = 'table_tu_sig_defaut' order by ordinal_position" -sortie "$bas\test.txt"
 } `
 -test {
-    $contenu = Get-Content "$bas\test.txt"
-    $contenu -ilike '*idtroncon*' -and $contenu -ilike '*numerorout*' -and $contenu -ilike '*geom*'
+    if (Test-Path "$bas\test.txt") {
+        $contenu = Get-Content "$bas\test.txt"
+        $contenu -ilike '*idtroncon*' -and $contenu -ilike '*numerorout*' -and $contenu -ilike '*geom*'
+    }
+    else {
+        $false
+    }
 } `
 -apres {
     Vider-BacASable

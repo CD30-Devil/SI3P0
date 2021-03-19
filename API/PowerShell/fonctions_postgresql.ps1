@@ -22,15 +22,13 @@ function Rechercher-MDP-PGPass {
         [string] $utilisateur = '.*'
     )
 
-    $mdp = $null
-
-    foreach ($ligne in Get-Content "$env:APPDATA\postgresql\pgpass.conf") {
-        if ($ligne -match "($($serveur)|\*):($($port)|\*):($($bdd)|\*):($($utilisateur)|\*)") {
-            $mdp = $ligne.Substring($ligne.LastIndexOf(':') + 1)
-        }
+    $ligne = Get-Content "$env:APPDATA\postgresql\pgpass.conf" | Where-Object {$_ -match "($($serveur)|\*):($($port)|\*):($($bdd)|\*):($($utilisateur)|\*)"} | select -First 1
+    
+    if ($ligne) {
+        $ligne.Substring($ligne.LastIndexOf(':') + 1)
+    } else {
+        $null
     }
-
-    $mdp
 }
 
 # -----------------------------------------------------------------------------
