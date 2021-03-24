@@ -1,21 +1,24 @@
 /*==============================================================*/
 /* Nom de SGBD :  PostgreSQL SI3P0                              */
-/* Date de création :  15/01/2021 21:43:50                      */
+/* Date de création :  24/03/2021 10:36:57                      */
 /*==============================================================*/
+
+
+-- schémas spécifiques SI3P0 (m = modèle)
+set search_path to m, public;
 
 
 /*==============================================================*/
 /* Table : qpv                                                  */
 /*==============================================================*/
-set search_path to m, public;
 create table qpv (
    codeqpv              VARCHAR              not null,
    nom                  VARCHAR              null,
    constraint pkqpv primary key (codeqpv)
 );
 
-select AddGeometryColumn('m', 'qpv', 'geom', 2154, 'MULTIPOLYGON', 2);
-create index qpv_geom on m.qpv using gist (geom);
+select AddGeometryColumn('qpv', 'geom', 2154, 'MULTIPOLYGON', 2);
+create index qpv_geom_idx on qpv using gist (geom);
 
 /*==============================================================*/
 /* Index : qpv_pk                                               */
@@ -27,7 +30,6 @@ codeqpv
 /*==============================================================*/
 /* Table : qpv_commune                                          */
 /*==============================================================*/
-set search_path to m, public;
 create table qpv_commune (
    codeqpv              VARCHAR              not null,
    cogcommune           VARCHAR              not null,
