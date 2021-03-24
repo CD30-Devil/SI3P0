@@ -1,3 +1,6 @@
+-- schémas spécifiques SI3P0 (f = fonctions)
+set search_path to f, public;
+
 -- ----------------------------------------------------------------------------
 -- Création d'un point en coordonnées Lambert93.
 -- Paramètres :
@@ -6,7 +9,7 @@
 -- Résultats :
 --   - Le point.
 -- ----------------------------------------------------------------------------
-create or replace function f.FabriquerPointL93(_X double precision, _Y double precision) returns geometry as $$
+create or replace function FabriquerPointL93(_X double precision, _Y double precision) returns geometry as $$
     select ST_SetSRID(ST_MakePoint(_X, _Y), 2154);
 $$ language sql;
 
@@ -18,7 +21,7 @@ $$ language sql;
 -- Résultats :
 --   - Le point.
 -- ----------------------------------------------------------------------------
-create or replace function f.FabriquerPointWGS84(_X double precision, _Y double precision) returns geometry as $$
+create or replace function FabriquerPointWGS84(_X double precision, _Y double precision) returns geometry as $$
     select ST_SetSRID(ST_MakePoint(_X, _Y), 4326);
 $$ language sql;
 
@@ -30,7 +33,7 @@ $$ language sql;
 -- Résultats :
 --   - Le point.
 -- ----------------------------------------------------------------------------
-create or replace function f.FabriquerPointCC44(_X double precision, _Y double precision) returns geometry as $$
+create or replace function FabriquerPointCC44(_X double precision, _Y double precision) returns geometry as $$
     select ST_SetSRID(ST_MakePoint(_X, _Y), 3944);
 $$ language sql;
 
@@ -41,7 +44,7 @@ $$ language sql;
 -- Résultats :
 --   - La géométrie transformée.
 -- ----------------------------------------------------------------------------
-create or replace function f.TransformerEnL93(_Geom geometry) returns geometry as $$
+create or replace function TransformerEnL93(_Geom geometry) returns geometry as $$
     select ST_Transform(_Geom, 2154);
 $$ language sql;
 
@@ -52,7 +55,7 @@ $$ language sql;
 -- Résultats :
 --   - La géométrie transformée.
 -- ----------------------------------------------------------------------------
-create or replace function f.TransformerEnWGS84(_Geom geometry) returns geometry as $$
+create or replace function TransformerEnWGS84(_Geom geometry) returns geometry as $$
     select ST_Transform(_Geom, 4326);
 $$ language sql;
 
@@ -63,7 +66,7 @@ $$ language sql;
 -- Résultats :
 --   - La géométrie transformée.
 -- ----------------------------------------------------------------------------
-create or replace function f.TransformerEnCC44(_Geom geometry) returns geometry as $$
+create or replace function TransformerEnCC44(_Geom geometry) returns geometry as $$
     select ST_Transform(_Geom, 3944);
 $$ language sql;
 
@@ -76,7 +79,7 @@ $$ language sql;
 -- Résultats :
 --   - Le lien vers le Géoportail.
 -- ----------------------------------------------------------------------------
-create or replace function f.PointVersGeoportail(_Point Geometry, _Couches varchar[] default null, _Zoom integer default 18) returns text as $$
+create or replace function PointVersGeoportail(_Point Geometry, _Couches varchar[] default null, _Zoom integer default 18) returns text as $$
 declare
     _ParametresCouches text;
     _NumeroCouche integer;
@@ -104,7 +107,7 @@ $$ language plpgsql;
 -- Résultats :
 --   - Le lien vers Google Maps.
 -- ----------------------------------------------------------------------------
-create or replace function f.PointVersGoogleMaps(_Point Geometry) returns text as $$
+create or replace function PointVersGoogleMaps(_Point Geometry) returns text as $$
     select 'https://www.google.com/maps/search/?api=1&query=' || ST_Y(TransformerEnWGS84(_Point)) || ',' || ST_X(TransformerEnWGS84(_Point));
 $$ language sql;
 
@@ -115,7 +118,7 @@ $$ language sql;
 -- Résultats :
 --   - Le lien vers Google Street View.
 -- ----------------------------------------------------------------------------
-create or replace function f.PointVersGoogleStreetView(_Point Geometry) returns text as $$
+create or replace function PointVersGoogleStreetView(_Point Geometry) returns text as $$
     select 'https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=' || ST_Y(TransformerEnWGS84(_Point)) || ',' || ST_X(TransformerEnWGS84(_Point));
 $$ language sql;
 
@@ -126,7 +129,7 @@ $$ language sql;
 -- Résultats :
 --   - Retourne le pourcentage moyen de pente.
 -- ----------------------------------------------------------------------------
-create or replace function f.CalculerPenteMoyenne(_Geom Geometry) returns double precision as $$
+create or replace function CalculerPenteMoyenne(_Geom Geometry) returns double precision as $$
     select (sqrt(pow(ST_3DLength(_Geom), 2) - pow(ST_Length(_Geom), 2)) / ST_Length(_Geom) * 100); -- pythagore : b = (c^2 - a^2)^0.5
 $$ language sql;
 
@@ -137,6 +140,6 @@ $$ language sql;
 -- Résultats :
 --   - La géométrie transformée.
 -- ----------------------------------------------------------------------------
-create or replace function f.TransformerEnGeomQlik(_Geom Geometry) returns text as $$
+create or replace function TransformerEnGeomQlik(_Geom Geometry) returns text as $$
     select ST_AsGeoJSON(TransformerEnWGS84(ST_Force2D(_Geom)))::json->>'coordinates';
 $$ language sql;
