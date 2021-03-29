@@ -60,6 +60,7 @@ Cas d’usages de la bibliothèque
 Les autres dossiers publiés ici sont les traitements mis en place par la MSI pour les besoins de la DGaML.
 Ils sont partiellement spécifiques aux besoins du Département du Gard mais servent d’exemple d’utilisation de la bibliothèque et peuvent pour une partie d’entre eux être adaptés et réutilisés.
 
+- 3V : Construction de référentiel Véloroutes et Voies Vertes selon le geostandard Covadis
 - Adresses : Agrégation dans une unique table des adresses BAN et fictives Cadastre (DGFiP) avec mise à disposition de fonctions PL/pgSQL de géocodage
 - BDTopo : Import des données de la version SQL L93 de la BDTopo IGN
 - Cadastre : Téléchargement et import des données de cadastre.data.gouv.fr
