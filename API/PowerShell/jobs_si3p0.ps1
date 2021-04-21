@@ -94,7 +94,6 @@ function Parametrer-Job-SI3P0-Generer-Carte {
         [bool] $activerPegman = $true,
         [int] $actualisationAuto = 0,
         [string] $utilisateur = $sigUtilisateur,
-        [string[]] $descriptionCouches,
         [bool] $afficherNbEntites = $true
     )
 

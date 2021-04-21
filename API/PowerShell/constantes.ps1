@@ -35,3 +35,6 @@ $7z = "$env:ProgramFiles\7-Zip\7z.exe"
 
 # serveur e-mail sortant
 $serveurSMTP = '<mon-serveur-smtp>'
+
+# SRID par défaut
+$sridDefaut = '2154'

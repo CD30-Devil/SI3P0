@@ -128,7 +128,7 @@ function Executer-Raster2Pgsql {
         [parameter(Mandatory=$true)] [string] $raster,
         [parameter(Mandatory=$true)] [string] $table,
         [parameter(Mandatory=$true)] [string] $fichierSQL,
-        [string[]] $autresParams = @('-C', '-s 2154', '-t 200x200', '-l 2,4,8', '-F', '-I'),
+        [string[]] $autresParams = @('-C', "-s $sridDefaut", '-t 200x200', '-l 2,4,8', '-F', '-I'),
         [System.Diagnostics.ProcessPriorityClass] $priorite = [System.Diagnostics.ProcessPriorityClass]::Normal
     )
 
