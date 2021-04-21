@@ -5,7 +5,7 @@ $bas = "$PSScriptRoot\..\Bac à sable"
 # Vidage du bas à sable.
 # -----------------------------------------------------------------------------
 function Vider-BacASable {
-    Remove-Item -Path "$bas\*" -Recurse -Force
+    Remove-Item -Path "$bas\*" -Exclude '.gitignore' -Recurse -Force
 }
 
 # -----------------------------------------------------------------------------

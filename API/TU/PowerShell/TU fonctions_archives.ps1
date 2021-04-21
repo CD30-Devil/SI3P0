@@ -22,8 +22,8 @@ Assert-CheminExiste -message "Dezipper" -chemin "$bas\dezip\test.txt" `
 -avant {
     Vider-BacASable
 
-    'fichier de test' | Out-File -FilePath "$bas\test.txt"
-    Zipper -dossier $bas -archiverDans "$bas\test.zip"
+    'fichier de test' | Out-File ( New-Item -Path "$bas\zip\test.txt" -Force )
+    Zipper -dossier "$bas\zip\" -archiverDans "$bas\test.zip"
     Dezipper -archive "$bas\test.zip" -extraireVers "$bas\dezip"
 } `
 -apres {
@@ -59,8 +59,8 @@ Assert-CheminExiste -message "7Z-Decompresser" -chemin "$bas\dezip\test.txt" `
 -avant {
     Vider-BacASable
 
-    'fichier de test' | Out-File -FilePath "$bas\test.txt"
-    Zipper -dossier $bas -archiverDans "$bas\test.zip"
+    'fichier de test' | Out-File ( New-Item -Path "$bas\zip\test.txt" -Force )
+    Zipper -dossier "$bas\zip" -archiverDans "$bas\test.zip"
     7Z-Decompresser -archive "$bas\test.zip" -extraireVers "$bas\dezip"
 } `
 -apres {
