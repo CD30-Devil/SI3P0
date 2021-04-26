@@ -25,7 +25,7 @@ function Zipper {
 # $archive : L'archive à décompresser.
 # $extraireVers : L'emplacement de décompression.
 # -----------------------------------------------------------------------------
-function Dezipper {
+function DeZipper {
     param(
         [parameter(Mandatory=$true)] [string] $archive,
         [parameter(Mandatory=$true)] [string] $extraireVers
@@ -33,6 +33,72 @@ function Dezipper {
     
     Afficher-Message-Date -message "Décompression de $archive vers $extraireVers."
     [System.IO.Compression.ZipFile]::ExtractToDirectory($archive, $extraireVers)
+}
+
+# -----------------------------------------------------------------------------
+# Compression d'un fichier en archive GZip.
+#
+# $fichier : Le fichier à compresser.
+# $archiverDans : L'emplacement de compression.
+# -----------------------------------------------------------------------------
+function GZipper {
+    param(
+        [parameter(Mandatory=$true)] [string] $fichier,
+        [parameter(Mandatory=$true)] [string] $archiverDans
+    )
+    
+    Afficher-Message-Date -message "Compression de $fichier dans $archiverDans."
+
+    $cheminSortie = "$archiverDans\$([System.IO.Path]::GetFileName($fichier)).gz"
+    
+    $fluxEntree = [System.IO.FileStream]::new($fichier, ([System.IO.FileMode]::Open), ([System.IO.FileAccess]::Read))
+    $fluxSortie = [System.IO.File]::Create($cheminSortie)
+    $fluxGZSortie = [System.IO.Compression.GZipStream]::new($fluxSortie, ([System.IO.Compression.CompressionMode]::Compress))
+    
+    $fluxEntree.CopyTo($fluxGZSortie);
+
+    $fluxGZSortie.Close()
+    $fluxSortie.Close()
+    $fluxEntree.Close()
+
+    $fluxGZSortie = $null
+    $fluxSortie = $null
+    $fluxEntree = $null
+}
+
+# -----------------------------------------------------------------------------
+# Décompression d'une archive GZip.
+#
+# $archive : L'archive à décompresser.
+# $extraireVers : L'emplacement de décompression.
+# -----------------------------------------------------------------------------
+function DeGZipper {
+    param(
+        [parameter(Mandatory=$true)] [string] $archive,
+        [parameter(Mandatory=$true)] [string] $extraireVers
+    )
+
+    Afficher-Message-Date -message "Décompression de $archive vers $extraireVers."
+
+    $cheminSortie = "$extraireVers\$([System.IO.Path]::GetFileNameWithoutExtension($archive))"
+    
+    if ('.tgz' -eq ([System.IO.Path]::GetExtension($archive))) {
+        $cheminSortie = "$cheminSortie.tar"
+    }
+
+    $fluxEntree = [System.IO.FileStream]::new($archive, ([System.IO.FileMode]::Open), ([System.IO.FileAccess]::Read))
+    $fluxGZEntree = [System.IO.Compression.GZipStream]::new($fluxEntree, ([System.IO.Compression.CompressionMode]::Decompress))
+    $fluxSortie = [System.IO.File]::Create($cheminSortie)
+
+    $fluxGZEntree.CopyTo($fluxSortie);
+
+    $fluxSortie.Close()
+    $fluxGZEntree.Close()
+    $fluxEntree.Close()
+
+    $fluxSortie = $null
+    $fluxGZEntree = $null
+    $fluxEntree = $null
 }
 
 # -----------------------------------------------------------------------------

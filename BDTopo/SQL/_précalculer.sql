@@ -49,6 +49,19 @@ inner join v.Gard g on ST_Intersects(bd.Geometrie, g.Geom);
 
 commit;
 
+-- bâtiments du département du Gard
+begin;
+
+drop table if exists pc.d30_bdtopo_batiment;
+
+create table pc.d30_bdtopo_batiment as
+select
+    bd.*
+from d.bdtopo_batiment bd
+inner join v.Gard g on ST_Intersects(bd.Geometrie, g.Geom);
+
+commit;
+
 -- tronçons de route du département du Gard
 begin;
 
