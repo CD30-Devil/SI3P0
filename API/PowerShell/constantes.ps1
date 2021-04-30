@@ -5,12 +5,12 @@
 $email_contact = '<contact@ma-collectivité.fr>'
 
 $RacinePostgreSQL = '<C:\PostgreSQL\10>'
-$RacineOSGeo4 = '<C:\OSGeo4W64>'
+$RacineOSGeo4W = '<C:\OSGeo4W64>'
 $RacineOracle = '<c:\Ora11g>'
 
 # variables d'environnement
 $Env:PGCLIENTENCODING = 'UTF8'
-$Env:GDAL_DATA = "$RacineOSGeo4\share\gdal\"
+$Env:GDAL_DATA = "$RacineOSGeo4W\share\gdal\"
 
 # chemin vers un répertoire de travail temporaire
 # pour le bon fonctionnement de certaines fonctions, il ne doit pas y avoir d'accent dans le chemin
@@ -28,7 +28,7 @@ $sqlplus = "$RacineOracle\Product\bin\sqlplus.exe"
 $OracleDataAccessLib = "$RacineOracle\Product\odp.net\bin\4\Oracle.DataAccess.dll"
 
 # chemin vers Ogr2Ogr
-$ogr2ogr = "$RacineOSGeo4\bin\ogr2ogr.exe"
+$ogr2ogr = "$RacineOSGeo4W\bin\ogr2ogr.exe"
 
 # chemin vers 7-Zip
 $7z = "$env:ProgramFiles\7-Zip\7z.exe"
