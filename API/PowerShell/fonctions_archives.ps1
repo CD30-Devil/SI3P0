@@ -49,6 +49,9 @@ function GZipper {
     
     Afficher-Message-Date -message "Compression de $fichier dans $archiverDans."
 
+    # création du répertoire de sortie
+    [System.IO.Directory]::CreateDirectory($archiverDans)
+
     $cheminSortie = "$archiverDans\$([System.IO.Path]::GetFileName($fichier)).gz"
     
     $fluxEntree = [System.IO.FileStream]::new($fichier, ([System.IO.FileMode]::Open), ([System.IO.FileAccess]::Read))
@@ -79,6 +82,9 @@ function DeGZipper {
     )
 
     Afficher-Message-Date -message "Décompression de $archive vers $extraireVers."
+
+    # création du répertoire de sortie
+    [System.IO.Directory]::CreateDirectory($extraireVers)
 
     $cheminSortie = "$extraireVers\$([System.IO.Path]::GetFileNameWithoutExtension($archive))"
     
