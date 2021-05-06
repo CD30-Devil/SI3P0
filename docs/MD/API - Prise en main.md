@@ -4,7 +4,7 @@ Ce tutoriel montre comment l’API PowerShell SI3P0 peut permettre l’automatis
 
 Il est illustré par un cas pratique de téléchargement, d’import et d’exploitation des données de la Base Adresse Nationale.
 
-NDLR : Le terme API est peut-être mal choisi, le mot “toolkox” serait probablement plus adapté. Vu le nombre de références au dossier qui porte ce nom dans le code, j’avoue être faiblement motivé par l’idée de le renommer.
+_NDLR : Le terme API est peut-être mal choisi, le mot “toolkox” serait probablement plus adapté. Vu le nombre de références au dossier qui porte ce nom dans le code, j’avoue être faiblement motivé par l’idée de le renommer._
 
 Pré-requis :
 * Se dire que PowerShell, c’est comme tout, ça s’apprend.
