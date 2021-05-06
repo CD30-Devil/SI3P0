@@ -13,3 +13,5 @@ Pré-requis :
     * permet la création et l’exécution de scripts PowerShell,
     * dispose des outils clients PostgreSQL/Postgis (dont principalement psql.exe),
     * dispose de ogr2ogr.exe.
+
+(en construction)
