@@ -17,13 +17,19 @@ Pré-requis :
 Table des matières
 1. SI3Pquoi ?
 2. Pourquoi une boîte à outils ?
-2.1. "Donnez-moi un T !"
-2.2. "Donnez- moi un E ! Donnez-moi un L !"
-2.3. ELT et TEL
-2.4. Quelques mots sur PowerShell
+	1. "Donnez-moi un T !"
+	2. "Donnez- moi un E ! Donnez-moi un L !"
+	3. ELT et TEL
+	4. Quelques mots sur PowerShell
 3. API SI3P0 et BAN
-3.1. Etape 1 - Préparer le contexte de travail
-3.1.1. Récupérer l’API SI3P0
+	1. Etape 1 - Préparer le contexte de travail
+		1. Récupérer l’API SI3P0
+		2. (Facultatif) Installer 7-Zip
+		3. Créer une base de tests
+		4. Ajouter les informations de connexion au PGPASS
+		5. Modifier le fichier constantes.ps1
+		6. Modifier le fichier sig_défaut.ps1
+		7. (Facultatif) Nettoyer le code spécifique au Gard
 
 ## 1. SI3Pquoi ?
 
@@ -46,7 +52,7 @@ Le “Shadok” c’est quoi ? Et bien le “Shadok” c’est toi ;
 * Toi qui fais “clic-droit > extraire vers" pour décompresser une à une les 42 archives fraîchement téléchargées.
 * Toi qui enfin importes les données dans la base avec des outils graphiques type “Postgis Shapefile Import/Export Manager”.
 
-![SIg sans ETL](../Ressources/API - Prise en main/SIg sans ETL.png)
+![SIg avec Shadok](../Ressources/API - Prise en main/SIg avec Shadok.png)
 
 A la MSI nous n’avons pas de budget alloué et notre équipe se compte sur les doigts d’une demi-main. Mais, comme tout bon informaticien qui se respecte...on est feignant !
 
@@ -111,5 +117,113 @@ Le sous-dossier API est suffisant mais les autres répertoires peuvent à minima
 
 Commence donc par récupérer ce “repo” par téléchargement et extraction du Zip ou en créant un fork du projet.
 
+#### 3.1.2. (Facultatif) Installer 7-Zip
+
+7-Zip est un logiciel libre et gratuit de gestion des fichiers archives. Après installation, tu auras accès à deux versions de l’outil :
+* une version graphique ; pratique au quotidien,
+* une version ligne de commandes ; que tu pourras appeler via l’API SI3P0.
+
+Si tu n’es pas en mesure d’installer 7-Zip, l’API propose des fonctions natives pour les fichiers Zip et GZip...ce qui reste malgré tout assez limité.
+
+#### 3.1.3. Créer une base de tests
+
+Pour les premiers tests, je t’encourage à créer une base dédiée histoire de te familiariser avec les différentes fonctions avant de travailler sur ta base de production.
+
+Je recommande également de créer dans cette base (et ensuite dans la base de production) un schéma de travail pour la création des tables, vues et fonctions temporaires nécessaires aux transformations.
+
+Comme il faut ajouter des extensions à cette base, il te faudra être connecté en tant que superuser.
+
+```markdown
+-- création d'un utilisateur geotribu
+create role geotribu with password 'geotribu' login nosuperuser createdb;
+
+-- création de la base de données de tests
+create database tutosi3p0 owner geotribu;
+
+-- connexion à la base tutosi3p0
+\c tutosi3p0
+
+-- installation des extensions PostGis
+create extension if not exists postgis;
+create extension if not exists postgis_topology;
+
+-- installation de l'extension unaccent (pour disposer de la fonction du même nom)
+-- cf. https://www.postgresql.org/docs/13/unaccent.html
+create extension if not exists unaccent;
+
+-- installation de l'extension pg_trgm (pour disposer de la fonction similarity)
+-- https://www.postgresql.org/docs/13/pgtrgm.html
+create extension if not exists pg_trgm;
+
+-- création du schéma temporaire
+create schema tmp authorization geotribu;
+```
+
+![Création BDD](../Ressources/API - Prise en main/Création BDD.png)
+
+#### 3.1.4. Ajouter les informations de connexion au PGPASS
+
+L’API SI3P0 utilise le fichier PGPASS (notamment via psql.exe) pour se connecter au serveur PostgreSQL. Il te faut donc y ajouter les paramètres de connexion à la base nouvellement créée. Tu trouveras plus d’information sur ce fichier ici : https://docs.postgresql.fr/13/libpq-pgpass.html
+
+![Fichier PGPASS](../Ressources/API - Prise en main/Fichier PGPASS.png)
+
+#### 3.1.5. Modifier le fichier constantes.ps1
+
+Le fichier API\PowerShell\constantes.ps1 fixe plusieurs paramètres utiles à l’API. Il est notamment question de définir les chemins vers les outils PostgreSQL et OSGeo4W.
+
+Après ouverture de ce fichier dans Windows PowerShell ISE, tu dois modifier les éléments placés entre chevrons :
+
+* &racinePostgreSQL et &racineOSGeo4W : Ces racines sont utilisées dans les constantes qui suivent, aussi, si ton contexte de travail le nécessite, tu peux également modifier les chemins dans la suite du fichier pour pointer vers les bons emplacements des différents outils.
+
+* $racineOracle : Tu n’as pas de client Oracle sur ton poste ? Pas de panique. En fait, ce chemin sert seulement si tu dois extraire des données depuis une base Oracle. Tu peux donc le laisser tel quel si ce n’est pas ton cas.
+
+* $email_contact et $serveurSMTP : Ces variables sont utiles si tu veux envoyer des mails depuis tes scripts. Dans le cas contraire, tu peux passer ton chemin. A noter qu’en l’état, l’API ne gère que le SMTP sans authentification.
+
+Tu peux en profiter pour modifier le chemin vers le dossier de travail temporaire ($dossierTravailTemp) qu’utilisent plusieurs fonctions. Tu pourras aussi changer le SRID par défaut ($sridDefaut) mais pour les besoins du tuto il te faut rester pour le moment en 2154.
+
+![Fichier constantes](../Ressources/API - Prise en main/Fichier constantes.png)
+
+#### 3.1.6. Modifier le fichier sig_défaut.ps1
+
+Le fichier API\PowerShell\sig_défaut.ps1 est un élément central de l’API SI3P0. Il contient les fonctions d’interaction avec le SGBDg.
+
+Les paramètres de connexion à la base SIg sont à définir en haut de ce fichier. Ceux-ci sont ensuite passés comme valeur par défaut aux arguments des fonctions. Il reste possible d’outrepasser ces paramètres lors des appels ce qui peut par exemple être utile ;
+* lorsque plusieurs bases sont exploitées (test et production),
+* quand des utilisateurs avec des droits distincts sont nécessaires pour la connexion à la base.
+
+Tu trouveras également dans ce fichier la variable $sigNbCoeurs qui détermine le nombre de cœurs du SGBDg. Celle-ci peut permettre de limiter le nombre de processus en parallèle lors de l’utilisation des jobs.
+
+![Fichier sig_défaut](../Ressources/API - Prise en main/Fichier sig_défaut.png)
+
+#### 3.1.7. (Facultatif) Nettoyer le code spécifique au Gard
+
+Certains fichiers sont spécifiques aux besoins et à l’infrastructure du Département du Gard. Tu peux supprimer ce code qui est là pour garder la cohérence avec le source des autres dossiers du “repo”.
+
+Pour cela :
+* supprime le fichier API\PowerShell\constantes_si3p0.ps1,
+* supprime le fichier API\PowerShell\fonctions_si3p0.ps1,
+* supprime le fichier API\PowerShell\jobs_si3p0.ps1,
+* dans le fichier API\PowerShell\api_complète.ps1, retire l’appel aux 3 fichiers spécifiques.
+
+#### 3.1.8. Fixer l’ExecutionPolicy
+
+Si tu veux tout savoir sur l’ExecutionPolicy c’est par là :
+[https://docs.microsoft.com/fr-fr/powershell/module/microsoft.powershell.core/about/about_execution_policies?view=powershell-7.1](https://docs.microsoft.com/fr-fr/powershell/module/microsoft.powershell.core/about/about_execution_policies?view=powershell-7.1)
+
+Mais si tu n’es pas motivé pour lire tout ça et bien, en résumé, tu dois savoir que l’ExecutionPolicy est un niveau de sécurité appliqué à l’exécution des scripts PowerShell. Par défaut, cela empêche le lancement de scripts non signés numériquement. Pour cette raison, le niveau de sécurité doit être abaissé pour permettre l’utilisation de l’API SI3P0.
+
+L’ExecutionPolicy peut se fixer au niveau machine mais cela nécessite des droits administrateur. Pour ce faire, exécute Windows PowerShell en tant qu’administrateur et lance la commande suivante :
+`Set-ExecutionPolicy -scope LocalMachine Unrestricted`
+
+Si tu n’es pas administrateur, tu peux également modifier ce paramètre au niveau utilisateur. Dans ce cas il te faut lancer la commande suivante :
+`Set-ExecutionPolicy -scope CurrentUser Unrestricted`
+
+Si tu penses lancer des scripts dans des contextes 64 bits et 32 bits alors tu dois également exécuter ces commandes avec la version x86 de Windows PowerShell.
+
+Si tu n'es pas en mesure de faire l’un ou l’autre, il reste deux options qui ne sont pas très pratiques puisqu’il est question de fixer le niveau à la session. Il faudra donc refaire l’action à chaque exécution.
+
+* Option 1 - Passer le paramètre au lancement de Windows Powershell grâce à la commande suivante : powershell.exe -executionpolicy Unrestricted
+
+* Option 2 - Fixer la variable d’environnement PSExecutionPolicyPreference pour la session, il suffit pour cela de lancer dans l’invite PowerShell la commande suivante : $Env:PSExecutionPolicyPreference = 'Unrestricted'
 
 (en construction)
