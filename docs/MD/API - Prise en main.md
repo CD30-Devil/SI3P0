@@ -15,51 +15,58 @@ Pré-requis :
     * dispose de ogr2ogr.exe.
 
 Table des matières
+
 [1. SI3Pquoi ?](#_1)
 
 [2. Pourquoi une boîte à outils ?](#_2)
 
-[    2.1. "Donnez-moi un T !"](#_21)
+&nbsp;&nbsp;[2.1. "Donnez-moi un T !"](#_21)
 
-[    2.2. "Donnez- moi un E ! Donnez-moi un L !"](#_22)
+&nbsp;&nbsp;[2.2. "Donnez- moi un E ! Donnez-moi un L !"](#_22)
 
-[    2.3. ELT et TEL](#_23)
+&nbsp;&nbsp;[2.3. ELT et TEL](#_23)
 
-[    2.4. Quelques mots sur PowerShell](#_24)
+&nbsp;&nbsp;[2.4. Quelques mots sur PowerShell](#_24)
 
 [3. API SI3P0 et BAN](#_3)
 
-[    3.1. Etape 1 - Préparer le contexte de travail](#_31)
+&nbsp;&nbsp;[3.1. Etape 1 - Préparer le contexte de travail](#_31)
 
-[        3.1.1. Récupérer l’API SI3P0](#_311)
+&nbsp;&nbsp;&nbsp;&nbsp;[3.1.1. Récupérer l’API SI3P0](#_311)
 
-[        3.1.2. (Facultatif) Installer 7-Zip](#_312)
+&nbsp;&nbsp;&nbsp;&nbsp;[3.1.2. (Facultatif) Installer 7-Zip](#_312)
 
-[        3.1.3. Créer une base de tests](#_313)
+&nbsp;&nbsp;&nbsp;&nbsp;[3.1.3. Créer une base de tests](#_313)
 
-[        3.1.4. Ajouter les informations de connexion au PGPASS](#_314)
+&nbsp;&nbsp;&nbsp;&nbsp;[3.1.4. Ajouter les informations de connexion au PGPASS](#_314)
 
-[        3.1.5. Modifier le fichier constantes.ps1](#_315)
+&nbsp;&nbsp;&nbsp;&nbsp;[3.1.5. Modifier le fichier constantes.ps1](#_315)
 
-[        3.1.6. Modifier le fichier sig_défaut.ps1](#_316)
+&nbsp;&nbsp;&nbsp;&nbsp;[3.1.6. Modifier le fichier sig_défaut.ps1](#_316)
 
-[        3.1.7. (Facultatif) Nettoyer le code spécifique au Gard](#_317)
+&nbsp;&nbsp;&nbsp;&nbsp;[3.1.7. (Facultatif) Nettoyer le code spécifique au Gard](#_317)
 
-[        3.1.8. Fixer l’ExecutionPolicy](#_318)
+&nbsp;&nbsp;&nbsp;&nbsp;[3.1.8. Fixer l’ExecutionPolicy](#_318)
 
-[        3.1.9. Jouer les Tests Unitaires (TU)](#_319)
+&nbsp;&nbsp;&nbsp;&nbsp;[3.1.9. Jouer les Tests Unitaires (TU)](#_319)
 
-[    3.2. Etape 2 - Explorer l’API](#_32)
+&nbsp;&nbsp;[3.2. Etape 2 - Explorer l’API](#_32)
 
-[    3.3. Etape 3 - Phase Extract : Télécharger les données de la BAN](#_33)
+&nbsp;&nbsp;[3.3. Etape 3 - Phase Extract : Télécharger les données de la BAN](#_33)
 
-[        3.3.1. Principe](#_331)
+&nbsp;&nbsp;&nbsp;&nbsp;[3.3.1. Principe](#_331)
 
-[        3.3.2. Script](#_332)
+&nbsp;&nbsp;&nbsp;&nbsp;[3.3.2. Script](#_332)
 
-[        3.3.3. Exécution du script](#_333)
+&nbsp;&nbsp;&nbsp;&nbsp;[3.3.3. Exécution du script](#_333)
 
-[    4. Etape 4 - Phase Load : Importer les données BAN dans le SIg](#_4)
+&nbsp;&nbsp;[3.4. Etape 4 - Phase Load : Importer les données BAN dans le SIg](#_34)
+
+&nbsp;&nbsp;&nbsp;&nbsp;[3.4.1. Principe](#_341)
+
+&nbsp;&nbsp;&nbsp;&nbsp;[3.4.2. Script](#_342)
+
+&nbsp;&nbsp;&nbsp;&nbsp;[3.4.3. Exécution du script](#_343)
 
 ## <a name="_1"></a>1. SI3Pquoi ?
 
@@ -400,5 +407,119 @@ A l’issue de l’exécution, tu dois avoir à l’emplacement de téléchargem
 ![Fichiers GZ](../Ressources/API - Prise en main/Fichiers GZ.png)
 
 ### <a name="_34"></a>3.4. Etape 4 - Phase Load : Importer les données BAN dans le SIg
+
+#### <a name="_341"></a>3.4.1. Principe
+
+Pour la phase Load, il va être question de décompresser et d’importer les fichiers précédemment téléchargés dans deux tables temporaires, une Etalab et une DGFIP. Celles-ci auront la même structure que les fichiers CSV et seront formées uniquement de colonnes de type TEXT.
+
+#### <a name="_342"></a>3.4.2. Script
+
+Toujours dans Windows PowerShell ISE, copie-colle le code source ci-dessous dans un nouveau script et sauvegarde le à côté du précédent. Ensuite, lance le grâce à la touche F5.
+
+```powershell
+# on importe l'API SI3P0
+. ("$PSScriptRoot\..\API\PowerShell\api_complète.ps1")
+ 
+# on crée une variable pour définir le chemin source des fichiers
+$dossierDonnees = "$PSScriptRoot\Données"
+ 
+# on crée une variable pour fixer un dossier de sortie des rapports
+$dossierRapports = "$PSScriptRoot\Rapports\Load"
+ 
+# on réalise un nettoyage préalable en début de script
+# effacement des rapports
+Remove-Item "$dossierRapports\*.txt"
+Remove-Item "$dossierRapports\*.err"
+ 
+# effacement des fichiers temporaires
+Remove-Item "$dossierTravailTemp\tuto_si3p0\Load\*" -Recurse -Force
+ 
+# effacement des tables temporaires
+SIg-Effacer-Table -table 'tmp.AdresseEtalab' `
+    -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - effacement tmp.AdresseEtalab.txt"
+ 
+SIg-Effacer-Table -table 'tmp.AdresseDGFIP' `
+    -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - effacement tmp.AdresseDGFIP.txt"
+ 
+# on itère sur les fichiers .gz pour les décompresser dans le dossier de travail temporaire défini dans constantes.ps1
+foreach ($gz in (Get-ChildItem "$dossierDonnees\*.gz")) {
+    DeGZipper -archive $gz -extraireVers "$dossierTravailTemp\tuto_si3p0\Load\"
+}
+ 
+# on crée les 2 tables temporaires pour l'import des CSV
+# grâce à la fonction SIg-Creer-Table-Temp présente dans sig_défaut.ps1
+# elle prend 2 paramètres obligatoires : le nom (+ facultatif le schéma) de la table et la liste de ses colonnes
+# le paramètre sortie est facultatif,
+# il permet de récupérer la sortie standard et erreur de psql qui est lancé par la fonction
+SIg-Creer-Table-Temp `
+    -table 'tmp.AdresseEtalab' `
+    -colonnes `
+        'id', `
+        'id_fantoir', `
+        'numero', `
+        'rep', `
+        'nom_voie', `
+        'code_postal', `
+        'code_insee', `
+        'nom_commune', `
+        'code_insee_ancienne_commune', `
+        'nom_ancienne_commune', `
+        'x', `
+        'y', `
+        'lon', `
+        'lat', `
+        'alias', `
+         'nom_ld', `
+         'libelle_acheminement', `
+         'nom_afnor', `
+         'source_position', `
+         'source_nom_voie' `
+    -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - création tmp.AdresseEtalab.txt"
+ 
+SIg-Creer-Table-Temp `
+    -table 'tmp.AdresseDGFIP' `
+    -colonnes `
+        'cle_interop', `
+        'uid_adresse', `
+        'numero', `
+        'suffixe', `
+        'pseudo_numero', `
+        'voie_nom', `
+        'voie_code', `
+        'code_postal', `
+        'libelle_acheminement', `
+        'destination_principale', `
+        'commune_code', `
+        'commune_nom', `
+        'source', `
+        'long', `
+        'lat', `
+        'x', `
+        'y', `
+        'position', `
+        'date_der_maj' `
+    -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - création tmp.AdresseDGFIP.txt"
+ 
+# on crée un ArrayList (tableau dynamique) que l'on va remplir avec le paramétrage des jobs d'import
+$parametresJobs = [System.Collections.ArrayList]::new()
+ 
+foreach ($csvEtalab in (Get-ChildItem "$dossierTravailTemp\tuto_si3p0\Load\*-etalab.csv")) {
+    # la fonction Parametrer-Job-SIG-Importer-CSV est également issue du fichier sig_défaut.ps1
+    # elle prend 2 paramètres obligatoires : la table cible et le CSV à importer
+    [void]$parametresJobs.Add((Parametrer-Job-SIG-Importer-CSV -table 'tmp.AdresseEtalab' -csv $csvEtalab))
+}
+ 
+foreach ($csvDGFIP in (Get-ChildItem "$dossierTravailTemp\tuto_si3p0\Load\*-dgfip.csv")) {
+    [void]$parametresJobs.Add((Parametrer-Job-SIG-Importer-CSV -table 'tmp.AdresseDGFIP' -csv $csvDGFIP))
+}
+ 
+# on exécute les jobs en demandant de lancer un nombre de processus égal au nombre de coeurs du serveur / 2
+Executer-Jobs -parametresJobs $parametresJobs -nombreJobs $($sigNbCoeurs / 2)
+ 
+# on réalise un nettoyage en fin de script
+Remove-Item "$dossierTravailTemp\tuto_si3p0\Load\*" -Recurse -Force
+```
+
+#### <a name="_343"></a>3.4.3. Exécution du script
 
 (en construction)
