@@ -15,9 +15,9 @@ Pré-requis :
     * dispose de ogr2ogr.exe.
 
 Table des matières
-1. SI3Pquoi ?
-2. Pourquoi une boîte à outils ?
-	1. "Donnez-moi un T !"
+[1. SI3Pquoi ?](#_1)
+[2. Pourquoi une boîte à outils ?](#_2)
+[    2.1. "Donnez-moi un T !"](#_21)
 	2. "Donnez- moi un E ! Donnez-moi un L !"
 	3. ELT et TEL
 	4. Quelques mots sur PowerShell
@@ -30,12 +30,20 @@ Table des matières
 		5. Modifier le fichier constantes.ps1
 		6. Modifier le fichier sig_défaut.ps1
 		7. (Facultatif) Nettoyer le code spécifique au Gard
+		8. Fixer l’ExecutionPolicy
+		9. Jouer les Tests Unitaires (TU)
+	2. Etape 2 - Explorer l’API
+	3. Etape 3 - Phase Extract : Télécharger les données de la BAN
+		1. Principe
+		2. Script
+		3. Exécution du script
+	4. Etape 4 - Phase Load : Importer les données BAN dans le SIg
 
-## 1. SI3Pquoi ?
+## 1. <a name="_1"></a>SI3Pquoi ?
 
 SI3P0 pour Systèmes d’Information 3.0 ; c’est le nom donné au SIg que nous développons à la Mission des Systèmes d’Information (MSI) pour la direction “routes et bâtiments” du Gard. Il fait référence au logo de la collectivité et au code INSEE de notre [chauvin=’on’]magnifique département[chauvin=’off’].
 
-## 2. Pourquoi une boîte à outils ?
+## 2. <a name="_2"></a>Pourquoi une boîte à outils ?
 
 Classiquement, un SIg se construit autour de 3 briques :
 * un Système de Gestion de Bases de Données géographiques (SGBDg),
@@ -56,7 +64,7 @@ Le “Shadok” c’est quoi ? Et bien le “Shadok” c’est toi ;
 
 A la MSI nous n’avons pas de budget alloué et notre équipe se compte sur les doigts d’une demi-main. Mais, comme tout bon informaticien qui se respecte...on est feignant !
 
-### 2.1. "Donnez-moi un T !"
+### 2.1. <a name="_21"></a>"Donnez-moi un T !"
 
 L’ETL transforme. Tu peux grâce à lui croiser, filtrer, grouper, sélectionner, adapter (et plein d’autres verbes à l’infinitif) tes données. Mais ceux qui suivent auront noté que dans SGBGg il y a “Gestion” et “Données”. Aussi, il est tout à fait possible de faire faire les transformations au serveur de bases. Le SGBDg n’est plus seulement vu comme la brique de stockage mais aussi comme serveur de (géo)traitements.
 
@@ -133,7 +141,7 @@ Je recommande également de créer dans cette base (et ensuite dans la base de p
 
 Comme il faut ajouter des extensions à cette base, il te faudra être connecté en tant que superuser.
 
-```markdown
+```sql
 -- création d'un utilisateur geotribu
 create role geotribu with password 'geotribu' login nosuperuser createdb;
 
@@ -208,6 +216,7 @@ Pour cela :
 #### 3.1.8. Fixer l’ExecutionPolicy
 
 Si tu veux tout savoir sur l’ExecutionPolicy c’est par là :
+
 [https://docs.microsoft.com/fr-fr/powershell/module/microsoft.powershell.core/about/about_execution_policies?view=powershell-7.1](https://docs.microsoft.com/fr-fr/powershell/module/microsoft.powershell.core/about/about_execution_policies?view=powershell-7.1)
 
 Mais si tu n’es pas motivé pour lire tout ça et bien, en résumé, tu dois savoir que l’ExecutionPolicy est un niveau de sécurité appliqué à l’exécution des scripts PowerShell. Par défaut, cela empêche le lancement de scripts non signés numériquement. Pour cette raison, le niveau de sécurité doit être abaissé pour permettre l’utilisation de l’API SI3P0.
@@ -225,5 +234,130 @@ Si tu n'es pas en mesure de faire l’un ou l’autre, il reste deux options qui
 * Option 1 - Passer le paramètre au lancement de Windows Powershell grâce à la commande suivante : powershell.exe -executionpolicy Unrestricted
 
 * Option 2 - Fixer la variable d’environnement PSExecutionPolicyPreference pour la session, il suffit pour cela de lancer dans l’invite PowerShell la commande suivante : $Env:PSExecutionPolicyPreference = 'Unrestricted'
+
+#### 3.1.9. Jouer les Tests Unitaires (TU)
+
+C’est le moment de voir si ça fonctionne. En lançant les tests unitaires, tu pourras voir ce qui est vert et OK ou rouge et non utilisable.
+
+Attention, certains tests créent et suppriment des tables et vues dans la base SIg par défaut. Si tu dois les lancer sur une base de production, il est peu probable qu’une table ou vue porte le même nom que ceux choisis pour les tests (table_tu_sig_defaut, vue_tu_sig_defaut) mais il vaut mieux rester vigilant.
+
+Pour exécuter les tests, ouvre le fichier API\TU\PowerShell\exécuter.ps1 avec Windows PowerShell ISE et lance l’exécution (touche F5).
+
+![Exécution TU](../Ressources/API - Prise en main/Exécution TU.png)
+
+Ici, plusieurs tests sont KO comme ceux qui concernent les fonctions 7-Zip, ce dernier n’étant pas installé sur le poste. Mais de nombreux tests sont au vert dont notamment ceux sur les fonctions d’interaction avec le SIg.
+
+En l’état, rien ne nous empêche de continuer le tuto en utilisant uniquement les parties opérationnelles. Charge à toi de régler ce qui cloche dans ton contexte de travail pour que tout soit OK afin de bénéficier pleinement de l’API.
+
+### 3.2. Etape 2 - Explorer l’API
+
+Le résultat des TU que tu viens de jouer te donne un petit aperçu des fonctions proposées. Cela dit, cela peut-être le bon moment pour regarder d’un peu plus près ce qu’il y a sous le capot. Tu trouveras ci-dessous un bref descriptif de chaque fichier.
+
+**api_complète.ps1**
+Ce fichier référence l’ensemble des autres scripts de l’API. Il te suffira de l’inclure à ton code pour pouvoir utiliser les différentes fonctions.
+
+**constantes.ps1**
+Comme tu as pu le voir précédemment, on trouve là plusieurs constantes utiles à l’API.
+
+**fonctions_archives.ps1**
+Dans ce fichier se trouvent les fonctions de manipulation des archives Zip, GZip ainsi que les fonctions d’appel à 7-Zip.
+
+**fonctions_es.ps1**
+Pour l’instant, il n’y a là qu’une fonction pour changer l’encodage d’un fichier.
+
+**fonctions_excel.ps1**
+Excel ? Mais si tu vois, le tableur de Microsoft. Ce fichier propose deux fonctions de conversion de XLS/XLSX en CSV, une qui s'appuie sur Excel via du pilotage OleAutomation et une autre qui utilise un driver OleDB.
+
+**fonctions_géodonnées.ps1**
+Ce script propose des fonctions d’exécution d’ogr2ogr, shp2pgsql et raster2pgsql.
+
+**fonctions_jobs**
+Les jobs permettent l’exécution en parallèle de plusieurs processus. La fonction de lancement des jobs se trouve ici.
+
+**fonctions_oracle.ps1**
+Pour interagir avec des bases Oracle, tu pourrais avoir besoin des fonctions de lancement de SQLPlus et d’export du résultat d’une requête Oracle en CSV que propose ce fichier.
+
+**fonctions_outils.ps1**
+Tout ce qui est inclassable.
+
+**fonctions_postgis.ps1**
+Pratique pour l’import/export de GeoJSON et SHP vers/depuis une base PostgreSQL/Postgis. Les fonctions utilisent ogr2ogr.
+
+**fonctions_postgresql.ps1**
+Et bien je crois que c’est clair non ? Tu trouveras dans ce fichier ce qu’il faut pour exploiter une base PostgreSQL.
+
+**fonctions_web.ps1**
+Pour télécharger un fichier ou envoyer un e-mail, c’est par là que ça se passe.
+
+**jobs_postgis.ps1**
+C’est comme fonctions_postgis mais en version jobs.
+
+**jobs_postgresql.ps1**
+C’est comme fonctions_postgresql mais en version jobs.
+
+**jobs_web.ps1**
+Il faut vraiment que je la fasse une troisième fois ?
+
+**sig_défaut.ps1**
+Ce fichier agrège les fonctions et jobs PostgreSQL/Postgis pour les reproposer en ciblant par défaut la base paramétrée à l’étape 3.1.6.
+
+### 3.3. Etape 3 - Phase Extract : Télécharger les données de la BAN
+
+#### 3.3.1. Principe
+
+Avec ce script, tu vas télécharger les fichiers BAN version Etalab et DGFIP de plusieurs départements. Pour cela, tu vas paramétrer un job de téléchargement pour chaque fichier puis lancer ces jobs.
+
+#### 3.3.2. Script
+
+Dans Windows PowerShell ISE, rédige puis lance le script suivant. Il te faut l’enregistrer dans un dossier à côté du dossier API ou adapter les chemins (notamment l’import du fichier api_complète.ps1) pour pouvoir l’exécuter. Tu peux modifier la liste des départements si tu le souhaites.
+```powershell
+# on importe l'API SI3P0
+# la constante $PSScriptRoot permet de définir le chemin relativement au script courant
+. ("$PSScriptRoot\..\API\PowerShell\api_complète.ps1")
+ 
+# on crée une variable pour fixer le chemin de téléchargement des fichiers
+$dossierDonnees = "$PSScriptRoot\Données"
+ 
+# on crée un tableau des numéros de départements à télécharger
+$departements = @( '07', '12', '13', '30', '34', '48', '84' )
+ 
+# on crée un ArrayList (tableau dynamique) que l'on va remplir avec le paramétrage des jobs de téléchargement
+$parametresJobs = [System.Collections.ArrayList]::new()
+ 
+# on itère sur le tableau des départements pour créer le paramétrage des jobs correspondants
+foreach ($departement in $departements) {
+ 
+    # la fonction Parametrer-Job-Telecharger est issue du fichier jobs_web.ps1
+    # elle prend 2 paramètres : l'URL de téléchargement et la cible de l'enregistrement
+    # l'objet résultat de l'appel à Parametrer-Job-Telecharger est ajouté à l'ArrayList
+    
+    # premier ajout, le fichier Etalab du département
+    [void]$parametresJobs.Add((Parametrer-Job-Telecharger `
+        -url "https://adresse.data.gouv.fr/data/ban/adresses/latest/csv/adresses-$departement.csv.gz" `
+        -enregistrerSous "$dossierDonnees\$departement-etalab.csv.gz"))
+ 
+    # second ajout, le fichier DGFIP du département
+    [void]$parametresJobs.Add((Parametrer-Job-Telecharger `
+        -url "https://adresse.data.gouv.fr/data/adresses-cadastre/latest/csv/adresses-cadastre-$departement.csv.gz" `
+        -enregistrerSous "$dossierDonnees\$departement-dgfip.csv.gz"))
+}
+
+# lorsque le paramétrage est terminé,
+# on exécute les jobs grâce à la fonction Executer-Jobs présente dans fonctions_jobs.ps1
+# par défaut, le nombre de jobs en parallèle est égal au nombre de coeurs de la machine - 1
+Executer-Jobs -parametresJobs $parametresJobs 
+```
+
+#### 3.3.3. Exécution du script
+
+Le script lance en parallèle un nombre de processus égal au nombre de cœurs de ta machine moins un (dans mon cas 8 - 1 = 7). Tu peux voir ça grâce à ProcessExplorer.
+
+![Processus Executer-Jobs](../Ressources/API - Prise en main/Processus Executer-Jobs.png)
+
+A l’issue de l’exécution, tu dois avoir à l’emplacement de téléchargement choisi, deux fichiers .gz par département.
+
+![Fichiers GZ](../Ressources/API - Prise en main/Fichiers GZ.png)
+
+### 3.4. Etape 4 - Phase Load : Importer les données BAN dans le SIg
 
 (en construction)
