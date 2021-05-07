@@ -24,5 +24,5 @@ Classiquement, un SIg se construit autour de 3 briques :
 * des outils de visualisation,
 * un logiciel d’extraction, de transformation et de chargement des données (ETL).
 
-![SIg avec ETL](./Ressources/API - Prise en main/SIg avec ETL.png)
+![SIg avec ETL](../Ressources/API - Prise en main/SIg avec ETL.png)
 (en construction)
