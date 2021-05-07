@@ -14,4 +14,15 @@ Pré-requis :
     * dispose des outils clients PostgreSQL/Postgis (dont principalement psql.exe),
     * dispose de ogr2ogr.exe.
 
+## 1. SI3Pquoi ?
+SI3P0 pour Systèmes d’Information 3.0 ; c’est le nom donné au SIg que nous développons à la Mission des Systèmes d’Information (MSI) pour la direction “routes et bâtiments” du Gard. Il fait référence au logo de la collectivité et au code INSEE de notre [chauvin=’on’]magnifique département[chauvin=’off’].
+
+## 2. Pourquoi une boîte à outils ?
+
+Classiquement, un SIg se construit autour de 3 briques :
+* un Système de Gestion de Bases de Données géographiques (SGBDg),
+* des outils de visualisation,
+* un logiciel d’extraction, de transformation et de chargement des données (ETL).
+
+![SIg avec ETL](./Ressources/API - Prise en main/SIg avec ETL.png)
 (en construction)
