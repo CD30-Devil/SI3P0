@@ -671,7 +671,7 @@ Avoir des données c’est bien, les utiliser c’est mieux. Tu vas avec ce dern
 
 J’espère juste que le lien vers ladite donnée ouverte ne finira pas en 404 :
 
-[https://www.data.gouv.fr/fr/datasets/adresse-des-etablissements-d-accueil-du-jeune-enfant-percevant/#_](https://www.data.gouv.fr/fr/datasets/adresse-des-etablissements-d-accueil-du-jeune-enfant-percevant/#_){:target="_blank"}
+[https://www.data.gouv.fr/fr/datasets/adresse-des-etablissements-d-accueil-du-jeune-enfant-percevant/](https://www.data.gouv.fr/fr/datasets/adresse-des-etablissements-d-accueil-du-jeune-enfant-percevant/){:target="_blank"}
 
 Pour que l’exécution soit plus rapide, seuls les établissements enregistrés en 2018 sont géocodés. De plus, le géocodage ne pourra retourner de résultats que sur les départements dont la BAN a été téléchargée.
 
