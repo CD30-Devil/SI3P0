@@ -287,9 +287,13 @@ Si tu penses lancer des scripts dans des contextes 64 bits et 32 bits alors tu d
 
 Si tu n'es pas en mesure de faire l’un ou l’autre, il reste deux options qui ne sont pas très pratiques puisqu’il est question de fixer le niveau à la session. Il faudra donc refaire l’action à chaque exécution.
 
-* Option 1 - Passer le paramètre au lancement de Windows Powershell grâce à la commande suivante : `powershell.exe -executionpolicy Unrestricted 
+* Option 1 - Passer le paramètre au lancement de Windows Powershell grâce à la commande suivante :
 
-* Option 2 - Fixer la variable d’environnement PSExecutionPolicyPreference pour la session, il suffit pour cela de lancer dans l’invite PowerShell la commande suivante : `$Env:PSExecutionPolicyPreference = 'Unrestricted'`
+`powershell.exe -executionpolicy Unrestricted`
+
+* Option 2 - Fixer la variable d’environnement PSExecutionPolicyPreference pour la session, il suffit pour cela de lancer dans l’invite PowerShell la commande suivante :
+
+`$Env:PSExecutionPolicyPreference = 'Unrestricted'`
 
 #### <a name="_319"></a>3.1.9. Jouer les Tests Unitaires (TU)
 
