@@ -154,8 +154,8 @@ Ce langage de script propose de nombreuses cmdlet (prononcer commandlette) pour 
 Si malgré tout, tu ne trouves pas la cmdlet qu’il te faut, tu pourras créer tes propres fonctions et profiter de la richesse du Framework .NET sur lequel PowerShell s’appuie.
 
 Comme PowerShell est inclus à Windows, même si tu n’as pas de droits administrateurs dans ton contexte professionnel, il est probable que tu ais accès à :
-Windows PowerShell (powershell.exe) : l’interface ligne de commande,
-Windows PowerShell ISE (powershell_ise.exe) : un éditeur de scripts simple mais complet puisqu’il permet l’exécution pas à pas et le debug.
+* Windows PowerShell (powershell.exe) : l’interface ligne de commande,
+* Windows PowerShell ISE (powershell_ise.exe) : un éditeur de scripts simple mais complet puisqu’il permet l’exécution pas à pas et le debug.
 
 ![SIg sans ETL](../Ressources/API - Prise en main/Debug PowerShell ISE.png)
 
@@ -173,7 +173,7 @@ _"Nombreuses les étapes préparatoires sont, de patience t’armer tu dois"_. J
 
 #### <a name="_311"></a>3.1.1. Récupérer l’API SI3P0
 
-L’API SI3P0, ainsi que le code propre à certains de nos cas d’usages, sont disponibles sous licence BSD-3 à l’emplacement suivant : [https://github.com/CD30-Devil/SI3P0](https://github.com/CD30-Devil/SI3P0)
+L’API SI3P0, ainsi que le code propre à certains de nos cas d’usages, sont disponibles sous licence BSD-3 à l’emplacement suivant : [https://github.com/CD30-Devil/SI3P0](https://github.com/CD30-Devil/SI3P0){:target="_blank"}
 
 Le sous-dossier API est suffisant mais les autres répertoires peuvent à minima servir d’exemple voire être réutilisables moyennant quelques adaptations (notamment pour les collègues territoriaux qui travaillent sur des thématiques équivalentes aux nôtres).
 
@@ -271,7 +271,7 @@ Pour cela :
 
 Si tu veux tout savoir sur l’ExecutionPolicy c’est par là :
 
-[https://docs.microsoft.com/fr-fr/powershell/module/microsoft.powershell.core/about/about_execution_policies?view=powershell-7.1](https://docs.microsoft.com/fr-fr/powershell/module/microsoft.powershell.core/about/about_execution_policies?view=powershell-7.1)
+[https://docs.microsoft.com/fr-fr/powershell/module/microsoft.powershell.core/about/about_execution_policies?view=powershell-7.1](https://docs.microsoft.com/fr-fr/powershell/module/microsoft.powershell.core/about/about_execution_policies?view=powershell-7.1){:target="_blank"}
 
 Mais si tu n’es pas motivé pour lire tout ça et bien, en résumé, tu dois savoir que l’ExecutionPolicy est un niveau de sécurité appliqué à l’exécution des scripts PowerShell. Par défaut, cela empêche le lancement de scripts non signés numériquement. Pour cette raison, le niveau de sécurité doit être abaissé pour permettre l’utilisation de l’API SI3P0.
 
@@ -671,7 +671,7 @@ Avoir des données c’est bien, les utiliser c’est mieux. Tu vas avec ce dern
 
 J’espère juste que le lien vers ladite donnée ouverte ne finira pas en 404 :
 
-[https://www.data.gouv.fr/fr/datasets/adresse-des-etablissements-d-accueil-du-jeune-enfant-percevant/#_](https://www.data.gouv.fr/fr/datasets/adresse-des-etablissements-d-accueil-du-jeune-enfant-percevant/#_)
+[https://www.data.gouv.fr/fr/datasets/adresse-des-etablissements-d-accueil-du-jeune-enfant-percevant/#_](https://www.data.gouv.fr/fr/datasets/adresse-des-etablissements-d-accueil-du-jeune-enfant-percevant/#_){:target="_blank"}
 
 Pour que l’exécution soit plus rapide, seuls les établissements enregistrés en 2018 sont géocodés. De plus, le géocodage ne pourra retourner de résultats que sur les départements dont la BAN a été téléchargée.
 
@@ -681,11 +681,11 @@ Pour créer les fonctions de géocodage et géocodage inverse, tu dois jouer deu
 
 Le premier script crée quelques fonctions outils. Il est ici :
 
-[https://github.com/CD30-Devil/SI3P0/blob/main/API/SQL/f.outils%20(create).sql](https://github.com/CD30-Devil/SI3P0/blob/main/API/SQL/f.outils%20(create).sql)
+[https://github.com/CD30-Devil/SI3P0/blob/main/API/SQL/f.outils%20(create).sql](https://github.com/CD30-Devil/SI3P0/blob/main/API/SQL/f.outils%20(create).sql){:target="_blank"}
 
 Le second script qui crée les fonctions de géocodage se trouve là :
 
-[https://github.com/CD30-Devil/SI3P0/blob/main/Adresses/SQL/f.adresses%20(create).sql](https://github.com/CD30-Devil/SI3P0/blob/main/Adresses/SQL/f.adresses%20(create).sql)
+[https://github.com/CD30-Devil/SI3P0/blob/main/Adresses/SQL/f.adresses%20(create).sql](https://github.com/CD30-Devil/SI3P0/blob/main/Adresses/SQL/f.adresses%20(create).sql){:target="_blank"}
 
 #### <a name="_363"></a>3.6.3. Aperçu
 
@@ -782,10 +782,10 @@ Nous voilà au terme de ce long tutoriel. Tu as pu utiliser l’API SI3P0 sur un
 
 Concernant PowerShell, et comme mentionné en pré-requis, c’est une syntaxe qui comme tous les autres langages peut se “dompter”. Tu trouveras pour cela sur le net pas mal de documentation. Personnellement, j’ai appris sur le tas via la documentation Microsoft notamment, mais je vois qu’une recherche de “PowerShell tuto” retourne plusieurs liens dont un qui semble complet ici :
 
-[https://www.it-connect.fr/powershell-pour-les-debutants-1ere-partie/](https://www.it-connect.fr/powershell-pour-les-debutants-1ere-partie/)
+[https://www.it-connect.fr/powershell-pour-les-debutants-1ere-partie/](https://www.it-connect.fr/powershell-pour-les-debutants-1ere-partie/){:target="_blank"}
 
 Pour rappel, l’API SI3P0 est en licence BSD-3 mais cela ne t'empêche pas de nouveau faire un petit poke via mon compte Twitter @tetranos si tu deviens réutilisateur. Cela nous motivera à consolider et améliorer ces codes sources.
 
 May the force be with you!
 Pour la MSI,
-Michaël Galien - [@Tetranos](https://twitter.com/tetranos)
+Michaël Galien - [@Tetranos](https://twitter.com/tetranos){:target="_blank"}
