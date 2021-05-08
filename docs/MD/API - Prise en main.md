@@ -235,13 +235,13 @@ Le fichier API\PowerShell\constantes.ps1 fixe plusieurs paramètres utiles à l�
 
 Après ouverture de ce fichier dans Windows PowerShell ISE, tu dois modifier les éléments placés entre chevrons :
 
-* &racinePostgreSQL et &racineOSGeo4W : Ces racines sont utilisées dans les constantes qui suivent, aussi, si ton contexte de travail le nécessite, tu peux également modifier les chemins dans la suite du fichier pour pointer vers les bons emplacements des différents outils.
+* `&racinePostgreSQL` et `&racineOSGeo4W` : Ces racines sont utilisées dans les constantes qui suivent, aussi, si ton contexte de travail le nécessite, tu peux également modifier les chemins dans la suite du fichier pour pointer vers les bons emplacements des différents outils.
 
-* $racineOracle : Tu n’as pas de client Oracle sur ton poste ? Pas de panique. En fait, ce chemin sert seulement si tu dois extraire des données depuis une base Oracle. Tu peux donc le laisser tel quel si ce n’est pas ton cas.
+* `$racineOracle` : Tu n’as pas de client Oracle sur ton poste ? Pas de panique. En fait, ce chemin sert seulement si tu dois extraire des données depuis une base Oracle. Tu peux donc le laisser tel quel si ce n’est pas ton cas.
 
-* $email_contact et $serveurSMTP : Ces variables sont utiles si tu veux envoyer des mails depuis tes scripts. Dans le cas contraire, tu peux passer ton chemin. A noter qu’en l’état, l’API ne gère que le SMTP sans authentification.
+* `$email_contact` et `$serveurSMTP` : Ces variables sont utiles si tu veux envoyer des mails depuis tes scripts. Dans le cas contraire, tu peux passer ton chemin. A noter qu’en l’état, l’API ne gère que le SMTP sans authentification.
 
-Tu peux en profiter pour modifier le chemin vers le dossier de travail temporaire ($dossierTravailTemp) qu’utilisent plusieurs fonctions. Tu pourras aussi changer le SRID par défaut ($sridDefaut) mais pour les besoins du tuto il te faut rester pour le moment en 2154.
+Tu peux en profiter pour modifier le chemin vers le dossier de travail temporaire (`$dossierTravailTemp`) qu’utilisent plusieurs fonctions. Tu pourras aussi changer le SRID par défaut (`$sridDefaut`) mais pour les besoins du tuto il te faut rester pour le moment en 2154.
 
 ![Fichier constantes](../Ressources/API - Prise en main/Fichier constantes.png)
 
