@@ -169,7 +169,7 @@ Le tutoriel qui suit s’appuie sur ce cas d’usage.
 
 ### <a name="_31"></a>3.1. Etape 1 - Préparer le contexte de travail
 
-_"Nombreuses les étapes préparatoires sont, de patience t’armer tu dois"_. Je plaisante même s’il est vrai qu’il y a plusieurs choses à faire préalablement à l’utilisation de l’API. J’ai essayé de détailler ici les différents "level" à passer pour que tu sois ensuite opérationnel pour la rédaction de scripts PowerShell, c’est donc un peu verbeux mais pas forcément très long.
+_"Nombreuses les étapes préparatoires sont, de patience t’armer tu dois"_. Il y a effectivement plusieurs choses à faire préalablement à l’utilisation de l’API. J’ai essayé de détailler ici les différents "level" à passer pour que tu sois ensuite opérationnel pour la rédaction de scripts PowerShell, c’est donc un peu verbeux mais pas forcément très long.
 
 #### <a name="_311"></a>3.1.1. Récupérer l’API SI3P0
 
@@ -196,11 +196,11 @@ Je recommande également de créer dans cette base (et ensuite dans la base de p
 Comme il faut ajouter des extensions à cette base, il te faudra être connecté en tant que superuser.
 
 ```sql
--- création d'un utilisateur geotribu
-create role geotribu with password 'geotribu' login nosuperuser createdb;
+-- création d'un utilisateur
+create role r2d2 with password 'r2d2' login nosuperuser createdb;
 
--- création de la base de données de tests
-create database tutosi3p0 owner geotribu;
+-- création de la base de données de test
+create database tutosi3p0 owner r2d2;
 
 -- connexion à la base tutosi3p0
 \c tutosi3p0
@@ -213,12 +213,12 @@ create extension if not exists postgis_topology;
 -- cf. https://www.postgresql.org/docs/13/unaccent.html
 create extension if not exists unaccent;
 
--- installation de l'extension pg_trgm (pour disposer de la fonction similarity)
+-- création de l'extension pg_trgm (pour disposer de la fonction similarity)
 -- https://www.postgresql.org/docs/13/pgtrgm.html
 create extension if not exists pg_trgm;
 
 -- création du schéma temporaire
-create schema tmp authorization geotribu;
+create schema tmp authorization r2d2;
 ```
 
 ![Création BDD](../Ressources/API - Prise en main/Création BDD.png)
