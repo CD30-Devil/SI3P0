@@ -4,7 +4,7 @@ Ce tutoriel montre comment l’API PowerShell SI3P0 peut permettre l’automatis
 
 Il est illustré par un cas pratique de téléchargement, d’import et d’exploitation des données de la Base Adresse Nationale.
 
-_NDLR : Le terme API est peut-être mal choisi, le mot “toolkox” serait probablement plus adapté. Vu le nombre de références au dossier qui porte ce nom dans le code, j’avoue être faiblement motivé par l’idée de le renommer._
+_NDLR : Le terme API est peut-être mal choisi, le mot "toolkox" serait probablement plus adapté. Vu le nombre de références au dossier qui porte ce nom dans le code, j’avoue être faiblement motivé par l’idée de le renommer._
 
 **Pré-requis :**
 
@@ -95,7 +95,7 @@ _NDLR : Le terme API est peut-être mal choisi, le mot “toolkox” serait prob
 
 ## <a name="_1"></a>1. SI3Pquoi ?
 
-SI3P0 pour Systèmes d’Information 3.0 ; c’est le nom donné au SIg que nous développons à la Mission des Systèmes d’Information (MSI) pour la direction “routes et bâtiments” du Gard. Il fait référence au logo de la collectivité et au code INSEE de notre [chauvin=’on’]magnifique département[chauvin=’off’].
+SI3P0 pour Systèmes d’Information 3.0 ; c’est le nom donné au SIg que nous développons à la Mission des Systèmes d’Information (MSI) pour la direction "routes et bâtiments" du Gard. Il fait référence au logo de la collectivité et au code INSEE de notre [chauvin=’on’]magnifique département[chauvin=’off’].
 
 ## <a name="_2"></a>2. Pourquoi une boîte à outils ?
 
@@ -108,11 +108,11 @@ Classiquement, un SIg se construit autour de 3 briques :
 
 Lorsque les moyens financiers manquent, difficile de faire l’impasse sur le SGBDg et les outils de visualisation. Mais PostgreSQL/Postgis et QGis font très bien le job.
 
-L’ETL est quant à lui remplacé par une brique moins onéreuse ; classiquement appelée le “Shadok”.
-Le “Shadok” c’est quoi ? Et bien le “Shadok” c’est toi ;
+L’ETL est quant à lui remplacé par une brique moins onéreuse ; classiquement appelée le "Shadok".
+Le "Shadok" c’est quoi ? Et bien le "Shadok" c’est toi ;
 * Toi qui télécharges tous les mois la dernière mise à jour des données avec ton navigateur favori.
-* Toi qui fais “clic-droit > extraire vers" pour décompresser une à une les 42 archives fraîchement téléchargées.
-* Toi qui enfin importes les données dans la base avec des outils graphiques type “Postgis Shapefile Import/Export Manager”.
+* Toi qui fais "clic-droit > extraire vers" pour décompresser une à une les 42 archives fraîchement téléchargées.
+* Toi qui enfin importes les données dans la base avec des outils graphiques type "Postgis Shapefile Import/Export Manager".
 
 ![SIg avec Shadok](../Ressources/API - Prise en main/SIg avec Shadok.png)
 
@@ -120,28 +120,28 @@ A la MSI nous n’avons pas de budget alloué et notre équipe se compte sur les
 
 ### <a name="_21"></a>2.1. "Donnez-moi un T !"
 
-L’ETL transforme. Tu peux grâce à lui croiser, filtrer, grouper, sélectionner, adapter (et plein d’autres verbes à l’infinitif) tes données. Mais ceux qui suivent auront noté que dans SGBGg il y a “Gestion” et “Données”. Aussi, il est tout à fait possible de faire faire les transformations au serveur de bases. Le SGBDg n’est plus seulement vu comme la brique de stockage mais aussi comme serveur de (géo)traitements.
+L’ETL transforme. Tu peux grâce à lui croiser, filtrer, grouper, sélectionner, adapter (et plein d’autres verbes à l’infinitif) tes données. Mais ceux qui suivent auront noté que dans SGBGg il y a "Gestion" et "Données". Aussi, il est tout à fait possible de faire faire les transformations au serveur de bases. Le SGBDg n’est plus seulement vu comme la brique de stockage mais aussi comme serveur de (géo)traitements.
 
-Ce principe selon lequel le “code” est placé au niveau du SGBD porte le nom de base épaisse. Ce n’est pas l’objet du tutoriel aussi je t’invite à [lire le “Plaidoyer de Frédéric Brouard” pour en savoir plus](https://www.yumpu.com/fr/document/read/51018012/plaidoyer-de-frederic-brouard-sur-le-concept-de-bases-de-donnees-epaisses){:target="_blank"}. 
+Ce principe selon lequel le "code" est placé au niveau du SGBD porte le nom de base épaisse. Ce n’est pas l’objet du tutoriel aussi je t’invite à [lire le "Plaidoyer de Frédéric Brouard" pour en savoir plus](https://www.yumpu.com/fr/document/read/51018012/plaidoyer-de-frederic-brouard-sur-le-concept-de-bases-de-donnees-epaisses){:target="_blank"}. 
 
 ### <a name="_22"></a>2.2. "Donnez- moi un E ! Donnez-moi un L !"
 
-En revanche, le SGBD n’est pas l’outil le plus adapté pour interagir avec le système de fichiers même si certaines choses sont possibles ; foreign data, copy from file. Et surtout le SGBD n’ira pas récupérer la matière sur le net pour toi.
+En revanche, le SGBD n’est pas l’outil le plus adapté pour interagir avec le système de fichiers même si certaines choses sont possibles ; `foreign data`, `copy from file`. Et surtout le SGBD n’ira pas récupérer la matière sur le net pour toi.
 
 C’est là qu’intervient l’API. Celle-ci propose notamment des fonctions :
 * de téléchargement,
 * de manipulation d’archives dont certaines avec l’appui de 7-Zip,
 * d’import-export de (géo)données via psql et ogr2ogr.
 
-Elle donne également la possibilité de paralléliser les traitements grâce à ce que nous appelons des “jobs” qui lancent simultanément plusieurs processus. Il est ainsi possible d’exploiter au mieux les ressources machines et par conséquent de réduire les temps de traitement.
+Elle donne également la possibilité de paralléliser les traitements grâce à ce que nous appelons des "jobs" qui lancent simultanément plusieurs processus. Il est ainsi possible d’exploiter au mieux les ressources machines et par conséquent de réduire les temps de traitement.
 
 ### <a name="_23"></a>2.3. ELT et TEL
 
 Puisqu’il est question de transformer les données grâce aux SGBDg, l’approche sera légèrement différente du classique schéma ETL.
 
-En entrée, il faudra charger les données “au plus tôt” dans la base pour pouvoir les adapter au modèle cible ; ELT pour Extract Load Transform.
+En entrée, il faudra charger les données "au plus tôt" dans la base pour pouvoir les adapter au modèle cible ; ELT pour Extract Load Transform.
 
-En sortie, il faudra extraire les données “au plus tard” après qu’elles aient été rendues compatibles avec le format attendu ; TEL pour Transform Extract Load.
+En sortie, il faudra extraire les données "au plus tard" après qu’elles aient été rendues compatibles avec le format attendu ; TEL pour Transform Extract Load.
 
 ![SIg sans ETL](../Ressources/API - Prise en main/ELT - TEL.png)
 
@@ -149,7 +149,7 @@ En sortie, il faudra extraire les données “au plus tard” après qu’elles 
 
 PowerShell est à Windows ce que Bash est à Linux. Au placard donc les .BAT, c’est l’heure de faire des .PS1.
 
-Ce langage de script propose de nombreuses cmdlet (prononcer commandlette) pour réaliser différentes opérations allant du simple Write-Host, pour écrire sur la sortie standard, au Invoke-WebRequest et ses multiples paramètres pour envoyer une requête HTTP/HTTPS.
+Ce langage de script propose de nombreuses cmdlet (prononcer commandlette) pour réaliser différentes opérations allant du simple `Write-Host`, pour écrire sur la sortie standard, au `Invoke-WebRequest` et ses multiples paramètres pour envoyer une requête HTTP/HTTPS.
 
 Si malgré tout, tu ne trouves pas la cmdlet qu’il te faut, tu pourras créer tes propres fonctions et profiter de la richesse du Framework .NET sur lequel PowerShell s’appuie.
 
@@ -161,7 +161,7 @@ Comme PowerShell est inclus à Windows, même si tu n’as pas de droits adminis
 
 ## <a name="_3"></a>3. API SI3P0 et BAN
 
-L’API Adresse disponible sur Etalab propose la point d’entrée /search/ pour le géocodage. Lorsque le numéro est introuvable, un point au centre de la rue (type street) est retourné.
+L’API Adresse disponible sur Etalab propose la point d’entrée `/search/` pour le géocodage. Lorsque le numéro est introuvable, un point au centre de la rue (type street) est retourné.
 
 Dans notre cas, si le numéro est absent, nous souhaitons que le numéro le plus proche soit retourné. Nous avons pour cela automatisé le téléchargement et l’import des données de la BAN dans le SIg et avons développé une fonction PL/pgSQL de géocodage. Celle-ci est moins souple/puissante que la version Etalab et ne se base que sur les adresses présentent dans le SIg, mais elle est suffisante pour nos besoins.
 
@@ -169,7 +169,7 @@ Le tutoriel qui suit s’appuie sur ce cas d’usage.
 
 ### <a name="_31"></a>3.1. Etape 1 - Préparer le contexte de travail
 
-_"Nombreuses les étapes préparatoires sont, de patience t’armer tu dois"_. Je plaisante même s’il est vrai qu’il y a plusieurs choses à faire préalablement à l’utilisation de l’API. J’ai essayé de détailler ici les différents “level” à passer pour que tu sois ensuite opérationnel pour la rédaction de scripts PowerShell, c’est donc un peu verbeux mais pas forcément très long.
+_"Nombreuses les étapes préparatoires sont, de patience t’armer tu dois"_. Je plaisante même s’il est vrai qu’il y a plusieurs choses à faire préalablement à l’utilisation de l’API. J’ai essayé de détailler ici les différents "level" à passer pour que tu sois ensuite opérationnel pour la rédaction de scripts PowerShell, c’est donc un peu verbeux mais pas forcément très long.
 
 #### <a name="_311"></a>3.1.1. Récupérer l’API SI3P0
 
@@ -177,7 +177,7 @@ L’API SI3P0, ainsi que le code propre à certains de nos cas d’usages, sont 
 
 Le sous-dossier API est suffisant mais les autres répertoires peuvent à minima servir d’exemple voire être réutilisables moyennant quelques adaptations (notamment pour les collègues territoriaux qui travaillent sur des thématiques équivalentes aux nôtres).
 
-Commence donc par récupérer ce “repo” par téléchargement et extraction du Zip ou en créant un fork du projet.
+Commence donc par récupérer ce "repo" par téléchargement et extraction du Zip ou en créant un fork du projet.
 
 #### <a name="_312"></a>3.1.2. (Facultatif) Installer 7-Zip
 
@@ -259,7 +259,7 @@ Tu trouveras également dans ce fichier la variable $sigNbCoeurs qui détermine 
 
 #### <a name="_317"></a>3.1.7. (Facultatif) Nettoyer le code spécifique au Gard
 
-Certains fichiers sont spécifiques aux besoins et à l’infrastructure du Département du Gard. Tu peux supprimer ce code qui est là pour garder la cohérence avec le source des autres dossiers du “repo”.
+Certains fichiers sont spécifiques aux besoins et à l’infrastructure du Département du Gard. Tu peux supprimer ce code qui est là pour garder la cohérence avec le source des autres dossiers du "repo".
 
 Pour cela :
 * supprime le fichier API\PowerShell\constantes_si3p0.ps1,
@@ -780,7 +780,7 @@ A noter que, lors de l’appel à RechercherAdresse, le seuil n’a pas été fi
 
 Nous voilà au terme de ce long tutoriel. Tu as pu utiliser l’API SI3P0 sur une base de tests. Il est désormais temps de modifier à nouveau les paramètres pour cibler la base de production et de découvrir les autres fonctions proposées.
 
-Concernant PowerShell, et comme mentionné en pré-requis, c’est une syntaxe qui comme tous les autres langages peut se “dompter”. Tu trouveras pour cela sur le net pas mal de documentation. Personnellement, j’ai appris sur le tas via la documentation Microsoft notamment, mais je vois qu’une recherche de “PowerShell tuto” retourne plusieurs liens dont un qui semble complet ici :
+Concernant PowerShell, et comme mentionné en pré-requis, c’est une syntaxe qui comme tous les autres langages peut se "dompter". Tu trouveras pour cela sur le net pas mal de documentation. Personnellement, j’ai appris sur le tas via la documentation Microsoft notamment, mais je vois qu’une recherche de "PowerShell tuto" retourne plusieurs liens dont un qui semble complet ici :
 
 [https://www.it-connect.fr/powershell-pour-les-debutants-1ere-partie/](https://www.it-connect.fr/powershell-pour-les-debutants-1ere-partie/){:target="_blank"}
 
