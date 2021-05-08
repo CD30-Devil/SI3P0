@@ -287,19 +287,15 @@ Si tu penses lancer des scripts dans des contextes 64 bits et 32 bits alors tu d
 
 Si tu n'es pas en mesure de faire l’un ou l’autre, il reste deux options qui ne sont pas très pratiques puisqu’il est question de fixer le niveau à la session. Il faudra donc refaire l’action à chaque exécution.
 
-* Option 1 - Passer le paramètre au lancement de Windows Powershell grâce à la commande suivante :
+* Option 1 - Passer le paramètre au lancement de Windows Powershell grâce à la commande suivante : `powershell.exe -executionpolicy Unrestricted`
 
-`powershell.exe -executionpolicy Unrestricted`
-
-* Option 2 - Fixer la variable d’environnement PSExecutionPolicyPreference pour la session, il suffit pour cela de lancer dans l’invite PowerShell la commande suivante :
-
-`$Env:PSExecutionPolicyPreference = 'Unrestricted'`
+* Option 2 - Fixer la variable d’environnement `PSExecutionPolicyPreference` pour la session, il suffit pour cela de lancer dans l’invite PowerShell la commande suivante : `$Env:PSExecutionPolicyPreference = 'Unrestricted'`
 
 #### <a name="_319"></a>3.1.9. Jouer les Tests Unitaires (TU)
 
 C’est le moment de voir si ça fonctionne. En lançant les tests unitaires, tu pourras voir ce qui est vert et OK ou rouge et non utilisable.
 
-Attention, certains tests créent et suppriment des tables et vues dans la base SIg par défaut. Si tu dois les lancer sur une base de production, il est peu probable qu’une table ou vue porte le même nom que ceux choisis pour les tests (table_tu_sig_defaut, vue_tu_sig_defaut) mais il vaut mieux rester vigilant.
+Attention, certains tests créent et suppriment des tables et vues dans la base SIg par défaut. Si tu dois les lancer sur une base de production, il est peu probable qu’une table ou vue porte le même nom que ceux choisis pour les tests (`table_tu_sig_defaut`, `vue_tu_sig_defaut`) mais il vaut mieux rester vigilant.
 
 Pour exécuter les tests, ouvre le fichier API\TU\PowerShell\exécuter.ps1 avec Windows PowerShell ISE et lance l’exécution (touche F5).
 
