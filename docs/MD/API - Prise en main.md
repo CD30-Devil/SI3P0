@@ -183,7 +183,7 @@ Commence donc par récupérer ce "repo" par téléchargement et extraction du Zi
 
 7-Zip est un logiciel libre et gratuit de gestion des fichiers archives. Après installation, tu auras accès à deux versions de l’outil :
 * une version graphique ; pratique au quotidien,
-* une version ligne de commandes ; que tu pourras appeler via l’API SI3P0.
+* une version ligne de commande ; que tu pourras appeler via l’API SI3P0.
 
 Si tu n’es pas en mesure d’installer 7-Zip, l’API propose des fonctions natives pour les fichiers Zip et GZip...ce qui reste malgré tout assez limité.
 
@@ -225,7 +225,7 @@ create schema tmp authorization geotribu;
 
 #### <a name="_314"></a>3.1.4. Ajouter les informations de connexion au PGPASS
 
-L’API SI3P0 utilise le fichier PGPASS (notamment via psql.exe) pour se connecter au serveur PostgreSQL. Il te faut donc y ajouter les paramètres de connexion à la base nouvellement créée. Tu trouveras plus d’information sur ce fichier ici : https://docs.postgresql.fr/13/libpq-pgpass.html
+L’API SI3P0 utilise le fichier PGPASS (notamment via psql.exe) pour se connecter au serveur PostgreSQL. Il te faut donc y ajouter les paramètres de connexion à la base nouvellement créée. Tu trouveras plus d’information sur ce fichier ici : [https://docs.postgresql.fr/13/libpq-pgpass.html](https://docs.postgresql.fr/13/libpq-pgpass.html){:target="_blank"}
 
 ![Fichier PGPASS](../Ressources/API - Prise en main/Fichier PGPASS.png)
 
@@ -787,5 +787,7 @@ Concernant PowerShell, et comme mentionné en pré-requis, c’est une syntaxe q
 Pour rappel, l’API SI3P0 est en licence BSD-3 mais cela ne t'empêche pas de nouveau faire un petit poke via mon compte Twitter @tetranos si tu deviens réutilisateur. Cela nous motivera à consolider et améliorer ces codes sources.
 
 May the force be with you!
+
 Pour la MSI,
+
 Michaël Galien - [@Tetranos](https://twitter.com/tetranos){:target="_blank"}
