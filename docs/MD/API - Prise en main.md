@@ -68,6 +68,30 @@ Table des matières
 
 &nbsp;&nbsp;&nbsp;&nbsp;[3.4.3. Exécution du script](#_343)
 
+&nbsp;&nbsp;[3.5. Etape 5 - Phase Transform : Créer/peupler la structure de données](#_35)
+
+&nbsp;&nbsp;&nbsp;&nbsp;[3.5.1. Principe](#_351)
+
+&nbsp;&nbsp;&nbsp;&nbsp;[3.5.2. Création de la table cible](#_352)
+
+&nbsp;&nbsp;&nbsp;&nbsp;[3.5.3. Script](#_353)
+
+&nbsp;&nbsp;&nbsp;&nbsp;[3.5.4. Exécution du script](#_354)
+
+&nbsp;&nbsp;[3.6. Etape 6 - Géocoder des adresses et exporter le résultat](#_36)
+
+&nbsp;&nbsp;&nbsp;&nbsp;[3.6.1. Principe](#_361)
+
+&nbsp;&nbsp;&nbsp;&nbsp;[3.6.2. Création des fonctions de géocodage](#_362)
+
+&nbsp;&nbsp;&nbsp;&nbsp;[3.6.3. Aperçu](#_363)
+
+&nbsp;&nbsp;&nbsp;&nbsp;[3.6.4. Script](#_364)
+
+&nbsp;&nbsp;&nbsp;&nbsp;[3.6.5. Exécution du script](#_365)
+
+[4. Conclusion](#_4)
+
 ## <a name="_1"></a>1. SI3Pquoi ?
 
 SI3P0 pour Systèmes d’Information 3.0 ; c’est le nom donné au SIg que nous développons à la Mission des Systèmes d’Information (MSI) pour la direction “routes et bâtiments” du Gard. Il fait référence au logo de la collectivité et au code INSEE de notre [chauvin=’on’]magnifique département[chauvin=’off’].
@@ -522,4 +546,245 @@ Remove-Item "$dossierTravailTemp\tuto_si3p0\Load\*" -Recurse -Force
 
 #### <a name="_343"></a>3.4.3. Exécution du script
 
-(en construction)
+Le script enchaîne plusieurs étapes : nettoyage préalable, extraction des archives, création de tables temporaires, import des données et nettoyage final.
+
+Si tout se déroule correctement, tu dois avoir à la fin du script deux tables dans le schéma tmp de la base de tests. Celles-ci contiennent respectivement les lignes des CSV Etalab et DGFIP ; soit dans mon cas plus d’1,5 millions de lignes chacune.
+
+![Count tables Adresse](../Ressources/API - Prise en main/Count tables Adresse.png)
+
+### <a name="_35"></a>3.5. Etape 5 - Phase Transform : Créer/peupler la structure de données
+
+#### <a name="_351"></a>3.5.1. Principe
+
+Avec cette étape de transformation, tu vas peupler une unique table géographique par fusion des données des tables temporaires AdresseEtalab et AdresseDGFIP. Toutes les lignes de la première table seront exploitées alors que seules les adresses fictives seront récupérées depuis les données DGFIP.
+
+#### <a name="_352"></a>3.5.2. Création de la table cible
+
+Préalablement à la rédaction du script, tu dois créer la table cible des données. Puisqu’il s’agit d’une table définitive, celle-ci n’est pas créée dans le schéma tmp. Ci-dessous le script SQL de création.
+
+```sql
+create table adresse (
+    idadresse            SERIAL not null,
+    cogcommune           VARCHAR              not null,
+    numero               INT4                 null,
+    repetition           VARCHAR              null,
+    nomvoie              VARCHAR              null,
+    source               VARCHAR              null,
+    idsource             VARCHAR              null,
+    constraint pkadresse primary key (idadresse)
+);
+
+select AddGeometryColumn('adresse', 'geom', 2154, 'POINT', 2);
+create index adresse_geom_idx on adresse using gist (geom);
+
+create unique index adresse_pk on adresse (
+    idadresse
+);
+
+create index adresse_commune_fk on adresse (
+    cogcommune
+);
+```
+
+#### <a name="_353"></a>3.5.3. Script
+
+Le code du script de transformation qui suit est à sauvegarder dans un nouveau fichier .ps1 et à exécuter depuis Windows Powershell ISE.
+
+```powershell
+# on importe l'API SI3P0
+. ("$PSScriptRoot\..\API\PowerShell\api_complète.ps1")
+ 
+# on crée une variable pour fixer un dossier de sortie des rapports
+$dossierRapports = "$PSScriptRoot\Rapports\Transform"
+ 
+# on réalise un nettoyage préalable en début de script
+# effacement des rapports
+Remove-Item "$dossierRapports\*.txt"
+Remove-Item "$dossierRapports\*.err"
+ 
+# effacement des données de la table
+SIg-Executer-Commande `
+    -commande 'delete from Adresse;' `
+    -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - raz Adresse.txt"
+ 
+SIg-Executer-Commande `
+    -commande "select pg_catalog.setval('adresse_idadresse_seq', 1, false);" `
+    -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - raz séquence Adresse.txt"
+ 
+# remplissage de la table Adresse
+# la fonction SIg-Executer-Commande est présente dans le fichier sig_défaut.ps1
+# elle prend un paramètre obligatoire commande correspondant au SQL à jouer
+# le paramètre sortie est facultatif,
+# il permet de récupérer la sortie standard et erreur de psql qui est lancé par la fonction
+SIg-Executer-Commande `
+    -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - remplissage Adresse.txt" `
+    -commande @'
+-- insertion des adresses Etalab
+insert into Adresse (COGCommune, Numero, Repetition, NomVoie, Source, IdSource, Geom)
+select
+    code_insee,
+    numero::integer,
+    coalesce(rep, ''),
+    nom_voie,
+    '1-Etalab',
+    id,
+    ST_SetSRID(ST_MakePoint(x::numeric, y::numeric), 2154)
+from tmp.AdresseEtalab;
+ 
+-- insertion des adresses "fictives" DGFIP
+insert into Adresse (COGCommune, Numero, Repetition, NomVoie, Source, IdSource, Geom)
+select
+    commune_code,
+    numero::integer,
+    coalesce(suffixe, ''),
+    voie_nom,
+    '2-DGFIP',
+    cle_interop,
+    ST_SetSRID(ST_MakePoint(x::numeric, y::numeric), 2154)
+from tmp.AdresseDGFIP
+where pseudo_numero = 'true';
+'@
+ 
+# on réalise un nettoyage en fin de script
+# effacement des tables temporaires
+SIg-Effacer-Table -table 'tmp.AdresseEtalab' `
+    -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - effacement tmp.AdresseEtalab.txt"
+ 
+SIg-Effacer-Table -table 'tmp.AdresseDGFIP' `
+    -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - effacement tmp.AdresseDGFIP.txt"
+```
+
+#### <a name="_354"></a>3.5.4. Exécution du script
+
+Et voilà, tu n’avais rien et tu es désormais l’heureux SIgiste propriétaire d’une table géographique des adresses. Tu peux facilement l’afficher sous QGis en configurant une nouvelle connexion PostgreSQL/Postgis sur la base de tests.
+
+![BAN QGis](../Ressources/API - Prise en main/BAN QGis.png)
+
+Par ailleurs, tu peux rejouer les scripts chaque fois que tu souhaites avoir des données à jour. Tu peux aussi faire un ultime script PowerShell qui appelle les 3 fichiers que tu viens de créer et automatiser son exécution via une tâche planifiée Windows. Une fonction `Executer-FichierPS` présente dans le fichier fonctions_outils.ps1 devrait t’aider à faire ça.
+
+### <a name="_36"></a>3.6. Etape 6 - Géocoder des adresses et exporter le résultat
+
+#### <a name="_361"></a>3.6.1. Principe
+
+Avoir des données c’est bien, les utiliser c’est mieux. Tu vas avec ce dernier script télécharger une donnée ouverte CSV publié par la CAF, la géocoder et ré-exporter le résultat en GeoJSON.
+
+J’espère juste que le lien vers ladite donnée ouverte ne finira pas en 404 :
+
+[https://www.data.gouv.fr/fr/datasets/adresse-des-etablissements-d-accueil-du-jeune-enfant-percevant/#_](https://www.data.gouv.fr/fr/datasets/adresse-des-etablissements-d-accueil-du-jeune-enfant-percevant/#_)
+
+Pour que l’exécution soit plus rapide, seuls les établissements enregistrés en 2018 sont géocodés. De plus, le géocodage ne pourra retourner de résultats que sur les départements dont la BAN a été téléchargée.
+
+#### <a name="_362"></a>3.6.2. Création des fonctions de géocodage
+
+Pour créer les fonctions de géocodage et géocodage inverse, tu dois jouer deux scripts SQL. Les deux fois, il te faudra ignorer les deux premières lignes car elles permettent de positionner les fonctions dans un schéma spécifique à la structuration de la BDDg du Département du Gard.
+
+Le premier script crée quelques fonctions outils. Il est ici :
+
+[https://github.com/CD30-Devil/SI3P0/blob/main/API/SQL/f.outils%20(create).sql](https://github.com/CD30-Devil/SI3P0/blob/main/API/SQL/f.outils%20(create).sql)
+
+Le second script qui crée les fonctions de géocodage se trouve là :
+
+[https://github.com/CD30-Devil/SI3P0/blob/main/Adresses/SQL/f.adresses%20(create).sql](https://github.com/CD30-Devil/SI3P0/blob/main/Adresses/SQL/f.adresses%20(create).sql)
+
+#### <a name="_363"></a>3.6.3. Aperçu
+
+Le but du script est de géocoder plusieurs adresses, mais avant ça un petit aperçu de géocodage unitaire directement depuis un filtre QGis.
+
+Le filtre appliqué à la table Adresse :
+
+![Filtre QGis géocodage unitaire](../Ressources/API - Prise en main/Filtre QGis géocodage unitaire.png)
+
+Et le résultat correspondant :
+
+![Résultat géocodage unitaire](../Ressources/API - Prise en main/Résultat géocodage unitaire.png)
+
+#### <a name="_364"></a>3.6.4. Script
+
+Tu connais désormais le principe, le code suivant est à copier dans un nouveau script.
+
+```powershell
+# import de l'API SI3P0
+. ("$PSScriptRoot\..\API\PowerShell\api_complète.ps1")
+ 
+# téléchargement de la donnée ouverte
+Telecharger `
+    -url 'https://www.data.gouv.fr/fr/datasets/r/86ed225a-0fbb-4e60-9c5e-dd5db056fc23' `
+    -enregistrerSous "$dossierTravailTemp\caf\EAJE_finances_2018.csv"
+ 
+# modification de l'encodage du fichier
+Changer-Encodage `
+    -fichier "$dossierTravailTemp\caf\EAJE_finances_2018.csv" `
+    -encodageAvant 'iso-8859-1' `
+    -encodageApres 'utf-8'
+ 
+# création d'une table temporaire pour import de la donnée
+# (rappel le SGBDg est vu comme serveur de géotraitement)
+SIg-Creer-Table-Temp -table 'tmp.EAJE' `
+    -colonnes `
+        'ID', `
+        'NUMORG', `
+        'ANNIDEAC', `
+        'NUINDOAC', `
+        'RAISOEEQ', `
+        'NOMEQU', `
+        'NBPLA0A5', `
+        'NUMVOIE', `
+        'TYPVOIE', `
+        'NOMVOIE', `
+        'CODPOST', `
+        'NUMCOM', `
+        'NOMCOM', `
+        'ADRESSE'
+ 
+# import de la donnée
+SIg-Importer-CSV -table 'tmp.EAJE' -csv "$dossierTravailTemp\caf\EAJE_finances_2018.csv"
+ 
+# géocodage avec export en GeoJSON
+SIg-Exporter-GeoJSON `
+    -geoJSON "$PSScriptRoot\eaje.geojson"  `
+    -requete @'
+select
+    e.id,
+    e.raisoeeq,
+    e.nbpla0a5,
+    concat_ws(' ', e.NumVoie, e.TypVoie, e.NomVoie)::varchar as AdrSaisie,
+    concat_ws(' ', a.Numero, a.Repetition, a.NomVoie)::varchar as AdrTrouvee,
+    a.COGCommune,
+    r._pertinence as PertinenceAdrTrouvee,
+    r._differencenumero EcartNumAdrTrouvee,
+    a.Source,
+    a.IdSource,
+    a.Geom
+from
+    tmp.EAJE e,
+    RechercherAdresse(concat_ws(' ', e.NumVoie, e.TypVoie, e.NomVoie)::varchar, e.NumCom::varchar) r,
+    Adresse a
+where e.annideac = '2018'
+and r._IdAdresse = a.IdAdresse
+'@
+ 
+# effacement de la table temporaire
+SIg-Effacer-Table -table 'tmp.EAJE'
+```
+
+#### <a name="_365"></a>3.6.5. Exécution du script
+
+Le résultat d’exécution est un GeoJSON directement utilisable sous QGis.
+
+A noter que, lors de l’appel à RechercherAdresse, le seuil n’a pas été fixé si bien que la fonction recherche jusqu’au niveau de pertinence 6. A ce niveau, l’adresse la plus proche syntaxiquement est renvoyée (utilisation de la fonction Similarity et l'extension pg_trgm) ce qui veut dire que la fonction retourne systématiquement un résultat mais que celui-ci peut être éloigné (à la fois syntaxiquement et géographiquement) de l’adresse renvoyée. Soit donc vigilant avec les résultats ayant ce niveau de pertinence.
+
+![Résultat géocodage](../Ressources/API - Prise en main/Résultat géocodage.png)
+
+## <a name="_4"></a>4. Conclusion
+
+Nous voilà au terme de ce long tutoriel. Tu as pu utiliser l’API SI3P0 sur une base de tests. Il est désormais temps de modifier à nouveau les paramètres pour cibler la base de production et de découvrir les autres fonctions proposées.
+
+Concernant PowerShell, et comme mentionné en pré-requis, c’est une syntaxe qui comme tous les autres langages peut se “dompter”. Tu trouveras pour cela sur le net pas mal de documentation. Personnellement, j’ai appris sur le tas via la documentation Microsoft notamment, mais je vois qu’une recherche de “PowerShell tuto” retourne plusieurs liens dont un qui semble complet ici :
+
+[https://www.it-connect.fr/powershell-pour-les-debutants-1ere-partie/](https://www.it-connect.fr/powershell-pour-les-debutants-1ere-partie/)
+
+Pour rappel, l’API SI3P0 est en licence BSD-3 mais cela ne t'empêche pas de nouveau faire un petit poke via mon compte Twitter @tetranos si tu deviens réutilisateur. Cela nous motivera à consolider et améliorer ces codes sources.
+
+May the force be with you!
+Pour la MSI,
+Michaël Galien - [@Tetranos](https://twitter.com/tetranos)
