@@ -1,6 +1,6 @@
 Salut à toi,
 
-Tu trouveras ci-après différentes ressources pour réutiliser les sources que nous mettons à ta disposition ici.
+Tu trouveras ci-après différentes ressources pour réutiliser le code que nous mettons à ta disposition ici.
 
 ## A propos de la MSI
 

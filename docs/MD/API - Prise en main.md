@@ -6,7 +6,8 @@ Il est illustré par un cas pratique de téléchargement, d’import et d’expl
 
 _NDLR : Le terme API est peut-être mal choisi, le mot “toolkox” serait probablement plus adapté. Vu le nombre de références au dossier qui porte ce nom dans le code, j’avoue être faiblement motivé par l’idée de le renommer._
 
-Pré-requis :
+**Pré-requis :**
+
 * Se dire que PowerShell, c’est comme tout, ça s’apprend.
 * Avoir un SIg basé sur le couple PostgreSQL/Postgis.
 * Avoir un client Windows qui :
@@ -14,81 +15,81 @@ Pré-requis :
     * dispose des outils clients PostgreSQL/Postgis (dont principalement psql.exe),
     * dispose de ogr2ogr.exe.
 
-Table des matières
+**Table des matières**
 
 [1. SI3Pquoi ?](#_1)
 
 [2. Pourquoi une boîte à outils ?](#_2)
 
-&nbsp;&nbsp;[2.1. "Donnez-moi un T !"](#_21)
+&nbsp;&nbsp;&nbsp;&nbsp;[2.1. "Donnez-moi un T !"](#_21)
 
-&nbsp;&nbsp;[2.2. "Donnez- moi un E ! Donnez-moi un L !"](#_22)
+&nbsp;&nbsp;&nbsp;&nbsp;[2.2. "Donnez- moi un E ! Donnez-moi un L !"](#_22)
 
-&nbsp;&nbsp;[2.3. ELT et TEL](#_23)
+&nbsp;&nbsp;&nbsp;&nbsp;[2.3. ELT et TEL](#_23)
 
-&nbsp;&nbsp;[2.4. Quelques mots sur PowerShell](#_24)
+&nbsp;&nbsp;&nbsp;&nbsp;[2.4. Quelques mots sur PowerShell](#_24)
 
 [3. API SI3P0 et BAN](#_3)
 
-&nbsp;&nbsp;[3.1. Etape 1 - Préparer le contexte de travail](#_31)
+&nbsp;&nbsp;&nbsp;&nbsp;[3.1. Etape 1 - Préparer le contexte de travail](#_31)
 
-&nbsp;&nbsp;&nbsp;&nbsp;[3.1.1. Récupérer l’API SI3P0](#_311)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.1.1. Récupérer l’API SI3P0](#_311)
 
-&nbsp;&nbsp;&nbsp;&nbsp;[3.1.2. (Facultatif) Installer 7-Zip](#_312)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.1.2. (Facultatif) Installer 7-Zip](#_312)
 
-&nbsp;&nbsp;&nbsp;&nbsp;[3.1.3. Créer une base de tests](#_313)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.1.3. Créer une base de tests](#_313)
 
-&nbsp;&nbsp;&nbsp;&nbsp;[3.1.4. Ajouter les informations de connexion au PGPASS](#_314)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.1.4. Ajouter les informations de connexion au PGPASS](#_314)
 
-&nbsp;&nbsp;&nbsp;&nbsp;[3.1.5. Modifier le fichier constantes.ps1](#_315)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.1.5. Modifier le fichier constantes.ps1](#_315)
 
-&nbsp;&nbsp;&nbsp;&nbsp;[3.1.6. Modifier le fichier sig_défaut.ps1](#_316)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.1.6. Modifier le fichier sig_défaut.ps1](#_316)
 
-&nbsp;&nbsp;&nbsp;&nbsp;[3.1.7. (Facultatif) Nettoyer le code spécifique au Gard](#_317)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.1.7. (Facultatif) Nettoyer le code spécifique au Gard](#_317)
 
-&nbsp;&nbsp;&nbsp;&nbsp;[3.1.8. Fixer l’ExecutionPolicy](#_318)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.1.8. Fixer l’ExecutionPolicy](#_318)
 
-&nbsp;&nbsp;&nbsp;&nbsp;[3.1.9. Jouer les Tests Unitaires (TU)](#_319)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.1.9. Jouer les Tests Unitaires (TU)](#_319)
 
-&nbsp;&nbsp;[3.2. Etape 2 - Explorer l’API](#_32)
+&nbsp;&nbsp;&nbsp;&nbsp;[3.2. Etape 2 - Explorer l’API](#_32)
 
-&nbsp;&nbsp;[3.3. Etape 3 - Phase Extract : Télécharger les données de la BAN](#_33)
+&nbsp;&nbsp;&nbsp;&nbsp;[3.3. Etape 3 - Phase Extract : Télécharger les données de la BAN](#_33)
 
-&nbsp;&nbsp;&nbsp;&nbsp;[3.3.1. Principe](#_331)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.3.1. Principe](#_331)
 
-&nbsp;&nbsp;&nbsp;&nbsp;[3.3.2. Script](#_332)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.3.2. Script](#_332)
 
-&nbsp;&nbsp;&nbsp;&nbsp;[3.3.3. Exécution du script](#_333)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.3.3. Exécution du script](#_333)
 
-&nbsp;&nbsp;[3.4. Etape 4 - Phase Load : Importer les données BAN dans le SIg](#_34)
+&nbsp;&nbsp;&nbsp;&nbsp;[3.4. Etape 4 - Phase Load : Importer les données BAN dans le SIg](#_34)
 
-&nbsp;&nbsp;&nbsp;&nbsp;[3.4.1. Principe](#_341)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.4.1. Principe](#_341)
 
-&nbsp;&nbsp;&nbsp;&nbsp;[3.4.2. Script](#_342)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.4.2. Script](#_342)
 
-&nbsp;&nbsp;&nbsp;&nbsp;[3.4.3. Exécution du script](#_343)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.4.3. Exécution du script](#_343)
 
-&nbsp;&nbsp;[3.5. Etape 5 - Phase Transform : Créer/peupler la structure de données](#_35)
+&nbsp;&nbsp;&nbsp;&nbsp;[3.5. Etape 5 - Phase Transform : Créer/peupler la structure de données](#_35)
 
-&nbsp;&nbsp;&nbsp;&nbsp;[3.5.1. Principe](#_351)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.5.1. Principe](#_351)
 
-&nbsp;&nbsp;&nbsp;&nbsp;[3.5.2. Création de la table cible](#_352)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.5.2. Création de la table cible](#_352)
 
-&nbsp;&nbsp;&nbsp;&nbsp;[3.5.3. Script](#_353)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.5.3. Script](#_353)
 
-&nbsp;&nbsp;&nbsp;&nbsp;[3.5.4. Exécution du script](#_354)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.5.4. Exécution du script](#_354)
 
-&nbsp;&nbsp;[3.6. Etape 6 - Géocoder des adresses et exporter le résultat](#_36)
+&nbsp;&nbsp;&nbsp;&nbsp;[3.6. Etape 6 - Géocoder des adresses et exporter le résultat](#_36)
 
-&nbsp;&nbsp;&nbsp;&nbsp;[3.6.1. Principe](#_361)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.6.1. Principe](#_361)
 
-&nbsp;&nbsp;&nbsp;&nbsp;[3.6.2. Création des fonctions de géocodage](#_362)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.6.2. Création des fonctions de géocodage](#_362)
 
-&nbsp;&nbsp;&nbsp;&nbsp;[3.6.3. Aperçu](#_363)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.6.3. Aperçu](#_363)
 
-&nbsp;&nbsp;&nbsp;&nbsp;[3.6.4. Script](#_364)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.6.4. Script](#_364)
 
-&nbsp;&nbsp;&nbsp;&nbsp;[3.6.5. Exécution du script](#_365)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.6.5. Exécution du script](#_365)
 
 [4. Conclusion](#_4)
 
@@ -121,7 +122,7 @@ A la MSI nous n’avons pas de budget alloué et notre équipe se compte sur les
 
 L’ETL transforme. Tu peux grâce à lui croiser, filtrer, grouper, sélectionner, adapter (et plein d’autres verbes à l’infinitif) tes données. Mais ceux qui suivent auront noté que dans SGBGg il y a “Gestion” et “Données”. Aussi, il est tout à fait possible de faire faire les transformations au serveur de bases. Le SGBDg n’est plus seulement vu comme la brique de stockage mais aussi comme serveur de (géo)traitements.
 
-Ce principe selon lequel le “code” est placé au niveau du SGBD porte le nom de base épaisse. Ce n’est pas l’objet du tutoriel aussi je t’invite à [lire le “Plaidoyer de Frédéric Brouard” pour en savoir plus](https://www.yumpu.com/fr/document/read/51018012/plaidoyer-de-frederic-brouard-sur-le-concept-de-bases-de-donnees-epaisses). 
+Ce principe selon lequel le “code” est placé au niveau du SGBD porte le nom de base épaisse. Ce n’est pas l’objet du tutoriel aussi je t’invite à [lire le “Plaidoyer de Frédéric Brouard” pour en savoir plus](https://www.yumpu.com/fr/document/read/51018012/plaidoyer-de-frederic-brouard-sur-le-concept-de-bases-de-donnees-epaisses){:target="_blank"}. 
 
 ### <a name="_22"></a>2.2. "Donnez- moi un E ! Donnez-moi un L !"
 
