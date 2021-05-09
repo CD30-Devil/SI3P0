@@ -387,38 +387,33 @@ Dans Windows PowerShell ISE, rédige puis lance le script suivant. Il te faut l�
 # on importe l'API SI3P0
 # la constante $PSScriptRoot permet de définir le chemin relativement au script courant
 . ("$PSScriptRoot\..\API\PowerShell\api_complète.ps1")
- 
+
 # on crée une variable pour fixer le chemin de téléchargement des fichiers
 $dossierDonnees = "$PSScriptRoot\Données"
- 
+
 # on crée un tableau des numéros de départements à télécharger
 $departements = @( '07', '12', '13', '30', '34', '48', '84' )
- 
+
 # on crée un ArrayList (tableau dynamique) que l'on va remplir avec le paramétrage des jobs de téléchargement
 $parametresJobs = [System.Collections.ArrayList]::new()
- 
+
 # on itère sur le tableau des départements pour créer le paramétrage des jobs correspondants
 foreach ($departement in $departements) {
- 
+
     # la fonction Parametrer-Job-Telecharger est issue du fichier jobs_web.ps1
     # elle prend 2 paramètres : l'URL de téléchargement et la cible de l'enregistrement
     # l'objet résultat de l'appel à Parametrer-Job-Telecharger est ajouté à l'ArrayList
     
     # premier ajout, le fichier Etalab du département
-    [void]$parametresJobs.Add((Parametrer-Job-Telecharger `
-        -url "https://adresse.data.gouv.fr/data/ban/adresses/latest/csv/adresses-$departement.csv.gz" `
-        -enregistrerSous "$dossierDonnees\$departement-etalab.csv.gz"))
- 
+    [void]$parametresJobs.Add((Parametrer-Job-Telecharger -url "https://adresse.data.gouv.fr/data/ban/adresses/latest/csv/adresses-$departement.csv.gz" -enregistrerSous "$dossierDonnees\$departement-etalab.csv.gz"))
+    
     # second ajout, le fichier DGFIP du département
-    [void]$parametresJobs.Add((Parametrer-Job-Telecharger `
-        -url "https://adresse.data.gouv.fr/data/adresses-cadastre/latest/csv/adresses-cadastre-$departement.csv.gz" `
-        -enregistrerSous "$dossierDonnees\$departement-dgfip.csv.gz"))
+    [void]$parametresJobs.Add((Parametrer-Job-Telecharger -url "https://adresse.data.gouv.fr/data/adresses-cadastre/latest/csv/adresses-cadastre-$departement.csv.gz" -enregistrerSous "$dossierDonnees\$departement-dgfip.csv.gz"))
 }
 
-# lorsque le paramétrage est terminé,
-# on exécute les jobs grâce à la fonction Executer-Jobs présente dans fonctions_jobs.ps1
+# lorsque le paramétrage est terminé, on exécute les jobs grâce à la fonction Executer-Jobs présente dans fonctions_jobs.ps1
 # par défaut, le nombre de jobs en parallèle est égal au nombre de coeurs de la machine - 1
-Executer-Jobs -parametresJobs $parametresJobs 
+Executer-Jobs -parametresJobs $parametresJobs
 ```
 
 #### <a name="_333"></a>3.3.3. Exécution du script
