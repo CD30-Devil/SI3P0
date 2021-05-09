@@ -468,6 +468,7 @@ foreach ($gz in (Get-ChildItem "$dossierDonnees\*.gz")) {
 # grâce à la fonction SIg-Creer-Table-Temp présente dans sig_défaut.ps1
 # elle prend 2 paramètres obligatoires : le nom (+ facultatif le schéma) de la table et la liste de ses colonnes
 # le paramètre sortie est facultatif, il permet de récupérer la sortie standard et erreur de psql qui est lancé par la fonction
+
 SIg-Creer-Table-Temp -table 'tmp.AdresseEtalab' -colonnes 'id', 'id_fantoir', 'numero', 'rep', 'nom_voie', 'code_postal', 'code_insee', 'nom_commune', 'code_insee_ancienne_commune', 'nom_ancienne_commune', 'x', 'y', 'lon', 'lat', 'alias', 'nom_ld', 'libelle_acheminement', 'nom_afnor', 'source_position', 'source_nom_voie' -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - création tmp.AdresseEtalab.txt"
 
 SIg-Creer-Table-Temp -table 'tmp.AdresseDGFIP' -colonnes 'cle_interop', 'uid_adresse', 'numero', 'suffixe', 'pseudo_numero', 'voie_nom', 'voie_code', 'code_postal', 'libelle_acheminement', 'destination_principale', 'commune_code', 'commune_nom', 'source', 'long', 'lat', 'x', 'y', 'position', 'date_der_maj' -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - création tmp.AdresseDGFIP.txt"
