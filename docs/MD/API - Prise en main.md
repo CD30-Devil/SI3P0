@@ -497,7 +497,7 @@ Remove-Item "$dossierTravailTemp\tuto_si3p0\Load\*" -Recurse -Force
 
 Le script enchaîne plusieurs étapes : nettoyage préalable, extraction des archives, création de tables temporaires, import des données et nettoyage final.
 
-Si tout se déroule correctement, tu dois avoir à la fin du script deux tables dans le schéma tmp de la base de tests. Celles-ci contiennent respectivement les lignes des CSV Etalab et DGFIP ; soit dans mon cas plus d’1,5 millions de lignes chacune.
+Si tout se déroule correctement, tu dois avoir à la fin du script deux tables dans le schéma `tmp` de la base de tests. Celles-ci contiennent respectivement les lignes des CSV Etalab et DGFIP ; soit dans mon cas plus d’1,5 millions de lignes chacune.
 
 ![Count tables Adresse](../Ressources/API - Prise en main/Count tables Adresse.png)
 
@@ -509,7 +509,7 @@ Avec cette étape de transformation, tu vas peupler une unique table géographiq
 
 #### <a name="_352"></a>3.5.2. Création de la table cible
 
-Préalablement à la rédaction du script, tu dois créer la table cible des données. Puisqu’il s’agit d’une table définitive, celle-ci n’est pas créée dans le schéma tmp. Ci-dessous le script SQL de création.
+Préalablement à la rédaction du script, tu dois créer la table cible des données. Puisqu’il s’agit d’une table définitive, celle-ci n’est pas créée dans le schéma `tmp`. Ci-dessous le script SQL de création.
 
 ```sql
 create table adresse (
