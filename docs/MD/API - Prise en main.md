@@ -430,7 +430,7 @@ A l’issue de l’exécution, tu dois avoir à l’emplacement de téléchargem
 
 #### <a name="_341"></a>3.4.1. Principe
 
-Pour la phase Load, il va être question de décompresser et d’importer les fichiers précédemment téléchargés dans deux tables temporaires, une Etalab et une DGFIP. Celles-ci auront la même structure que les fichiers CSV et seront formées uniquement de colonnes de type TEXT.
+Pour la phase Load, il va être question de décompresser et d’importer les fichiers précédemment téléchargés dans deux tables temporaires, une Etalab et une DGFIP. Celles-ci auront la même structure que les fichiers CSV et seront formées uniquement de colonnes de type `TEXT`.
 
 #### <a name="_342"></a>3.4.2. Script
 
@@ -439,103 +439,55 @@ Toujours dans Windows PowerShell ISE, copie-colle le code source ci-dessous dans
 ```powershell
 # on importe l'API SI3P0
 . ("$PSScriptRoot\..\API\PowerShell\api_complète.ps1")
- 
+
 # on crée une variable pour définir le chemin source des fichiers
 $dossierDonnees = "$PSScriptRoot\Données"
- 
+
 # on crée une variable pour fixer un dossier de sortie des rapports
 $dossierRapports = "$PSScriptRoot\Rapports\Load"
- 
+
 # on réalise un nettoyage préalable en début de script
 # effacement des rapports
 Remove-Item "$dossierRapports\*.txt"
 Remove-Item "$dossierRapports\*.err"
- 
+
 # effacement des fichiers temporaires
 Remove-Item "$dossierTravailTemp\tuto_si3p0\Load\*" -Recurse -Force
- 
+
 # effacement des tables temporaires
-SIg-Effacer-Table -table 'tmp.AdresseEtalab' `
-    -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - effacement tmp.AdresseEtalab.txt"
- 
-SIg-Effacer-Table -table 'tmp.AdresseDGFIP' `
-    -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - effacement tmp.AdresseDGFIP.txt"
- 
+SIg-Effacer-Table -table 'tmp.AdresseEtalab' -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - effacement tmp.AdresseEtalab.txt"
+
+SIg-Effacer-Table -table 'tmp.AdresseDGFIP' -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - effacement tmp.AdresseDGFIP.txt"
+
 # on itère sur les fichiers .gz pour les décompresser dans le dossier de travail temporaire défini dans constantes.ps1
 foreach ($gz in (Get-ChildItem "$dossierDonnees\*.gz")) {
     DeGZipper -archive $gz -extraireVers "$dossierTravailTemp\tuto_si3p0\Load\"
 }
- 
+
 # on crée les 2 tables temporaires pour l'import des CSV
 # grâce à la fonction SIg-Creer-Table-Temp présente dans sig_défaut.ps1
 # elle prend 2 paramètres obligatoires : le nom (+ facultatif le schéma) de la table et la liste de ses colonnes
-# le paramètre sortie est facultatif,
-# il permet de récupérer la sortie standard et erreur de psql qui est lancé par la fonction
-SIg-Creer-Table-Temp `
-    -table 'tmp.AdresseEtalab' `
-    -colonnes `
-        'id', `
-        'id_fantoir', `
-        'numero', `
-        'rep', `
-        'nom_voie', `
-        'code_postal', `
-        'code_insee', `
-        'nom_commune', `
-        'code_insee_ancienne_commune', `
-        'nom_ancienne_commune', `
-        'x', `
-        'y', `
-        'lon', `
-        'lat', `
-        'alias', `
-         'nom_ld', `
-         'libelle_acheminement', `
-         'nom_afnor', `
-         'source_position', `
-         'source_nom_voie' `
-    -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - création tmp.AdresseEtalab.txt"
- 
-SIg-Creer-Table-Temp `
-    -table 'tmp.AdresseDGFIP' `
-    -colonnes `
-        'cle_interop', `
-        'uid_adresse', `
-        'numero', `
-        'suffixe', `
-        'pseudo_numero', `
-        'voie_nom', `
-        'voie_code', `
-        'code_postal', `
-        'libelle_acheminement', `
-        'destination_principale', `
-        'commune_code', `
-        'commune_nom', `
-        'source', `
-        'long', `
-        'lat', `
-        'x', `
-        'y', `
-        'position', `
-        'date_der_maj' `
-    -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - création tmp.AdresseDGFIP.txt"
- 
+# le paramètre sortie est facultatif, il permet de récupérer la sortie standard et erreur de psql qui est lancé par la fonction
+SIg-Creer-Table-Temp -table 'tmp.AdresseEtalab' -colonnes 'id', 'id_fantoir', 'numero', 'rep', 'nom_voie', 'code_postal', 'code_insee', 'nom_commune', 'code_insee_ancienne_commune', 'nom_ancienne_commune', 'x', 'y', 'lon', 'lat', 'alias', 'nom_ld', 'libelle_acheminement', 'nom_afnor', 'source_position', 'source_nom_voie' -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - création tmp.AdresseEtalab.txt"
+
+SIg-Creer-Table-Temp -table 'tmp.AdresseDGFIP' -colonnes 'cle_interop', 'uid_adresse', 'numero', 'suffixe', 'pseudo_numero', 'voie_nom', 'voie_code', 'code_postal', 'libelle_acheminement', 'destination_principale', 'commune_code', 'commune_nom', 'source', 'long', 'lat', 'x', 'y', 'position', 'date_der_maj' -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - création tmp.AdresseDGFIP.txt"
+
 # on crée un ArrayList (tableau dynamique) que l'on va remplir avec le paramétrage des jobs d'import
 $parametresJobs = [System.Collections.ArrayList]::new()
- 
+
 foreach ($csvEtalab in (Get-ChildItem "$dossierTravailTemp\tuto_si3p0\Load\*-etalab.csv")) {
     # la fonction Parametrer-Job-SIG-Importer-CSV est également issue du fichier sig_défaut.ps1
     # elle prend 2 paramètres obligatoires : la table cible et le CSV à importer
     [void]$parametresJobs.Add((Parametrer-Job-SIG-Importer-CSV -table 'tmp.AdresseEtalab' -csv $csvEtalab))
 }
- 
+
 foreach ($csvDGFIP in (Get-ChildItem "$dossierTravailTemp\tuto_si3p0\Load\*-dgfip.csv")) {
     [void]$parametresJobs.Add((Parametrer-Job-SIG-Importer-CSV -table 'tmp.AdresseDGFIP' -csv $csvDGFIP))
 }
- 
+
 # on exécute les jobs en demandant de lancer un nombre de processus égal au nombre de coeurs du serveur / 2
 Executer-Jobs -parametresJobs $parametresJobs -nombreJobs $($sigNbCoeurs / 2)
- 
+
 # on réalise un nettoyage en fin de script
 Remove-Item "$dossierTravailTemp\tuto_si3p0\Load\*" -Recurse -Force
 ```
