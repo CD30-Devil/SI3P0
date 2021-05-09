@@ -647,44 +647,22 @@ Tu connais désormais le principe, le code suivant est à copier dans un nouveau
 ```powershell
 # import de l'API SI3P0
 . ("$PSScriptRoot\..\API\PowerShell\api_complète.ps1")
- 
+
 # téléchargement de la donnée ouverte
-Telecharger `
-    -url 'https://www.data.gouv.fr/fr/datasets/r/86ed225a-0fbb-4e60-9c5e-dd5db056fc23' `
-    -enregistrerSous "$dossierTravailTemp\caf\EAJE_finances_2018.csv"
- 
+Telecharger -url 'https://www.data.gouv.fr/fr/datasets/r/86ed225a-0fbb-4e60-9c5e-dd5db056fc23' -enregistrerSous "$dossierTravailTemp\caf\EAJE_finances_2018.csv"
+
 # modification de l'encodage du fichier
-Changer-Encodage `
-    -fichier "$dossierTravailTemp\caf\EAJE_finances_2018.csv" `
-    -encodageAvant 'iso-8859-1' `
-    -encodageApres 'utf-8'
- 
+Changer-Encodage -fichier "$dossierTravailTemp\caf\EAJE_finances_2018.csv" -encodageAvant 'iso-8859-1' -encodageApres 'utf-8'
+
 # création d'une table temporaire pour import de la donnée
 # (rappel le SGBDg est vu comme serveur de géotraitement)
-SIg-Creer-Table-Temp -table 'tmp.EAJE' `
-    -colonnes `
-        'ID', `
-        'NUMORG', `
-        'ANNIDEAC', `
-        'NUINDOAC', `
-        'RAISOEEQ', `
-        'NOMEQU', `
-        'NBPLA0A5', `
-        'NUMVOIE', `
-        'TYPVOIE', `
-        'NOMVOIE', `
-        'CODPOST', `
-        'NUMCOM', `
-        'NOMCOM', `
-        'ADRESSE'
- 
+SIg-Creer-Table-Temp -table 'tmp.EAJE' -colonnes 'ID', 'NUMORG', 'ANNIDEAC', 'NUINDOAC', 'RAISOEEQ', 'NOMEQU', 'NBPLA0A5', 'NUMVOIE', 'TYPVOIE', 'NOMVOIE', 'CODPOST', 'NUMCOM', 'NOMCOM', 'ADRESSE'
+
 # import de la donnée
 SIg-Importer-CSV -table 'tmp.EAJE' -csv "$dossierTravailTemp\caf\EAJE_finances_2018.csv"
- 
+
 # géocodage avec export en GeoJSON
-SIg-Exporter-GeoJSON `
-    -geoJSON "$PSScriptRoot\eaje.geojson"  `
-    -requete @'
+SIg-Exporter-GeoJSON -geoJSON "$PSScriptRoot\eaje.geojson" -requete @'
 select
     e.id,
     e.raisoeeq,
@@ -704,7 +682,7 @@ from
 where e.annideac = '2018'
 and r._IdAdresse = a.IdAdresse
 '@
- 
+
 # effacement de la table temporaire
 SIg-Effacer-Table -table 'tmp.EAJE'
 ```
@@ -713,7 +691,7 @@ SIg-Effacer-Table -table 'tmp.EAJE'
 
 Le résultat d’exécution est un GeoJSON directement utilisable sous QGis.
 
-A noter que, lors de l’appel à RechercherAdresse, le seuil n’a pas été fixé si bien que la fonction recherche jusqu’au niveau de pertinence 6. A ce niveau, l’adresse la plus proche syntaxiquement est renvoyée (utilisation de la fonction Similarity et l'extension pg_trgm) ce qui veut dire que la fonction retourne systématiquement un résultat mais que celui-ci peut être éloigné (à la fois syntaxiquement et géographiquement) de l’adresse renvoyée. Soit donc vigilant avec les résultats ayant ce niveau de pertinence.
+A noter que, lors de l’appel à `RechercherAdresse`, le seuil n’a pas été fixé si bien que la fonction recherche jusqu’au niveau de pertinence 6. A ce niveau, l’adresse la plus proche syntaxiquement est renvoyée (utilisation de la fonction `Similarity` et l'extension `pg_trgm`) ce qui veut dire que la fonction retourne systématiquement un résultat mais que celui-ci peut être éloigné (à la fois syntaxiquement et géographiquement) de l’adresse renvoyée. Soit donc vigilant avec les résultats ayant ce niveau de pertinence.
 
 ![Résultat géocodage](../Ressources/API - Prise en main/Résultat géocodage.png)
 
