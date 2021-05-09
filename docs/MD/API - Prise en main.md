@@ -542,32 +542,26 @@ Le code du script de transformation qui suit est à sauvegarder dans un nouveau 
 ```powershell
 # on importe l'API SI3P0
 . ("$PSScriptRoot\..\API\PowerShell\api_complète.ps1")
- 
+
 # on crée une variable pour fixer un dossier de sortie des rapports
 $dossierRapports = "$PSScriptRoot\Rapports\Transform"
- 
+
 # on réalise un nettoyage préalable en début de script
 # effacement des rapports
 Remove-Item "$dossierRapports\*.txt"
 Remove-Item "$dossierRapports\*.err"
- 
+
 # effacement des données de la table
-SIg-Executer-Commande `
-    -commande 'delete from Adresse;' `
-    -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - raz Adresse.txt"
- 
-SIg-Executer-Commande `
-    -commande "select pg_catalog.setval('adresse_idadresse_seq', 1, false);" `
-    -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - raz séquence Adresse.txt"
- 
+SIg-Executer-Commande -commande 'delete from Adresse;' -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - raz Adresse.txt"
+
+SIg-Executer-Commande -commande "select pg_catalog.setval('adresse_idadresse_seq', 1, false);" -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - raz séquence Adresse.txt"
+
 # remplissage de la table Adresse
 # la fonction SIg-Executer-Commande est présente dans le fichier sig_défaut.ps1
 # elle prend un paramètre obligatoire commande correspondant au SQL à jouer
-# le paramètre sortie est facultatif,
-# il permet de récupérer la sortie standard et erreur de psql qui est lancé par la fonction
-SIg-Executer-Commande `
-    -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - remplissage Adresse.txt" `
-    -commande @'
+# le paramètre sortie est facultatif, il permet de récupérer la sortie standard et erreur de psql qui est lancé par la fonction
+
+SIg-Executer-Commande -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - remplissage Adresse.txt" -commande @'
 -- insertion des adresses Etalab
 insert into Adresse (COGCommune, Numero, Repetition, NomVoie, Source, IdSource, Geom)
 select
@@ -579,7 +573,7 @@ select
     id,
     ST_SetSRID(ST_MakePoint(x::numeric, y::numeric), 2154)
 from tmp.AdresseEtalab;
- 
+
 -- insertion des adresses "fictives" DGFIP
 insert into Adresse (COGCommune, Numero, Repetition, NomVoie, Source, IdSource, Geom)
 select
@@ -593,14 +587,13 @@ select
 from tmp.AdresseDGFIP
 where pseudo_numero = 'true';
 '@
- 
+
 # on réalise un nettoyage en fin de script
 # effacement des tables temporaires
-SIg-Effacer-Table -table 'tmp.AdresseEtalab' `
-    -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - effacement tmp.AdresseEtalab.txt"
+
+SIg-Effacer-Table -table 'tmp.AdresseEtalab' -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - effacement tmp.AdresseEtalab.txt"
  
-SIg-Effacer-Table -table 'tmp.AdresseDGFIP' `
-    -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - effacement tmp.AdresseDGFIP.txt"
+SIg-Effacer-Table -table 'tmp.AdresseDGFIP' -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - effacement tmp.AdresseDGFIP.txt"
 ```
 
 #### <a name="_354"></a>3.5.4. Exécution du script
