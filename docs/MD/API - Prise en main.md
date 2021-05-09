@@ -505,7 +505,7 @@ Si tout se déroule correctement, tu dois avoir à la fin du script deux tables 
 
 #### <a name="_351"></a>3.5.1. Principe
 
-Avec cette étape de transformation, tu vas peupler une unique table géographique par fusion des données des tables temporaires AdresseEtalab et AdresseDGFIP. Toutes les lignes de la première table seront exploitées alors que seules les adresses fictives seront récupérées depuis les données DGFIP.
+Avec cette étape de transformation, tu vas peupler une unique table géographique par fusion des données des tables temporaires `AdresseEtalab` et `AdresseDGFIP`. Toutes les lignes de la première table seront exploitées alors que seules les adresses fictives seront récupérées depuis les données DGFIP.
 
 #### <a name="_352"></a>3.5.2. Création de la table cible
 
