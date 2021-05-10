@@ -705,7 +705,7 @@ Concernant PowerShell, et comme mentionné en pré-requis, c’est une syntaxe q
 
 [https://www.it-connect.fr/powershell-pour-les-debutants-1ere-partie/](https://www.it-connect.fr/powershell-pour-les-debutants-1ere-partie/){:target="_blank"}
 
-Pour rappel, l’API SI3P0 est en licence BSD-3 mais cela ne t'empêche pas de nouveau faire un petit poke via mon compte Twitter [@Tetranos](https://twitter.com/tetranos){:target="_blank"} si tu deviens réutilisateur. Cela nous motivera à consolider et améliorer ces codes sources.
+Pour rappel, l’API SI3P0 est en licence BSD-3 mais cela ne t'empêche pas de nous faire un petit "poke" via mon compte Twitter [@Tetranos](https://twitter.com/tetranos){:target="_blank"} si tu deviens réutilisateur. Cela nous motivera à consolider et améliorer ces codes sources.
 
 
 Pour la MSI,
