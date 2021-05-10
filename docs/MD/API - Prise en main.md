@@ -1,6 +1,6 @@
 # Tutoriel : Prendre en main l’API PowerShell SI3P0.
 
-Ce tutoriel montre comment l’API PowerShell SI3P0 peut permettre l’automatisation de traitements de données en lien avec un SIg construit sur PostgreSQL/Postgis.
+Ce tutoriel montre comment l’API PowerShell SI3P0 peut permettre l’automatisation de traitement de données en lien avec un SIg construit sur PostgreSQL/Postgis.
 
 Il est illustré par un cas pratique de téléchargement, d’import et d’exploitation des données de la Base Adresse Nationale.
 
@@ -120,9 +120,9 @@ A la MSI nous n’avons pas de budget alloué et notre équipe se compte sur les
 
 ### <a name="_21"></a>2.1. "Donnez-moi un T !"
 
-L’ETL transforme. Tu peux grâce à lui croiser, filtrer, grouper, sélectionner, adapter (et plein d’autres verbes à l’infinitif) tes données. Mais ceux qui suivent auront noté que dans SGBGg il y a "Gestion" et "Données". Aussi, il est tout à fait possible de faire faire les transformations au serveur de bases. Le SGBDg n’est plus seulement vu comme la brique de stockage mais aussi comme serveur de (géo)traitements.
+L’ETL transforme. Tu peux grâce à lui croiser, filtrer, grouper, sélectionner, adapter (et plein d’autres verbes à l’infinitif) tes données. Mais ceux qui suivent auront noté que dans SGBGg il y a "Gestion" et "Données". Aussi, il est tout à fait possible de faire faire les transformations au serveur de bases. Le SGBDg n’est plus seulement vu comme la brique de stockage mais aussi comme serveur de (géo)traitement.
 
-Ce principe selon lequel le "code" est placé au niveau du SGBD porte le nom de base épaisse. Ce n’est pas l’objet du tutoriel aussi je t’invite à [lire le "Plaidoyer de Frédéric Brouard" pour en savoir plus](https://www.yumpu.com/fr/document/read/51018012/plaidoyer-de-frederic-brouard-sur-le-concept-de-bases-de-donnees-epaisses){:target="_blank"}. 
+Ce principe selon lequel le "code" est placé au niveau du SGBD porte le nom de base épaisse. Ce n’est pas l’objet du tutoriel, aussi je t’invite à [lire le "Plaidoyer de Frédéric Brouard" pour en savoir plus](https://www.yumpu.com/fr/document/read/51018012/plaidoyer-de-frederic-brouard-sur-le-concept-de-bases-de-donnees-epaisses){:target="_blank"}. 
 
 ### <a name="_22"></a>2.2. "Donnez- moi un E ! Donnez-moi un L !"
 
@@ -153,7 +153,7 @@ Ce langage de script propose de nombreuses cmdlet (prononcer commandlette) pour 
 
 Si malgré tout, tu ne trouves pas la cmdlet qu’il te faut, tu pourras créer tes propres fonctions et profiter de la richesse du Framework .NET sur lequel PowerShell s’appuie.
 
-Comme PowerShell est inclus à Windows, même si tu n’as pas de droits administrateurs dans ton contexte professionnel, il est probable que tu ais accès à :
+Comme PowerShell est inclus à Windows, même si tu n’as pas de droits administrateurs dans ton contexte professionnel, il est probable que tu aies accès à :
 * Windows PowerShell (powershell.exe) : l’interface ligne de commande,
 * Windows PowerShell ISE (powershell_ise.exe) : un éditeur de scripts simple mais complet puisqu’il permet l’exécution pas à pas et le debug.
 
@@ -161,9 +161,9 @@ Comme PowerShell est inclus à Windows, même si tu n’as pas de droits adminis
 
 ## <a name="_3"></a>3. API SI3P0 et BAN
 
-L’API Adresse disponible sur Etalab propose la point d’entrée `/search/` pour le géocodage. Lorsque le numéro est introuvable, un point au centre de la rue (type street) est retourné.
+L’API Adresse disponible sur Etalab propose le point d’entrée `/search/` pour le géocodage. Lorsque le numéro est introuvable, un point au centre de la rue (type street) est retourné.
 
-Dans notre cas, si le numéro est absent, nous souhaitons que le numéro le plus proche soit retourné. Nous avons pour cela automatisé le téléchargement et l’import des données de la BAN dans le SIg et avons développé une fonction PL/pgSQL de géocodage. Celle-ci est moins souple/puissante que la version Etalab et ne se base que sur les adresses présentent dans le SIg, mais elle est suffisante pour nos besoins.
+Dans notre cas, si le numéro est absent, nous souhaitons que le numéro le plus proche soit retourné. Nous avons pour cela automatisé le téléchargement et l’import des données de la BAN dans le SIg et avons développé une fonction PL/pgSQL de géocodage. Celle-ci est moins souple/puissante que la version Etalab et ne se base que sur les adresses présentes dans le SIg, mais elle est suffisante pour nos besoins.
 
 Le tutoriel qui suit s’appuie sur ce cas d’usage.
 
@@ -175,15 +175,15 @@ _"Nombreuses les étapes préparatoires sont, de patience t’armer tu dois"_. I
 
 L’API SI3P0, ainsi que le code propre à certains de nos cas d’usages, sont disponibles sous licence BSD-3 à l’emplacement suivant : [https://github.com/CD30-Devil/SI3P0](https://github.com/CD30-Devil/SI3P0){:target="_blank"}
 
-Le sous-dossier API est suffisant mais les autres répertoires peuvent à minima servir d’exemple voire être réutilisables moyennant quelques adaptations (notamment pour les collègues territoriaux qui travaillent sur des thématiques équivalentes aux nôtres).
+Le sous-dossier API est suffisant mais les autres répertoires peuvent a minima servir d’exemple voire être réutilisables moyennant quelques adaptations (notamment pour les collègues territoriaux qui travaillent sur des thématiques équivalentes aux nôtres).
 
 Commence donc par récupérer ce "repo" par téléchargement et extraction du Zip ou en créant un fork du projet.
 
 #### <a name="_312"></a>3.1.2. (Facultatif) Installer 7-Zip
 
 7-Zip est un logiciel libre et gratuit de gestion des fichiers archives. Après installation, tu auras accès à deux versions de l’outil :
-* une version graphique ; pratique au quotidien,
-* une version ligne de commande ; que tu pourras appeler via l’API SI3P0.
+* une version graphique, pratique au quotidien,
+* une version ligne de commande, que tu pourras appeler via l’API SI3P0.
 
 Si tu n’es pas en mesure d’installer 7-Zip, l’API propose des fonctions natives pour les fichiers Zip et GZip...ce qui reste malgré tout assez limité.
 
@@ -225,7 +225,7 @@ create schema tmp authorization r2d2;
 
 #### <a name="_314"></a>3.1.4. Ajouter les informations de connexion au PGPASS
 
-L’API SI3P0 utilise le fichier PGPASS (notamment via psql.exe) pour se connecter au serveur PostgreSQL. Il te faut donc y ajouter les paramètres de connexion à la base nouvellement créée. Tu trouveras plus d’information sur ce fichier ici : [https://docs.postgresql.fr/13/libpq-pgpass.html](https://docs.postgresql.fr/13/libpq-pgpass.html){:target="_blank"}
+L’API SI3P0 utilise le fichier PGPASS (notamment via psql.exe) pour se connecter au serveur PostgreSQL. Il te faut donc y ajouter les paramètres de connexion à la base nouvellement créée. Tu trouveras plus d’informations sur ce fichier ici : [https://docs.postgresql.fr/13/libpq-pgpass.html](https://docs.postgresql.fr/13/libpq-pgpass.html){:target="_blank"}
 
 ![Fichier PGPASS](../Ressources/API - Prise en main/Fichier PGPASS.png)
 
@@ -235,7 +235,7 @@ Le fichier API\PowerShell\constantes.ps1 fixe plusieurs paramètres utiles à l�
 
 Après ouverture de ce fichier dans Windows PowerShell ISE, tu dois modifier les éléments placés entre chevrons :
 
-* `&racinePostgreSQL` et `&racineOSGeo4W` : Ces racines sont utilisées dans les constantes qui suivent, aussi, si ton contexte de travail le nécessite, tu peux également modifier les chemins dans la suite du fichier pour pointer vers les bons emplacements des différents outils.
+* `&racinePostgreSQL` et `&racineOSGeo4W` : Ces racines sont utilisées dans les constantes qui suivent. Aussi, si ton contexte de travail le nécessite, tu peux également modifier les chemins dans la suite du fichier pour pointer vers les bons emplacements des différents outils.
 
 * `$racineOracle` : Tu n’as pas de client Oracle sur ton poste ? Pas de panique. En fait, ce chemin sert seulement si tu dois extraire des données depuis une base Oracle. Tu peux donc le laisser tel quel si ce n’est pas ton cas.
 
@@ -307,7 +307,7 @@ En l’état, rien ne nous empêche de continuer le tuto en utilisant uniquement
 
 ### <a name="_32"></a>3.2. Etape 2 - Explorer l’API
 
-Le résultat des TU que tu viens de jouer te donne un petit aperçu des fonctions proposées. Cela dit, cela peut-être le bon moment pour regarder d’un peu plus près ce qu’il y a sous le capot. Tu trouveras ci-dessous un bref descriptif de chaque fichier.
+Le résultat des TU que tu viens de jouer te donne un petit aperçu des fonctions proposées. Cela dit, cela peut être le bon moment pour regarder d’un peu plus près ce qu’il y a sous le capot. Tu trouveras ci-dessous un bref descriptif de chaque fichier.
 
 **api_complète.ps1**
 
@@ -327,7 +327,9 @@ Pour l’instant, il n’y a là qu’une fonction pour changer l’encodage d�
 
 **fonctions_excel.ps1**
 
-Excel ? Mais si tu vois, le tableur de Microsoft. Ce fichier propose deux fonctions de conversion de XLS/XLSX en CSV, une qui s'appuie sur Excel via du pilotage OleAutomation et une autre qui utilise un driver OleDB.
+Si aucune des données que tu manipules ne se trouve dans Excel alors tu n'auras pas besoin de ce fichier qui propose deux fonctions de conversion de XLS/XLSX en CSV :
+* une qui s'appuie sur Excel via du pilotage OleAutomation
+* une autre qui utilise un driver OleDB.
 
 **fonctions_géodonnées.ps1**
 
@@ -351,7 +353,7 @@ Pratique pour l’import/export de GeoJSON et SHP vers/depuis une base PostgreSQ
 
 **fonctions_postgresql.ps1**
 
-Et bien je crois que c’est clair non ? Tu trouveras dans ce fichier ce qu’il faut pour exploiter une base PostgreSQL.
+Et bien je crois que c’est clair, non ? Tu trouveras dans ce fichier ce qu’il faut pour exploiter une base PostgreSQL.
 
 **fonctions_web.ps1**
 
@@ -608,7 +610,7 @@ Par ailleurs, tu peux rejouer les scripts chaque fois que tu souhaites avoir des
 
 #### <a name="_361"></a>3.6.1. Principe
 
-Avoir des données c’est bien, les utiliser c’est mieux. Tu vas avec ce dernier script télécharger une donnée ouverte CSV publié par la CAF, la géocoder et ré-exporter le résultat en GeoJSON.
+Avoir des données c’est bien, les utiliser c’est mieux. Tu vas, avec ce dernier script, télécharger une donnée ouverte CSV publiée par la CAF, la géocoder et ré-exporter le résultat en GeoJSON.
 
 J’espère juste que le lien vers ladite donnée ouverte ne finira pas en 404 :
 
@@ -691,7 +693,7 @@ SIg-Effacer-Table -table 'tmp.EAJE'
 
 Le résultat d’exécution est un GeoJSON directement utilisable sous QGis.
 
-A noter que, lors de l’appel à `RechercherAdresse`, le seuil n’a pas été fixé si bien que la fonction recherche jusqu’au niveau de pertinence 6. A ce niveau, l’adresse la plus proche syntaxiquement est renvoyée (utilisation de la fonction `Similarity` et l'extension `pg_trgm`) ce qui veut dire que la fonction retourne systématiquement un résultat mais que celui-ci peut être éloigné (à la fois syntaxiquement et géographiquement) de l’adresse renvoyée. Soit donc vigilant avec les résultats ayant ce niveau de pertinence.
+A noter que, lors de l’appel à `RechercherAdresse`, le seuil n’a pas été fixé si bien que la fonction recherche jusqu’au niveau de pertinence 6. A ce niveau, l’adresse la plus proche syntaxiquement est renvoyée (utilisation de la fonction `Similarity` et l'extension `pg_trgm`) ce qui veut dire que la fonction retourne systématiquement un résultat mais que celui-ci peut être éloigné (à la fois syntaxiquement et géographiquement) de l’adresse renvoyée. Sois donc vigilant avec les résultats ayant ce niveau de pertinence.
 
 ![Résultat géocodage](../Ressources/API - Prise en main/Résultat géocodage.png)
 
