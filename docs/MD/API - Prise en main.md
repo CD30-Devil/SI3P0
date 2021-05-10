@@ -436,7 +436,7 @@ Pour la phase Load, il va être question de décompresser et d’importer les fi
 
 #### <a name="_342"></a>3.4.2. Script
 
-Toujours dans Windows PowerShell ISE, copie-colle le code source ci-dessous dans un nouveau script et sauvegarde le à côté du précédent. Ensuite, lance le grâce à la touche F5.
+Toujours dans Windows PowerShell ISE, copie-colle le code source ci-dessous dans un nouveau script et sauvegarde-le à côté du précédent. Ensuite, lance-le grâce à la touche F5.
 
 ```powershell
 # on importe l'API SI3P0
