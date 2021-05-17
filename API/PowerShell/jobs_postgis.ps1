@@ -444,6 +444,108 @@ function Parametrer-Job-Exporter-SHP-Postgis {
 }
 
 # -----------------------------------------------------------------------------
+# Job d'export d'un GPX (par appel à Ogr2Ogr).
+#
+# Format attendu de $parametres :
+# .racineAPI : Le chemin vers le dossier racine de l'API PowerShell.
+# .serveur : Le serveur de base de données.
+# .port : Le port du serveur de base de données.
+# .bdd : Le nom de la base de données.
+# .utilisateur : L'utilisateur pour la connexion à la base de données.
+# .mdp : Le mot de passe pour la connexion à la base de données, $null pour
+#        lire le mot de passe depuis le pgpass.conf.
+# .requete : La requête SQL source de l'export.
+# .gpx : Le GPX d'export.
+# .sridSource : Le SRID source.
+# .autresParams : Les paramètres d'appel supplémentaires à Ogr2Ogr.
+# .sortie : Chemin de redirection de la sortie standard, $null pour ne pas
+#           activer la redirection.
+# .erreur : Pour demander, lorsque la redirection de la sortie standard est
+#           activée, la redirection de la sortie erreur. Le fichier de sortie
+#           porte le même nom que celui de la sortie standard avec ajout de
+#           l'extension .err.
+# .priorite : La priorité donnée au processus.
+# -----------------------------------------------------------------------------
+$Job_Exporter_GPX_Postgis = {
+    param (
+        [object] $parametres
+    )
+
+    . ("$($parametres.racineAPI)\fonctions_postgis.ps1")
+
+    Exporter-GPX-Postgis `
+        -serveur $parametres.serveur `
+        -port $parametres.port `
+        -bdd $parametres.bdd `
+        -utilisateur $parametres.utilisateur `
+        -mdp $parametres.mdp `
+        -requete $parametres.requete `
+        -gpx $parametres.gpx `
+        -sridSource $parametres.sridSource `
+        -autresParams $parametres.autresParams `
+        -sortie $parametres.sortie `
+        -erreur $parametres.erreur `
+        -priorite $parametres.priorite
+}
+
+# -----------------------------------------------------------------------------
+# Paramétrage d'un job d'export d'un GPX (par appel à Ogr2Ogr).
+#
+# $racineAPI : Le chemin vers le dossier racine de l'API PowerShell.
+# $serveur : Le serveur de base de données.
+# $port : Le port du serveur de base de données.
+# $bdd : Le nom de la base de données.
+# $utilisateur : L'utilisateur pour la connexion à la base de données.
+# $mdp : Le mot de passe pour la connexion à la base de données, $null pour
+#        lire le mot de passe depuis le pgpass.conf.
+# $requete : La requête SQL source de l'export.
+# $gpx : Le GPX d'export.
+# $sridSource : Le SRID source.
+# $autresParams : Les paramètres d'appel supplémentaires à Ogr2Ogr.
+# $sortie : Chemin de redirection de la sortie standard, $null pour ne pas
+#           activer la redirection.
+# $erreur : Pour demander, lorsque la redirection de la sortie standard est
+#           activée, la redirection de la sortie erreur. Le fichier de sortie
+#           porte le même nom que celui de la sortie standard avec ajout de
+#           l'extension .err.
+# $priorite : La priorité donnée au processus.
+# -----------------------------------------------------------------------------
+function Parametrer-Job-Exporter-GPX-Postgis {
+    param (
+        [string] $racineAPI = $PSScriptRoot,
+        [parameter(Mandatory=$true)] [string] $serveur,
+        [string] $port = '5432',
+        [parameter(Mandatory=$true)] [string] $bdd,
+        [parameter(Mandatory=$true)] [string] $utilisateur,
+        [string] $mdp = $null,
+        [parameter(Mandatory=$true)] [string] $requete,
+        [parameter(Mandatory=$true)] [string] $gpx,
+        [string] $sridSource = $sridDefaut,
+        [string[]] $autresParams = @('-nlt MULTILINESTRING', '-dsco GPX_USE_EXTENSIONS=YES'),
+        [string] $sortie = $null,
+        [bool] $erreur = $true,
+        [System.Diagnostics.ProcessPriorityClass] $priorite = [System.Diagnostics.ProcessPriorityClass]::Normal
+    )
+
+    @{
+        script = $Job_Exporter_GPX_Postgis
+        racineAPI = $racineAPI
+        serveur = $serveur
+        port = $port
+        bdd = $bdd
+        utilisateur = $utilisateur
+        mdp = $mdp
+        requete = $requete
+        gpx = $gpx
+        sridSource = $sridSource
+        autresParams = $autresParams
+        sortie = $sortie
+        erreur = $erreur
+        priorite = $priorite
+    }
+}
+
+# -----------------------------------------------------------------------------
 # Job d'export d'un DXF (par appel à Ogr2Ogr).
 #
 # Format attendu de $parametres :

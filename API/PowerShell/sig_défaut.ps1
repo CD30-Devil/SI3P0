@@ -517,6 +517,60 @@ function SIg-Exporter-SHP {
 }
 
 # -----------------------------------------------------------------------------
+# Export d'un GPX (par appel à Ogr2Ogr).
+# Les valeurs pré-établies des paramètres font que le SIg par défaut est
+# utilisé comme source.
+#
+# $serveur : Le serveur de base de données.
+# $port : Le port du serveur de base de données.
+# $bdd : Le nom de la base de données.
+# $utilisateur : L'utilisateur pour la connexion à la base de données.
+# $mdp : Le mot de passe pour la connexion à la base de données, $null pour
+#        lire le mot de passe depuis le pgpass.conf.
+# $requete : La requête SQL source de l'export.
+# $gpx : Le GPX d'export.
+# $sridSource : Le SRID source.
+# $autresParams : Les paramètres d'appel supplémentaires à Ogr2Ogr.
+# $sortie : Chemin de redirection de la sortie standard, $null pour ne pas
+#           activer la redirection.
+# $erreur : Pour demander, lorsque la redirection de la sortie standard est
+#           activée, la redirection de la sortie erreur. Le fichier de sortie
+#           porte le même nom que celui de la sortie standard avec ajout de
+#           l'extension .err.
+# $priorite : La priorité donnée au processus.
+# -----------------------------------------------------------------------------
+function SIg-Exporter-GPX {
+    param (
+        [string] $serveur = $sigServeur,
+        [string] $port = $sigPort,
+        [string] $bdd = $sigBDD,
+        [string] $utilisateur = $sigUtilisateur,
+        [string] $mdp = $sigMDP,
+        [parameter(Mandatory=$true)] [string] $requete,
+        [parameter(Mandatory=$true)] [string] $gpx,
+        [string] $sridSource = $sridDefaut,
+        [string[]] $autresParams = @('-nlt MULTILINESTRING', '-dsco GPX_USE_EXTENSIONS=YES'),
+        [string] $sortie = $null,
+        [bool] $erreur = $true,
+        [System.Diagnostics.ProcessPriorityClass] $priorite = [System.Diagnostics.ProcessPriorityClass]::Normal
+    )
+
+    Exporter-GPX-Postgis `
+        -serveur $serveur `
+        -port $port `
+        -bdd $bdd `
+        -utilisateur $utilisateur `
+        -mdp $mdp `
+        -requete $requete `
+        -gpx $gpx `
+        -sridSource $sridSource `
+        -autresParams $autresParams `
+        -sortie $sortie `
+        -erreur $erreur `
+        -priorite $priorite
+}
+
+# -----------------------------------------------------------------------------
 # Export d'un DXF (par appel à Ogr2Ogr).
 # Les valeurs pré-établies des paramètres font que le SIg par défaut est
 # utilisé comme source.
@@ -1122,10 +1176,68 @@ function Parametrer-Job-SIg-Exporter-SHP {
 }
 
 # -----------------------------------------------------------------------------
+# Paramétrage d'un job d'export d'un GPX (par appel à Ogr2Ogr).
+# Les valeurs pré-établies des paramètres font que le SIg par défaut est
+# utilisé comme source.
+#
+# $racineAPI : Le chemin vers le dossier racine de l'API PowerShell.
+# $serveur : Le serveur de base de données.
+# $port : Le port du serveur de base de données.
+# $bdd : Le nom de la base de données.
+# $utilisateur : L'utilisateur pour la connexion à la base de données.
+# $mdp : Le mot de passe pour la connexion à la base de données, $null pour
+#        lire le mot de passe depuis le pgpass.conf.
+# $requete : La requête SQL source de l'export.
+# $gpx : Le GPX d'export.
+# $sridSource : Le SRID source.
+# $autresParams : Les paramètres d'appel supplémentaires à Ogr2Ogr.
+# $sortie : Chemin de redirection de la sortie standard, $null pour ne pas
+#           activer la redirection.
+# $erreur : Pour demander, lorsque la redirection de la sortie standard est
+#           activée, la redirection de la sortie erreur. Le fichier de sortie
+#           porte le même nom que celui de la sortie standard avec ajout de
+#           l'extension .err.
+# $priorite : La priorité donnée au processus.
+# -----------------------------------------------------------------------------
+function Parametrer-Job-SIg-Exporter-GPX {
+    param (
+        [string] $racineAPI = $PSScriptRoot,
+        [string] $serveur = $sigServeur,
+        [string] $port = $sigPort,
+        [string] $bdd = $sigBDD,
+        [string] $utilisateur = $sigUtilisateur,
+        [string] $mdp = $sigMDP,
+        [parameter(Mandatory=$true)] [string] $requete,
+        [parameter(Mandatory=$true)] [string] $gpx,
+        [string] $sridSource = $sridDefaut,
+        [string[]] $autresParams = @('-nlt MULTILINESTRING', '-dsco GPX_USE_EXTENSIONS=YES'),
+        [string] $sortie = $null,
+        [bool] $erreur = $true,
+        [System.Diagnostics.ProcessPriorityClass] $priorite = [System.Diagnostics.ProcessPriorityClass]::Normal
+    )
+
+    Parametrer-Job-Exporter-GPX-Postgis `
+        -racineAPI $racineAPI `
+        -serveur $serveur `
+        -port $port `
+        -bdd $bdd `
+        -utilisateur $utilisateur `
+        -mdp $mdp `
+        -requete $requete `
+        -gpx $gpx `
+        -sridSource $sridSource `
+        -autresParams $autresParams `
+        -sortie $sortie `
+        -erreur $erreur `
+        -priorite $priorite
+}
+
+# -----------------------------------------------------------------------------
 # Paramétrage d'un job d'export d'un DXF (par appel à Ogr2Ogr).
 # Les valeurs pré-établies des paramètres font que le SIg par défaut est
 # utilisé comme source.
 #
+# $racineAPI : Le chemin vers le dossier racine de l'API PowerShell.
 # $serveur : Le serveur de base de données.
 # $port : Le port du serveur de base de données.
 # $bdd : Le nom de la base de données.
