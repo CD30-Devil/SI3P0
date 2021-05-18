@@ -827,7 +827,7 @@ function SIg-Paralleliser-Fichier-Transactions {
 #           porte le même nom que celui de la sortie standard avec ajout de
 #           l'extension .err.
 # -----------------------------------------------------------------------------
-function Parametrer-Job-SIG-Importer-CSV {
+function Parametrer-Job-SIg-Importer-CSV {
     param (
         [string] $racineAPI = $PSScriptRoot,
         [parameter(Mandatory=$true)] [string] $csv,
