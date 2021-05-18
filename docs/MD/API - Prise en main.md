@@ -479,13 +479,13 @@ SIg-Creer-Table-Temp -table 'tmp.AdresseDGFIP' -colonnes 'cle_interop', 'uid_adr
 $parametresJobs = [System.Collections.ArrayList]::new()
 
 foreach ($csvEtalab in (Get-ChildItem "$dossierTravailTemp\tuto_si3p0\Load\*-etalab.csv")) {
-    # la fonction Parametrer-Job-SIG-Importer-CSV est également issue du fichier sig_défaut.ps1
+    # la fonction Parametrer-Job-SIg-Importer-CSV est également issue du fichier sig_défaut.ps1
     # elle prend 2 paramètres obligatoires : la table cible et le CSV à importer
-    [void]$parametresJobs.Add((Parametrer-Job-SIG-Importer-CSV -table 'tmp.AdresseEtalab' -csv $csvEtalab))
+    [void]$parametresJobs.Add((Parametrer-Job-SIg-Importer-CSV -table 'tmp.AdresseEtalab' -csv $csvEtalab))
 }
 
 foreach ($csvDGFIP in (Get-ChildItem "$dossierTravailTemp\tuto_si3p0\Load\*-dgfip.csv")) {
-    [void]$parametresJobs.Add((Parametrer-Job-SIG-Importer-CSV -table 'tmp.AdresseDGFIP' -csv $csvDGFIP))
+    [void]$parametresJobs.Add((Parametrer-Job-SIg-Importer-CSV -table 'tmp.AdresseDGFIP' -csv $csvDGFIP))
 }
 
 # on exécute les jobs en demandant de lancer un nombre de processus égal au nombre de coeurs du serveur / 2
