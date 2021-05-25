@@ -20,33 +20,63 @@ Remove-Item "$dossierRapports\*.err"
 Remove-Item "$dossierDonnees\*" -Recurse -Force
 
 # effacement des tables
-SIg-Effacer-Table `    -table 'BAN_CSV' `    -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - effacement BAN_CSV.txt"
+SIg-Effacer-Table `
+    -table 'BAN_CSV' `
+    -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - effacement BAN_CSV.txt"
 
-SIg-Effacer-Table `    -table 'BAN_Geo' `    -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - effacement BAN_Geo.txt"
+SIg-Effacer-Table `
+    -table 'BAN_Geo' `
+    -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - effacement BAN_Geo.txt"
 
 # -----------------------------------------------------------------------------
 # Phase Extract amont
 # -----------------------------------------------------------------------------
 
 # téléchargement...
-Telecharger `    -url "https://adresse.data.gouv.fr/data/ban/adresses/latest/csv/adresses-$departement.csv.gz" `    -enregistrerSous "$dossierDonnees\adresses-$departement.csv.gz"
+Telecharger `
+    -url "https://adresse.data.gouv.fr/data/ban/adresses/latest/csv/adresses-$departement.csv.gz" `
+    -enregistrerSous "$dossierDonnees\adresses-$departement.csv.gz"
 
 #  ...et extraction de la BAN
-DeGZipper `    -archive "$dossierDonnees\adresses-$departement.csv.gz" `    -extraireVers $dossierDonnees
+DeGZipper `
+    -archive "$dossierDonnees\adresses-$departement.csv.gz" `
+    -extraireVers $dossierDonnees
 
 # -----------------------------------------------------------------------------
 # Phase Load
 # -----------------------------------------------------------------------------
 
 # création d'une table temporaire pour l'import du CSV
-SIg-Creer-Table-Temp `    -table 'BAN_CSV' `    -colonnes `
-        'id', `        'id_fantoir', `        'numero', `        'rep', `        'nom_voie', `        'code_postal', `        'code_insee', `        'nom_commune', `        'code_insee_ancienne_commune', `        'nom_ancienne_commune', `        'x', `        'y', `        'lon', `
-        'lat', `        'alias', `
-        'nom_ld', `        'libelle_acheminement', `        'nom_afnor', `        'source_position', `        'source_nom_voie' `
+SIg-Creer-Table-Temp `
+    -table 'BAN_CSV' `
+    -colonnes `
+        'id', `
+        'id_fantoir', `
+        'numero', `
+        'rep', `
+        'nom_voie', `
+        'code_postal', `
+        'code_insee', `
+        'nom_commune', `
+        'code_insee_ancienne_commune', `
+        'nom_ancienne_commune', `
+        'x', `
+        'y', `
+        'lon', `
+        'lat', `
+        'alias', `
+        'nom_ld', `
+        'libelle_acheminement', `
+        'nom_afnor', `
+        'source_position', `
+        'source_nom_voie' `
     -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - création BAN_CSV.txt"
 
 # import du CSV
-SIg-Importer-CSV `    -table 'BAN_CSV' `    -csv "$dossierDonnees\adresses-$departement.csv" `    -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - import adresses-$departement.csv.txt"
+SIg-Importer-CSV `
+    -table 'BAN_CSV' `
+    -csv "$dossierDonnees\adresses-$departement.csv" `
+    -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - import adresses-$departement.csv.txt"
 
 # -----------------------------------------------------------------------------
 # Phase Transform
@@ -80,7 +110,9 @@ from BAN_CSV;
 
 # recherche de la liste des communes
 # passage par un fichier intermédiaire (pas mieux pour l'instant via la bibliothèque)
-SIg-Executer-Commande `    -commande 'select distinct code_insee from BAN_Geo' `    -sortie "$dossierRapports\cog_communes.txt" `
+SIg-Executer-Commande `
+    -commande 'select distinct code_insee from BAN_Geo' `
+    -sortie "$dossierRapports\cog_communes.txt" `
     -erreur $false `
     -autresParams '--tuples-only', '--no-align'
     
@@ -92,12 +124,17 @@ foreach ($cog_commune in (Get-Content "$dossierRapports\cog_communes.txt")) {
 
     # job d'export GeoJSON
     [void]$parametresJobs.Add(
-        (Parametrer-Job-SIg-Exporter-GeoJSON `            -requete "select * from BAN_Geo where code_insee = '$cog_commune'" `            -geoJSON "$dossierDonnees\GeoJSON\BAN_$cog_commune.geojson")
+        (Parametrer-Job-SIg-Exporter-GeoJSON `
+            -requete "select * from BAN_Geo where code_insee = '$cog_commune'" `
+            -geoJSON "$dossierDonnees\GeoJSON\BAN_$cog_commune.geojson")
     )
 
     # job d'export SHP
     [void]$parametresJobs.Add(
-        (Parametrer-Job-SIg-Exporter-SHP `            -requete "select * from BAN_Geo where code_insee = '$cog_commune'" `            -shp "$dossierDonnees\SHP\BAN_$cog_commune.shp" `            -compresser $true)
+        (Parametrer-Job-SIg-Exporter-SHP `
+            -requete "select * from BAN_Geo where code_insee = '$cog_commune'" `
+            -shp "$dossierDonnees\SHP\BAN_$cog_commune.shp" `
+            -compresser $true)
     )
 
 }
