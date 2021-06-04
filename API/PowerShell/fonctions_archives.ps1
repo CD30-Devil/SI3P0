@@ -113,12 +113,20 @@ function DeGZipper {
 # $commande : La commande, cf. documentation 7-Zip.
 # $archive : L'archive source ou cible.
 # $autresParams : Les paramètres d'appel supplémentaires à 7-Zip.
+# $sortie : Chemin de redirection de la sortie standard, $null pour ne pas
+#           activer la redirection.
+# $erreur : Pour demander, lorsque la redirection de la sortie standard est
+#           activée, la redirection de la sortie erreur. Le fichier de sortie
+#           porte le même nom que celui de la sortie standard avec ajout de
+#           l'extension .err.
 # -----------------------------------------------------------------------------
 Function Executer-7Z {
     param(
         [parameter(Mandatory=$true)] [string] $commande,
         [parameter(Mandatory=$true)] [string] $archive,
-        [string[]] $autresParams = $null
+        [string[]] $autresParams = $null,
+        [string] $sortie = $null,
+        [bool] $erreur = $true
     )
 
     $parametres = New-Object System.Collections.ArrayList
@@ -130,7 +138,20 @@ Function Executer-7Z {
     }
 
     Afficher-Message-Date -message "`"$7z`" $parametres" -couleur gray
-    Start-Process -FilePath "`"$7z`"" -WindowStyle Hidden -Wait -ArgumentList $parametres
+
+    if ($sortie) {
+        New-Item -ItemType Directory -Force -Path (Split-Path -Path $sortie)
+
+        if ($erreur) {
+            Start-Process -FilePath "`"$7z`"" -WindowStyle Hidden -Wait -ArgumentList $parametres -RedirectStandardOutput $sortie -RedirectStandardError "$sortie.err"
+        }
+        else {
+            Start-Process -FilePath "`"$7z`"" -WindowStyle Hidden -Wait -ArgumentList $parametres -RedirectStandardOutput $sortie
+        }
+    }
+    else {
+        Start-Process -FilePath "`"$7z`"" -WindowStyle Hidden -Wait -ArgumentList $parametres
+    }
 }
 
 # -----------------------------------------------------------------------------
