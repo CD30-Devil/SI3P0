@@ -83,7 +83,12 @@ insert into m.infos_carte (id, texte_info) values ('$identifiant', '$([System.We
 #                    d'une couche.
 # $activerPermaliens : Pour activer la gestion des permaliens.
 # $activerPegman : Pour activer "Pegman", le bonhomme d'accès aux sites
-#                  externes dont StreetView.
+#                  externes dont StreetView. Les valeurs possibles sont :
+#                  - 0 : Désactivé
+#                  - 1 : Street View uniquement
+#                  - 2 : Sites 2D
+#                  - 3 : Sites 3D
+#                  - 4 : Sites 2D+3D
 # $actualisationAuto : Délai pour l'actualisation automatique de la carte, 0
 #                      pour désactiver.
 # $utilisateur : L'utilisateur pour la connexion à la base de données.
@@ -101,7 +106,7 @@ function SI3P0-Generer-Carte {
         [bool] $replierBoiteControle = $false,
         [bool] $activerZoomClic = $true,
         [bool] $activerPermaliens = $false,
-        [bool] $activerPegman = $true,
+        [int] $activerPegman = 4,
         [int] $actualisationAuto = 0,
         [string] $utilisateur = $sigUtilisateur
     )
