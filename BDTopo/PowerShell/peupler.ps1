@@ -4,7 +4,7 @@ $dossierDonnees = "$PSScriptRoot\..\Données"
 $dossierRapports = "$PSScriptRoot\..\Rapports\peupler"
 $dossierSQL = "$PSScriptRoot\..\SQL"
 
-$archiveBDTopo = "$dossierDonnees\BDTOPO_3-0_TOUSTHEMES_SQL_LAMB93_FXX_2021-03-15.7z.001"
+$archiveBDTopo = "$dossierDonnees\BDTOPO_3-0_TOUSTHEMES_SQL_LAMB93_FXX_2021-06-15.7z.001"
 
 # -----------------------------------------------------------------------------
 # Job d'import d'un thème de la BDTopo dans le schéma d.
@@ -153,7 +153,7 @@ $parametresJobs = New-Object System.Collections.ArrayList
 [void]$parametresJobs.Add(@{ script = $Job_Importer_BDTopo; racineAPI = "$PSScriptRoot\..\..\API\PowerShell"; archiveBDTopo = $archiveBDTopo; bdd = $bdd; theme = 'region'; typeGeometrie = 'MULTIPOLYGON'; dossierRapports = $dossierRapports })
 
 # exécution des jobs d'import des données
-Executer-Jobs -parametresJobs $parametresJobs -nombreJobs 2
+Executer-Jobs -parametresJobs $parametresJobs -nombreJobs 1
 
 # création des index
 SIg-Executer-Fichier -bdd $bdd -fichier "$dossierSQL\_créer index.sql" -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - _créer index.txt"

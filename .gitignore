@@ -1,0 +1,23 @@
+﻿# règles de base
+constantes_privées.ps1
+
+cartographier.ps1
+créer vues 4Qlik.ps1
+
+régulier.ps1
+quotidien.ps1
+hebdomadaire.ps1
+lancement manuel.ps1
+
+Documents/
+Données/
+Rapports/
+SQL.4Map/
+SQL.4Test/
+SQL.4Qlik/
+
+# 3V
+!/3V/Données/
+
+# Waze
+/Waze/Ressources/Icones

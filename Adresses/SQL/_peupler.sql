@@ -1,4 +1,4 @@
-start transaction;
+﻿start transaction;
 
 set constraints all deferred;
 

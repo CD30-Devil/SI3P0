@@ -5,15 +5,25 @@ $dossierRapports = "$PSScriptRoot\..\Rapports\peupler"
 $dossierSQL = "$PSScriptRoot\..\SQL"
 
 $natures = @(
-    @{ nom = 'batiments'; table = 'Cadastre_Batiment' }
-    @{ nom = 'feuilles'; table = 'Cadastre_Feuille' }
-    @{ nom = 'lieux_dits'; table = 'Cadastre_LieuDit' }
-    @{ nom = 'parcelles'; table = 'Cadastre_Parcelle' }
-    @{ nom = 'prefixes_sections'; table = 'Cadastre_PrefixeSection' }
-    @{ nom = 'sections'; table = 'Cadastre_Section' }
-    @{ nom = 'subdivisions_fiscales'; table = 'Cadastre_SubdivisionFiscale' }
+    @{ nom = 'subdivisions_fiscales'; table = 'd.Cadastre_SubdivisionFiscale' }
+    @{ nom = 'batiments'; table = 'd.Cadastre_Batiment' }
+    @{ nom = 'parcelles'; table = 'd.Cadastre_Parcelle' }
+    @{ nom = 'feuilles'; table = 'd.Cadastre_Feuille' }
+    @{ nom = 'sections'; table = 'd.Cadastre_Section' }
+    @{ nom = 'prefixes_sections'; table = 'd.Cadastre_PrefixeSection' }
+    @{ nom = 'lieux_dits'; table = 'd.Cadastre_LieuDit' }
 )
 
+# -----------------------------------------------------------------------------
+# Job d'import de données cadastrales dans les structures temporaires.
+#
+# Format attendu de $parametres :
+# .racineAPI : Le chemin vers le dossier racine de l'API PowerShell.
+# .nature : La nature des données à importer (parcelles, sections, ...).
+# .table : La table destination de l'import.
+# .dossierDonnees : Le chemin vers le dossier contenant les données à importer.
+# .dossierRapports : Le chemin vers le dossier de sortie des rapports.
+# -----------------------------------------------------------------------------
 $Job_Importer_Cadastre = {
     param (
         $parametres
@@ -21,35 +31,29 @@ $Job_Importer_Cadastre = {
 
     . ("$($parametres.racineAPI)\api_complète.ps1")
 
-    $dossierRapports = "$($parametres.dossierRapports)\$($parametres.nature)"
-
-    # nettoyage préalable
-    Remove-Item "$dossierRapports\*.txt"
-    Remove-Item "$dossierRapports\*.err"
-
-    SIg-Effacer-Table -table "d.$($parametres.table)" -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - effacement d.$($parametres.table).txt"
+    $dossierRapports = $parametres.dossierRapports
 
     # parcours des archives de la nature à traiter
-    foreach ($archive in Get-ChildItem "$($parametres.dossierDonnees)\cadastre-*-$($parametres.nature).json.gz") {
+    $archives = Get-ChildItem "$($parametres.dossierDonnees)\cadastre-*-$($parametres.nature).json.gz"
 
-        # isolation du code de département
-        $match = [Regex]::Match($archive.FullName, "-(.{2,3})-")
-        $departement = $match.Groups[1].Value
+    for ($i = 0; $i -lt $archives.Count; $i++) {
 
         # extraction du GeoJSON
-        7Z-Decompresser -archive $archive -extraireVers "$dossierTravailTemp\cadastre_peupler\"
+        7Z-Decompresser -archive $archives[$i] -extraireVers "$dossierTravailTemp\cadastre_peupler\"
 
         # import du GeoJSON dans le schéma tmp
-        $nomGeoJSON = [System.IO.Path]::GetFileNameWithoutExtension($archive)
-        SIg-Importer-GeoJSON -geoJSON "$dossierTravailTemp\cadastre_peupler\$nomGeoJSON" -table "tmp.$($parametres.table)_$departement" -sridSource '4326' -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - import $nomGeoJSON.txt"
+        $nomGeoJSON = [System.IO.Path]::GetFileNameWithoutExtension($archives[$i])
 
-        # transfert des données du schéma tmp vers le schéma d
-        SIg-Executer-Commande -commande "create table if not exists d.$($parametres.table) as select * from tmp.$($parametres.table)_$departement where false"
-        SIg-Executer-Commande -commande "insert into d.$($parametres.table) select * from tmp.$($parametres.table)_$departement" -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - transfert tmp.$($parametres.table)_$departement vers d.$($parametres.table).txt"
+        if ($i -eq 0) {
+            SIg-Importer-GeoJSON `                -geoJSON "$dossierTravailTemp\cadastre_peupler\$nomGeoJSON" `                -table "$($parametres.table)" `                -sridSource '4326' `                -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - import $nomGeoJSON.txt"
+        }
+        else {
+            SIg-Importer-GeoJSON `                -geoJSON "$dossierTravailTemp\cadastre_peupler\$nomGeoJSON" `                -table "$($parametres.table)" `                -sridSource '4326' `                -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - import $nomGeoJSON.txt" `
+                -autresParams @('-append')
+        }
 
-        # nettoyage
-        SIg-Effacer-Table -table "tmp.$($parametres.table)_$departement" -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - effacement tmp.$($parametres.table)_$departement.txt"
-        Remove-Item "$dossierTravailTemp\cadastre_peupler\$nomGeoJSON"
+        # suppression du geojson extrait
+        Remove-Item "$dossierTravailTemp\cadastre_peupler\$nomGeoJSON"#>
     }
 }
 
@@ -58,7 +62,11 @@ Remove-Item -Path "$dossierTravailTemp\cadastre_peupler\*"
 Remove-Item "$dossierRapports\*.txt"
 Remove-Item "$dossierRapports\*.err"
 
-# paramétrage d'un job d'import par nature de données cadastrales
+foreach ($nature in $natures) {
+    SIg-Effacer-Table -table "$($nature.table)" -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - effacement $($nature.table).txt"
+}
+
+# paramétrage d'un job d'import par nature de données cadastrales dans les structures temporaires
 $parametresJobs = New-Object System.Collections.ArrayList
 
 foreach ($nature in $natures) {
@@ -72,8 +80,8 @@ foreach ($nature in $natures) {
     })
 }
 
-# exécution des jobs d'import
+# exécution des jobs d'import dans les structures temporaires
 Executer-Jobs -parametresJobs $parametresJobs
 
-# création des index
-SIg-Executer-Fichier -fichier "$dossierSQL\_créer index.sql" -sortie "$dossierRapports\peupler\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - _créer index.txt"
+# transfert d'une partie des données du schéma tmp au schéma m
+SIg-Executer-Fichier -fichier "$dossierSQL\_peupler.sql" -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - _peupler.txt"

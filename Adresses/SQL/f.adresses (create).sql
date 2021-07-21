@@ -1,4 +1,4 @@
--- schémas spécifiques SI3P0 (f = fonctions, m = modèle)
+﻿-- schémas spécifiques SI3P0 (f = fonctions, m = modèle)
 set search_path to f, m, public;
 
 -- ----------------------------------------------------------------------------

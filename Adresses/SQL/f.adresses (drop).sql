@@ -1,4 +1,4 @@
--- schémas spécifiques SI3P0 (f = fonctions)
+﻿-- schémas spécifiques SI3P0 (f = fonctions)
 set search_path to f, public;
 
 drop function if exists RechercherAdresse(_Point geometry, _COGCommune character varying, _Limit integer);

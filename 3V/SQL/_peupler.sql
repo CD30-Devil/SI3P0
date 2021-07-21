@@ -1,4 +1,4 @@
-start transaction;
+﻿start transaction;
 
 set constraints all deferred;
 
@@ -118,6 +118,46 @@ select distinct
 from m.SegmentCyclable sc
 inner join tmp.SegmentCyclable tsc on sc.SourceGeometrie = tsc.SourceGeometrie and sc.IdGeometrie = tsc.IdGeometrie and tsc.EtatAvancement like ('0' || sc.CodeEtatAvancement3V || '%')
 inner join m.PortionCyclable pc on pc.Nom = tsc.PortionCyclable;
+
+-- ajustement du sens de numérisation des segments au sens de la portion
+-- TODO requête à valider notamment pour les tronçons qui changent à chaque exécution
+with SegmentOrdonneParPortion as (
+    select distinct sc.IdSegmentCyclable, pc.IdPortionCyclable, tsc.Ordre::integer, sc.Geom
+    from m.SegmentCyclable sc
+    inner join m.SegmentCyclable_PortionCyclable sp on sc.IdSegmentCyclable = sp.IdSegmentCyclable
+    inner join m.PortionCyclable pc on sp.IdPortionCyclable = pc.IdPortionCyclable
+    inner join tmp.SegmentCyclable tsc on sc.SourceGeometrie = tsc.SourceGeometrie and sc.IdGeometrie = tsc.IdGeometrie and tsc.EtatAvancement like ('0' || sc.CodeEtatAvancement3V || '%')
+),
+CoupleSegments as (
+    select prec.IdPortionCyclable, prec.IdSegmentCyclable as IdSegmentCyclablePrec, prec.Geom as GeomPrec, prec.Ordre as OrdrePrec, suiv.IdSegmentCyclable as IdSegmentCyclableSuiv, suiv.Geom as GeomSuiv, suiv.Ordre as OrdreSuiv
+    from SegmentOrdonneParPortion prec, SegmentOrdonneParPortion suiv
+    where prec.Ordre + 1 = suiv.Ordre
+    and prec.IdSegmentCyclable <> suiv.IdSegmentCyclable
+    and prec.IdPortionCyclable = suiv.IdPortionCyclable
+    and (
+        ST_Equals(ST_StartPoint(prec.Geom), ST_StartPoint(suiv.Geom))
+        or ST_Equals(ST_StartPoint(prec.Geom), ST_EndPoint(suiv.Geom))
+        or ST_Equals(ST_EndPoint(prec.Geom), ST_EndPoint(suiv.Geom))
+        or ST_Equals(ST_EndPoint(prec.Geom), ST_StartPoint(suiv.Geom))
+    )
+),
+SegmentARetourner as (
+    -- cas 1 : le point de fin du segment précédent n'est pas égal à l'intersection (segment précédent - segment suivant)
+    select IdSegmentCyclablePrec as IdSegmentCyclable, ST_Reverse(GeomPrec) as Geom
+    from CoupleSegments cs
+    where not ST_Equals(ST_Intersection(GeomPrec, GeomSuiv), ST_EndPoint(GeomPrec))
+
+    union
+
+    -- cas 2 : le point de départ du segment suivant n'est pas égal à l'intersection (segment précédent - segment suivant)
+    select IdSegmentCyclableSuiv as IdSegmentCyclable, ST_Reverse(GeomSuiv) as Geom
+    from CoupleSegments cs
+    where not ST_Equals(ST_Intersection(GeomPrec, GeomSuiv), ST_StartPoint(GeomSuiv))
+)
+update m.SegmentCyclable sc
+set Geom = sar.Geom
+from (select distinct * from SegmentARetourner) sar
+where sc.IdSegmentCyclable = sar.IdSegmentCyclable;
 
 -- ajout des communes traversées dans la description des portions
 with PortionCyclableCommune as (

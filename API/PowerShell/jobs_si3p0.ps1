@@ -1,31 +1,31 @@
-# -----------------------------------------------------------------------------
-# Jobs spécifiques à si3p0 (SIg du Gard)
+ï»¿# -----------------------------------------------------------------------------
+# Jobs spÃ©cifiques Ã  si3p0 (SIg du Gard)
 # -----------------------------------------------------------------------------
 
 # -----------------------------------------------------------------------------
-# Job de génération d'une carte Leaflet sur la base de vues/tables
-# géographiques.
+# Job de gÃ©nÃ©ration d'une carte Leaflet sur la base de vues/tables
+# gÃ©ographiques.
 #
 # Format attendu de $parametres :
 # .racineAPI : Le chemin vers le dossier racine de l'API PowerShell.
-# .sources : Les vues/tables (5 maxi) décrivant les couches de la cartes.
+# .sources : Les vues/tables (5 maxi) dÃ©crivant les couches de la cartes.
 #            Si un couche ligne existe, la mettre en premier pour que le zoom
 #            fonctionne.
 # .carte : Le chemin de sauvegarde de la carte.
 # .titre : Le titre de la carte.
-# .daterTitre : Pour demander l'ajout de la date de génération dans le titre.
-# .nbCouchesActives : Nombre de couches actives par défaut.
-# .fondDePlan : Le fond de plan à afficher par défaut.
-# .idInfo : L'identifiant du texte d'information à afficher sur le bouton
+# .daterTitre : Pour demander l'ajout de la date de gÃ©nÃ©ration dans le titre.
+# .nbCouchesActives : Nombre de couches actives par dÃ©faut.
+# .fondDePlan : Le fond de plan Ã  afficher par dÃ©faut.
+# .idInfo : L'identifiant du texte d'information Ã  afficher sur le bouton
 #           d'aide.
 # .activerInfosBulles : Pour activer l'affichage des informations au survol.
-# .replierBoiteControle : Pour replier la boîte de contrôle en haut à droite.
-# .activerZoomClic : Pour activer le zoom auto lors du clic sur un élément
+# .replierBoiteControle : Pour replier la boÃ®te de contrÃ´le en haut Ã  droite.
+# .activerZoomClic : Pour activer le zoom auto lors du clic sur un Ã©lÃ©ment
 #                    d'une couche.
 # .activerPermaliens : Pour activer la gestion des permaliens.
-# .actualisationAuto : Délai pour l'actualisation automatique de la carte, 0
-#                      pour désactiver.
-# .utilisateur : L'utilisateur pour la connexion à la base de données.
+# .actualisationAuto : DÃ©lai pour l'actualisation automatique de la carte, 0
+#                      pour dÃ©sactiver.
+# .utilisateur : L'utilisateur pour la connexion Ã  la base de donnÃ©es.
 # -----------------------------------------------------------------------------
 $Job_SI3P0_Generer_Carte = {
     param (
@@ -52,35 +52,35 @@ $Job_SI3P0_Generer_Carte = {
 }
 
 # -----------------------------------------------------------------------------
-# Paramètrage d'un job de génération d'une carte Leaflet sur la base de
-# vues/tables géographiques.
+# ParamÃ¨trage d'un job de gÃ©nÃ©ration d'une carte Leaflet sur la base de
+# vues/tables gÃ©ographiques.
 #
 # $racineAPI : Le chemin vers le dossier racine de l'API PowerShell.
-# $sources : Les vues/tables (5 maxi) décrivant les couches de la cartes.
+# $sources : Les vues/tables (5 maxi) dÃ©crivant les couches de la cartes.
 #            Si un couche ligne ou polygone existe, la mettre en premier pour
 #            que le zoom fonctionne.
 # $carte : Le chemin de sauvegarde de la carte.
 # $titre : Le titre de la carte.
-# $daterTitre : Pour demander l'ajout de la date de génération dans le titre.
-# $fondDePlan : Le fond de plan à afficher par défaut.
-# $idInfo : L'identifiant du texte d'information à afficher sur le bouton
+# $daterTitre : Pour demander l'ajout de la date de gÃ©nÃ©ration dans le titre.
+# $fondDePlan : Le fond de plan Ã  afficher par dÃ©faut.
+# $idInfo : L'identifiant du texte d'information Ã  afficher sur le bouton
 #           d'aide.
-# $nbCouchesActives : Nombre de couches actives par défaut.
+# $nbCouchesActives : Nombre de couches actives par dÃ©faut.
 # $activerInfosBulles : Pour activer l'affichage des informations au survol.
-# $replierBoiteControle : Pour replier la boîte de contrôle en haut à droite.
-# $activerZoomClic : Pour activer le zoom auto lors du clic sur un élément
+# $replierBoiteControle : Pour replier la boÃ®te de contrÃ´le en haut Ã  droite.
+# $activerZoomClic : Pour activer le zoom auto lors du clic sur un Ã©lÃ©ment
 #                    d'une couche.
 # $activerPermaliens : Pour activer la gestion des permaliens.
-# $activerPegman : Pour activer "Pegman", le bonhomme d'accès aux sites
+# $activerPegman : Pour activer "Pegman", le bonhomme d'accÃ¨s aux sites
 #                  externes dont StreetView. Les valeurs possibles sont :
-#                  - 0 : Désactivé
+#                  - 0 : DÃ©sactivÃ©
 #                  - 1 : Street View uniquement
 #                  - 2 : Sites 2D
 #                  - 3 : Sites 3D
 #                  - 4 : Sites 2D+3D
-# $actualisationAuto : Délai pour l'actualisation automatique de la carte, 0
-#                      pour désactiver.
-# $utilisateur : L'utilisateur pour la connexion à la base de données.
+# $actualisationAuto : DÃ©lai pour l'actualisation automatique de la carte, 0
+#                      pour dÃ©sactiver.
+# $utilisateur : L'utilisateur pour la connexion Ã  la base de donnÃ©es.
 # -----------------------------------------------------------------------------
 function Parametrer-Job-SI3P0-Generer-Carte {
     param (

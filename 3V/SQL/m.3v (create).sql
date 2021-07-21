@@ -1,10 +1,10 @@
 /*==============================================================*/
 /* Nom de SGBD :  PostgreSQL SI3P0                              */
-/* Date de création :  24/03/2021 09:05:57                      */
+/* Date de crÃ©ation :  21/07/2021 22:26:29                      */
 /*==============================================================*/
 
 
--- schémas spécifiques SI3P0 (m = modèle)
+-- schÃ©mas spÃ©cifiques SI3P0 (m = modÃ¨le)
 set search_path to m, public;
 
 
@@ -19,7 +19,7 @@ create table etatavancement3v (
 
 insert into EtatAvancement3V (CodeEtatAvancement3V, Description) values
 (1, 'Projet'),
-(2, 'Tracé arrêté'),
+(2, 'TracÃ© arrÃªtÃ©'),
 (3, 'Travaux en cours'),
 (4, 'Ouvert');
 
@@ -41,7 +41,7 @@ create table itinerairecyclable (
    arrivee              VARCHAR              null,
    estinscrit           BOOL                 null,
    niveauschema         VARCHAR              null
-      constraint ckcniveauschema check (niveauschema is null or (niveauschema in ('Infra-communal','Communal','Inter-communal','Départemental','Régional','National','Européen','International'))),
+      constraint ckcniveauschema check (niveauschema is null or (niveauschema in ('Infra-communal','Communal','Inter-communal','DÃ©partemental','RÃ©gional','National','EuropÃ©en','International'))),
    anneeinscription     INT4                 null,
    siteweb              VARCHAR              null,
    anneeouverture       INT4                 null,
@@ -319,7 +319,7 @@ insert into Statut3V (CodeStatut3V, Description) values
 ('ASP', 'Autre site propre'),
 ('RTE', 'Route'),
 ('BCY', 'Bande cyclable'),
-('ICA', 'Itinéraire à circulation apaisée');
+('ICA', 'ItinÃ©raire Ã  circulation apaisÃ©e');
 
 /*==============================================================*/
 /* Index : statut3v_pk                                          */
@@ -341,7 +341,7 @@ insert into TypePortionCyclable (CodeTypePortionCyclable, Description) values
 ('ETP', 'Etape'),
 ('VAR', 'Variante'),
 ('PRV', 'Portion provisoire'),
-('OBS', 'Portion observée');
+('OBS', 'Portion observÃ©e');
 
 /*==============================================================*/
 /* Index : typeportioncyclable_pk                               */
@@ -360,12 +360,12 @@ create table typeprcyclable (
 );
 
 insert into TypePRCyclable (CodeTypePRCyclable, Description) values
-('DFE', 'Début/fin d''étape'),
-('INT', 'Intersection d''itinéraires'),
+('DFE', 'DÃ©but/fin d''Ã©tape'),
+('INT', 'Intersection d''itinÃ©raires'),
 ('BIF', 'Bifurcation'),
-('APO', 'Accès POI'),
+('APO', 'AccÃ¨s POI'),
 ('CPT', 'Compteur'),
-('PDL', 'Passage délicat'),
+('PDL', 'Passage dÃ©licat'),
 ('PCT', 'Point de connexion transfrontalier');
 
 /*==============================================================*/
