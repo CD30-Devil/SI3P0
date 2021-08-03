@@ -150,3 +150,14 @@ or (not(sc.SensUnique) and t.sens_de_circulation in ('Sens direct', 'Sens invers
 order by t.sens_de_circulation, sc.IdGeometrie;
 select 'Remarque : cette liste devrait être vide.';
 select '';
+
+-- TODO voir s'il est utile d'activer cette requête de vérification qui recherche les couples de segments d'une même portion qui ont un même début ou une même fin
+-- select sc1.IdSegmentCyclable, sc2.IdSegmentCyclable, pc1.Nom
+-- from m.SegmentCyclable sc1, m.SegmentCyclable sc2, m.SegmentCyclable_PortionCyclable sp1, m.SegmentCyclable_PortionCyclable sp2, m.PortionCyclable pc1
+-- where sc1.IdSegmentCyclable > sc2.IdSegmentCyclable
+-- and sc1.IdSegmentCyclable = sp1.IdSegmentCyclable
+-- and sp1.IdPortionCyclable = pc1.IdPortionCyclable
+-- and sc2.IdSegmentCyclable = sp2.IdSegmentCyclable
+-- and sp1.IdPortionCyclable = sp2.IdPortionCyclable
+-- and (ST_Equals(ST_StartPoint(sc1.Geom), ST_StartPoint(sc2.Geom)) or ST_Equals(ST_EndPoint(sc1.Geom), ST_EndPoint(sc2.Geom)))
+-- order by pc1.Nom

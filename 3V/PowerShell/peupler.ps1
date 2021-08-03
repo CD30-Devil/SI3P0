@@ -4,8 +4,8 @@ $dossierDonnees = "$PSScriptRoot\..\Données"
 $dossierRapports = "$PSScriptRoot\..\Rapports\peupler"
 $dossierSQL = "$PSScriptRoot\..\SQL"
 
-$dateBDTopo = '2020-03-15'
-$dateComplement3V = '2021-06-01'
+$dateBDTopo = '2021-06-15'
+$dateComplement3V = '2021-07-30'
 
 # nettoyage préalable
 Remove-Item "$dossierRapports\*.txt"
@@ -34,7 +34,7 @@ $parametresJobs = New-Object System.Collections.ArrayList
 [void]$parametresJobs.Add((Parametrer-Job-SIg-Importer-CSV -csv "$dossierTravailTemp\3v_peupler\ItineraireCyclable.csv" -table 'tmp.ItineraireCyclable' -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - import ItineraireCyclable.csv.txt"))
 [void]$parametresJobs.Add((Parametrer-Job-SIg-Importer-CSV -csv "$dossierTravailTemp\3v_peupler\PortionCyclable.csv" -table 'tmp.PortionCyclable' -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - import PortionCyclable.csv.txt"))
 [void]$parametresJobs.Add((Parametrer-Job-SIg-Importer-CSV -csv "$dossierTravailTemp\3v_peupler\SegmentCyclable.csv" -table 'tmp.SegmentCyclable' -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - import SegmentCyclable.csv.txt"))
-[void]$parametresJobs.Add((Parametrer-Job-SIg-Importer-GeoJSON -geoJSON "$dossierDonnees\complement3v.geojson" -table 'tmp.complement3v' -multiGeom $false -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - import complement3v.shp.txt"))
+[void]$parametresJobs.Add((Parametrer-Job-SIg-Importer-GeoJSON -geoJSON "$dossierDonnees\complement3v.geojson" -table 'tmp.complement3v' -multiGeom $false -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - import complement3v.geojson.txt"))
 
 # exécution des jobs d'import des données dans les structures temporaires
 Executer-Jobs -parametresJobs $parametresJobs

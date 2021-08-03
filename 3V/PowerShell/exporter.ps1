@@ -36,12 +36,12 @@ $parametresJobs = New-Object System.Collections.ArrayList
 [void]$parametresJobs.Add((Parametrer-Job-SIg-Exporter-CSV -requete 'select * from tmp.VVVInventaireD30ParItineraires_4Sheet' -csv "$si3p0TableursPortailWeb\Thématique 3V\csv\Inventaire 3V Gard par itinéraires.csv"))
 
 # partenaires
-[void]$parametresJobs.Add((Parametrer-Job-SIg-Exporter-GeoJSON -requete 'select * from tmp.VetTSegment_4Layer' -geoJSON "$si3p0DossierExportPartenaires\Vélo et Territoires\D30_V&T_Segment.geojson" -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - Export D30_V&T_Segment.geojson.txt"))
+[void]$parametresJobs.Add((Parametrer-Job-SIg-Exporter-GeoJSON -requete 'select * from tmp.VetTSegment_4Layer' -geoJSON "$si3p0DossierExportPartenaires\Vélo et Territoires\D30_V&T_Segment.geojson" -sridCible 4326 -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - Export D30_V&T_Segment.geojson.txt"))
 [void]$parametresJobs.Add((Parametrer-Job-SIg-Exporter-CSV -requete 'select * from tmp.VetTRTronconSegment_4Sheet' -csv "$si3p0DossierExportPartenaires\Vélo et Territoires\D30_V&T_R_Troncon_Segment.csv"))
-[void]$parametresJobs.Add((Parametrer-Job-SIg-Exporter-GeoJSON -requete 'select * from tmp.VetTPortion_4Layer' -geoJSON "$si3p0DossierExportPartenaires\Vélo et Territoires\D30_V&T_Portion.geojson" -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - Export D30_V&T_Portion.geojson.txt"))
+[void]$parametresJobs.Add((Parametrer-Job-SIg-Exporter-GeoJSON -requete 'select * from tmp.VetTPortion_4Layer' -geoJSON "$si3p0DossierExportPartenaires\Vélo et Territoires\D30_V&T_Portion.geojson" -sridCible 4326 -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - Export D30_V&T_Portion.geojson.txt"))
 [void]$parametresJobs.Add((Parametrer-Job-SIg-Exporter-CSV -requete 'select * from tmp.VetTRElementPortion_4Sheet' -csv "$si3p0DossierExportPartenaires\Vélo et Territoires\D30_V&T_R_Element_Portion.csv"))
 [void]$parametresJobs.Add((Parametrer-Job-SIg-Exporter-CSV -requete 'select * from tmp.VetTItineraire_4Sheet' -csv "$si3p0DossierExportPartenaires\Vélo et Territoires\D30_V&T_Itineraire.csv"))
-[void]$parametresJobs.Add((Parametrer-Job-SIg-Exporter-GeoJSON -requete 'select * from tmp.vettbouclecyclo_4Layer' -geoJSON "$si3p0DossierExportPartenaires\Vélo et Territoires\D30_V&T_BoucleCyclo.geojson" -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - Export D30_V&T_BoucleCyclo.geojson.txt"))
+[void]$parametresJobs.Add((Parametrer-Job-SIg-Exporter-GeoJSON -requete 'select * from tmp.vettbouclecyclo_4Layer' -geoJSON "$si3p0DossierExportPartenaires\Vélo et Territoires\D30_V&T_BoucleCyclo.geojson" -sridCible 4326 -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - Export D30_V&T_BoucleCyclo.geojson.txt"))
 
 # exécution des jobs d'export
 Executer-Jobs -parametresJobs $parametresJobs

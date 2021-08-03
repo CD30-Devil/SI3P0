@@ -67,7 +67,7 @@ select
         when 'EV17b' then pi.Ordre + 20000
         else pi.Ordre
     end as "ORDRE_ETAP",
-    ST_Collect(sc.Geom) as Geom
+    ST_LineMerge(ST_Collect(sc.Geom)) as Geom
 from m.SegmentCyclable sc
 left join m.SegmentCyclable_PortionCyclable sp on sp.IdSegmentCyclable = sc.IdSegmentCyclable
 left join m.PortionCyclable pc on pc.IdPortionCyclable = sp.IdPortionCyclable
@@ -139,7 +139,7 @@ select
     coalesce(trvx.Distance, 0) as "KM_TRVX",
     coalesce(tarr.Distance, 0) as "KM_TR_ARR",
     coalesce(proj.Distance, 0) as "KM_PROJ",
-    ST_Collect(sc.Geom) as Geom
+    ST_LineMerge(ST_Collect(sc.Geom)) as Geom
 from m.SegmentCyclable sc
 left join m.SegmentCyclable_PortionCyclable sp on sp.IdSegmentCyclable = sc.IdSegmentCyclable
 left join m.PortionCyclable pc on pc.IdPortionCyclable = sp.IdPortionCyclable

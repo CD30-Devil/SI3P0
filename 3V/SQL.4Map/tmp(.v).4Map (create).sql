@@ -106,7 +106,7 @@ SegmentACompter as (
 select
     r.Description                                                                               as "Rev&ecirc;tement segments ",
     s.Description                                                                               as "Statut segments            ",
-	round(ST_Length(ST_CollectionExtract(unnest(ST_ClusterWithin(sc.Geom, 1)), 2))::numeric, 2) as "Longueur segments           ",
+    round(ST_Length(ST_CollectionExtract(unnest(ST_ClusterWithin(sc.Geom, 1)), 2))::numeric, 2) as "Longueur segments           ",
     ST_CollectionExtract(unnest(ST_ClusterWithin(sc.Geom, 1)), 2) as Geom,
     'Inventaire agrégé' as NomCouche,
     s.Description as Legende,
@@ -145,7 +145,7 @@ SegmentACompter as (
     and IdGeometrie not in (select IdIGN from m.Troncon)
 )
 select
-	ea.Description                                                                    as "Etat d'avancement segment ",
+    ea.Description                                                                    as "Etat d'avancement segment ",
     r.Description                                                                     as "Rev&ecirc;tement segment   ",
     s.Description                                                                     as "Statut segment              ",
     sc.AnneeOuverture                                                                 as "Ann&eacute;e d'ouverture segment ",
