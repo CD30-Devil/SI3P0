@@ -148,3 +148,17 @@ from SegmentACompter sc
 left join m.Revetement3V r on r.CodeRevetement3V = sc.CodeRevetement3V
 left join m.Statut3V s on s.CodeStatut3V = sc.CodeStatut3V
 group by r.Description, s.Description;
+
+-- portions uniformes
+create view tmp.VVVPortionUniforme_4Layer as
+select
+	pc.Nom as "Nom",
+	s.Description as "Statut",
+	e.Description as "EtatAvancement",
+    ST_Multi(ST_LineMerge(ST_CollectionExtract(unnest(ST_ClusterIntersecting(sc.geom)), 2))) as Geom
+from m.SegmentCyclable sc
+left join m.Statut3V s on sc.CodeStatut3V = s.CodeStatut3V
+left join m.EtatAvancement3V e on sc.CodeEtatAvancement3V = e.CodeEtatAvancement3V
+left join m.SegmentCyclable_PortionCyclable sp on sp.IdSegmentCyclable = sc.IdSegmentCyclable
+left join m.PortionCyclable pc on pc.IdPortionCyclable = sp.IdPortionCyclable
+group by pc.Nom, s.Description, e.Description;

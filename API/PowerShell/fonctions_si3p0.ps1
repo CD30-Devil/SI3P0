@@ -9,43 +9,227 @@
 Add-Type -AssemblyName System.Web
 
 # -----------------------------------------------------------------------------
-# Génération d'un fichier HTML de liens pour l'accès aux pages du portail.
+# Génération d'une page HTML du portail.
 # Utilise le modèle présent dans les ressources de l'API.
-# Sauvegarde le fichier HTLM de liens dans le dossier sous le nom index.html.
 #
-# $dossier : Le dossier pour lequel la fichier HTML doit être générée.
-# $titre : Le titre de la page de liens.
-# $exclure : La liste des sous-dossiers à exclure de l'analyse.
+# $titre : Le titre de la page.
+# $contenu : Le contenu de la page.
+# $sortie : Le chemin de sauvegarde de la page.
+# $activerBoutonAccueil : Pour demander l'affichage du bouton de retour à
+#                         l'accueil du portail.
 # -----------------------------------------------------------------------------
-function SI3P0-Generer-Page-Liens {
+function SI3P0-Generer-Page-Portail {
     param (
-        [parameter(Mandatory=$true)] [string] $dossier,
-        [string] $titre = '',
-        [string[]] $exclure
+        [parameter(Mandatory=$true)] [string] $titre,
+        [parameter(Mandatory=$true)] [string] $contenu,
+        [parameter(Mandatory=$true)] [string] $sortie,
+        [bool] $activerBoutonAccueil = $true
     )
 
-    $divs = New-Object System.Text.StringBuilder
+    $html = Get-Content "$PSScriptRoot\..\Ressources\modèle_page.html"
+    $html = $html.replace("<!-- inserer titre ici -->", $titre)
+    $html = $html.replace("<!-- inserer contenu ici -->", $contenu)
 
-    foreach ($sousDossier in Get-ChildItem -Path "$dossier" -Directory) {
-
-        [void]$divs.AppendLine("<div class=`"cadre_lien_liste`">")
-        [void]$divs.AppendLine("<h2>$sousDossier</h2>")
-        [void]$divs.AppendLine("<ul>")
-
-        foreach ($fichier in (Get-ChildItem -Path "$dossier\$sousDossier" -Exclude $exclure)) {
-            [void]$divs.AppendLine("<li><a href=`"./$sousDossier/$($fichier.Name)`">$($fichier.BaseName)</a></li>")
-        }
-
-        [void]$divs.AppendLine("</ul>")
-        [void]$divs.AppendLine("</div>")
+    if ($activerBoutonAccueil) {
+        $html = [RegEx]::Replace($html, '<!-- retirer commentaire pour activer bouton accueil (.*)-->', '<$1>')
     }
 
-    # chargement du modèle de page et insertion des divs
-    $html = Get-Content "$PSScriptRoot\..\Ressources\modèle_page_liens.html"
-    $html = $html.replace("<!-- inserer titre ici -->", $titre)
-    $html = $html.replace("<!-- inserer contenu ici -->", $divs.ToString())
+    $html | Out-File $sortie -Force -Encoding utf8
+}
 
-    $html | Out-File -LiteralPath "$dossier\index.html" -Force -Encoding utf8
+# -----------------------------------------------------------------------------
+# Génération de la page d'accueil du portail.
+#
+# Itère sur les dossiers présents dans Thématiques pour déterminer les tuiles
+# à afficher.
+# -----------------------------------------------------------------------------
+function SI3P0-Generer-Accueil-Portail {
+
+    $contenu = [Text.StringBuilder]::new()
+
+    # génération d'une tuile par thématique
+    foreach ($dossierThematique in Get-ChildItem $si3p0ThematiquesPortailWeb -Directory) {
+
+        [void]$contenu.AppendLine("<div class=`"cadre_thematique`">")
+        [void]$contenu.AppendLine("<a href=`"/Thématiques/$dossierThematique/`">")
+
+        [void]$contenu.AppendLine("<div class=`"illustration_thematique`">")
+        # /!\ placer une image "illustration.png" la thématique de taille 250px * 250px
+        [void]$contenu.AppendLine("<img class=`"ajuste`" src=`"/Thématiques/$dossierThematique/illustration.png`" title=`"$dossierThematique`" alt=`"$dossierThematique`" />")
+        [void]$contenu.AppendLine("</div>")
+
+        [void]$contenu.AppendLine("<div class=`"titre_thematique`">$dossierThematique</div>")
+
+        [void]$contenu.AppendLine("</a>")
+        [void]$contenu.AppendLine("</div>")
+    }
+
+    SI3P0-Generer-Page-Portail -titre 'si3p0' -contenu $contenu.ToString() -activerBoutonAccueil $false -sortie "$si3p0PortailWeb\index.html"
+}
+
+# -----------------------------------------------------------------------------
+# Génération de la page d'index d'une thématique du portail.
+#
+# $dossierThematique : Le dossier contenant les ressources de la thématique.
+# $sortie : Le chemin de sauvegarde de la page.
+# -----------------------------------------------------------------------------
+function SI3P0-Generer-Thematique-Portail {
+    param (
+        [parameter(Mandatory=$true)] [string] $dossierThematique,
+        [parameter(Mandatory=$true)] [string] $sortie
+    )
+
+    $contenu = [Text.StringBuilder]::new()
+
+    [void]$contenu.AppendLine("<div class=`"cadre_arborescence`">")
+
+    # parcours des sous-dossiers
+    foreach ($dossier in Get-ChildItem $dossierThematique -Directory) {
+
+        # cas 1 : le sous-dossier contient une page index.html
+        if (Test-Path "$($dossier.FullName)\index.html") {
+
+            # --> ajout d'un hyperlien vers le dossier
+            [void]$contenu.AppendLine("<ul class=`"arborescence`">")
+            [void]$contenu.AppendLine("<li class=`"arborescence_pliee`"><a href=`"./$dossier/`">$dossier</a></li>")
+            [void]$contenu.AppendLine("</ul>")
+
+        }
+        # cas 1 : le sous-dossier contient ne contient par une page index.html
+        else {
+            
+            [void]$contenu.AppendLine("<ul class=`"arborescence`">")
+            [void]$contenu.AppendLine("<li class=`"arborescence_depliee`">$dossier</li>")
+            [void]$contenu.AppendLine("<ul class=`"arborescence`">")
+            
+            # --> ajout d'un hyperlien vers les fichiers .html et .pdf
+            foreach ($fichier in Get-ChildItem "$($dossier.FullName)\*" -Include '*.pdf', '*.html') {
+                [void]$contenu.AppendLine("<li class=`"arborescence_feuille`"><a href=`"./$($dossier.Name)/$($fichier.Name)`">$([IO.Path]::GetFileNameWithoutExtension($fichier))</a></li>")
+            }
+
+            [void]$contenu.AppendLine("</ul>")
+            [void]$contenu.AppendLine("</ul>")
+        }
+    }
+
+    [void]$contenu.AppendLine("</div>")
+
+    SI3P0-Generer-Page-Portail -titre ([IO.Path]::GetFileName($dossierThematique)) -contenu $contenu.ToString() -sortie $sortie
+}
+
+# -----------------------------------------------------------------------------
+# Génération de la page d'index des thématiques du portail.
+#
+# Itère sur les dossiers présents dans Thématiques pour déterminer les pages
+# à générer.
+# -----------------------------------------------------------------------------
+function SI3P0-Generer-Thematiques-Portail {
+
+    foreach ($dossierThematique in Get-ChildItem $si3p0ThematiquesPortailWeb -Directory) {
+        SI3P0-Generer-Thematique-Portail -dossierThematique $dossierThematique.FullName -sortie "$($dossierThematique.FullName)/index.html"
+    }
+}
+
+# -----------------------------------------------------------------------------
+# Génération d'une page HTML du portail pour l'affichage du contenu d'un CSV.
+#
+# $csv : Le chemin vers le fichier CSV.
+# $urlCsv : L'URL de téléchargement du fichier CSV.
+# $sortie : Le chemin de sauvegarde de la page.
+# $titre : Le titre de la page.
+# $delimiteur : Le délimiteur utilisé dans le CSV.
+# -----------------------------------------------------------------------------
+function SI3P0-Generer-Tableau-Portail {
+    param (
+        [parameter(Mandatory=$true)] [string] $csv,
+        [parameter(Mandatory=$true)] [string] $urlCsv,
+        [parameter(Mandatory=$true)] [string] $sortie,
+        [string] $titre = [IO.Path]::GetFileNameWithoutExtension($csv),
+        [string] $delimiteur = (Get-Culture).TextInfo.ListSeparator
+    )
+
+    $contenuCSV = Import-Csv $csv -Delimiter $delimiteur
+
+    if ($contenuCSV.Count -ge 0) {
+
+        $contenu = [Text.StringBuilder]::new()
+        [void]$contenu.AppendLine('<table class="csv2html">')
+    
+        [void]$contenu.AppendLine('<thread>')
+    
+        # ajout du lien de téléchargement des données
+        [void]$contenu.AppendLine('<tr>')
+        [void]$contenu.AppendLine("<td colspan=""$($entetes.Length + 2)"">")
+        [void]$contenu.AppendLine("<a href=""$urlCsv"">Télécharger les données au format CSV...</a>")
+        [void]$contenu.AppendLine('</td>')
+        [void]$contenu.AppendLine('</tr>')
+
+        # génération de la ligne d'entête du tableau
+        [void]$contenu.AppendLine('<tr>')
+        [void]$contenu.AppendLine('<th>#</th>')
+        $contenuCSV[0].PSObject.Properties | foreach {
+            [void]$contenu.AppendLine("<th>$($_.Name)</th>")
+        }
+        [void]$contenu.AppendLine('</tr>')
+
+        [void]$contenu.AppendLine('</thread>')
+
+        # génération du corps du tableau
+        [void]$contenu.AppendLine('<tbody class="csv2html">')
+
+        # ligne à ligne
+        $numLig = 0
+        $contenuCSV | foreach {
+
+            $numLig++
+
+            [void]$contenu.AppendLine('<tr>')
+            [void]$contenu.AppendLine("<th>$numLig</th>")
+
+            # colonne à colonne
+            $_.PSObject.Properties | foreach {
+                [void]$contenu.Append("<td title=""#$numLig-$($_.Name)"">")
+                
+                if ($_.Name.StartsWith('Lien')) {
+                    [void]$contenu.Append("<a href=""$($_.Value)"" target=""_blank"">Accéder au lien</a>")
+                }
+                else {
+                    [void]$contenu.Append($_.Value)
+                }
+
+                [void]$contenu.AppendLine('</td>')
+            }
+
+            [void]$contenu.AppendLine('</tr>')
+        }
+
+        [void]$contenu.AppendLine('</tbody>')
+        [void]$contenu.AppendLine('</table>')
+
+        SI3P0-Generer-Page-Portail -titre $titre -contenu $contenu.ToString() -sortie $sortie
+    }
+}
+
+# -----------------------------------------------------------------------------
+# Génération d'une page HTML du portail pour l'affichage du contenu de chaque
+# CSV présent dans un dossier donné.
+#
+# $dossier : Le chemin vers le dossier contenant les CSV.
+# $urlCsv : L'URL du dossier contenant les CSV.
+# $sortie : Le chemin de sauvegarde des pages.
+# $delimiteur : Le délimiteur utilisé dans les CSV.
+# -----------------------------------------------------------------------------
+function SI3P0-Generer-Tableaux-Portail {
+    param (
+        [parameter(Mandatory=$true)] [string] $dossier,
+        [parameter(Mandatory=$true)] [string] $urlDossier,
+        [parameter(Mandatory=$true)] [string] $sortie,
+        [string] $delimiteur = (Get-Culture).TextInfo.ListSeparator
+    )
+
+    foreach ($csv in Get-ChildItem "$dossier\*.csv") {
+        SI3P0-Generer-Tableau-Portail -csv $csv -urlCsv "$urlDossier/$($csv.BaseName).csv" -sortie "$sortie\$($csv.BaseName).html"
+    }
 }
 
 # -----------------------------------------------------------------------------
@@ -143,88 +327,4 @@ function SI3P0-Generer-Carte {
 
     New-Item -ItemType Directory -Force -Path (Split-Path -Path $carte)
     Move-Item $carteTemp $carte -Force
-}
-
-# -----------------------------------------------------------------------------
-# Conversion d'un fichier CSV en page HTML.
-#
-# $csv : Le chemin du fichier CSV source.
-# $urlCsv : L'URL de téléchargement du fichier CSV.
-# $html : Le chemin du HTML de sortie.
-# $titre : Le titre du tableau.
-# $delimiteur : Le délimiteur utilisé dans le CSV source.
-# -----------------------------------------------------------------------------
-function SI3P0-Convertir-CSV-Vers-HTML {
-    param (
-        [parameter(Mandatory=$true)] [string] $csv,
-        [parameter(Mandatory=$true)] [string] $urlCsv,
-        [parameter(Mandatory=$true)] [string] $html,
-        [string] $titre = '',
-        [string] $delimiteur = (Get-Culture).TextInfo.ListSeparator
-    )
-
-    $contenuCSV = Import-Csv $csv -Delimiter $delimiteur
-
-    if ($contenuCSV.Count -ge 0) {
-
-        $sb = New-Object System.Text.StringBuilder
-        [void]$sb.AppendLine('<table class="csv2html">')
-    
-        [void]$sb.AppendLine('<thread>')
-    
-        # ajout du lien de téléchargement des données
-        [void]$sb.AppendLine('<tr>')
-        [void]$sb.AppendLine("<td colspan=""$($entetes.Length + 2)"">")
-        [void]$sb.AppendLine("<a href=""$urlCsv"">Télécharger les données au format CSV...</a>")
-        [void]$sb.AppendLine('</td>')
-        [void]$sb.AppendLine('</tr>')
-
-        # génération de la ligne d'entête du tableau
-        [void]$sb.AppendLine('<tr>')
-        [void]$sb.AppendLine('<th>#</th>')
-        $contenuCSV[0].PSObject.Properties | foreach {
-            [void]$sb.AppendLine("<th>$($_.Name)</th>")
-        }
-        [void]$sb.AppendLine('</tr>')
-
-        [void]$sb.AppendLine('</thread>')
-
-        # génération du corps du tableau
-        [void]$sb.AppendLine('<tbody class="csv2html">')
-
-        # ligne à ligne
-        $numLig = 0
-        $contenuCSV | foreach {
-
-            $numLig++
-
-            [void]$sb.AppendLine('<tr>')
-            [void]$sb.AppendLine("<th>$numLig</th>")
-
-            # colonne à colonne
-            $_.PSObject.Properties | foreach {
-                [void]$sb.Append("<td title=""#$numLig-$($_.Name)"">")
-                
-                if ($_.Name.StartsWith('Lien')) {
-                    [void]$sb.Append("<a href=""$($_.Value)"" target=""_blank"">Accéder au lien</a>")
-                }
-                else {
-                    [void]$sb.Append($_.Value)
-                }
-
-                [void]$sb.AppendLine('</td>')
-            }
-
-            [void]$sb.AppendLine('</tr>')
-        }
-
-        [void]$sb.AppendLine('</tbody>')
-        [void]$sb.AppendLine('</table>')
-
-        $code = Get-Content "$PSScriptRoot\..\Ressources\modèle_page_tableau.html"
-        $code = $code.replace("<!-- inserer titre ici -->", $titre)
-        $code = $code.replace("<!-- inserer contenu ici -->", $sb.ToString())
-
-        $code | Out-File -LiteralPath $html -Force -Encoding utf8
-    }
 }

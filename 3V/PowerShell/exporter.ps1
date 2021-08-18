@@ -22,18 +22,19 @@ SIg-Executer-Fichier -fichier "$dossierSQLPart\tmp(.v).4Part (create).sql" -sort
 $parametresJobs = New-Object System.Collections.ArrayList
 
 # geojson (WGS84)
-[void]$parametresJobs.Add((Parametrer-Job-SIg-Exporter-GeoJSON -requete 'select * from tmp.VVVAvecDoublons_4Layer' -geoJSON "$si3p0DossierExportGeoJSON\3V\D30_3V avec doublons.geojson" -sridCible 4326 -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - Export D30_3V avec doublons WGS84.geojson.txt"))
-[void]$parametresJobs.Add((Parametrer-Job-SIg-Exporter-GeoJSON -requete 'select * from tmp.VVVSansDoublons_4Layer' -geoJSON "$si3p0DossierExportGeoJSON\3V\D30_3V sans doublons.geojson" -sridCible 4326 -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - Export D30_3V sans doublons WGS84.geojson.txt"))
-[void]$parametresJobs.Add((Parametrer-Job-SIg-Exporter-GeoJSON -requete 'select * from tmp.VVVInventaireD30_4Layer' -geoJSON "$si3p0DossierExportGeoJSON\3V\D30_Inventaire.geojson" -sridCible 4326 -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - Export D30_Inventaire WGS84.geojson.txt"))
+[void]$parametresJobs.Add((Parametrer-Job-SIg-Exporter-GeoJSON -requete 'select * from tmp.VVVAvecDoublons_4Layer' -geoJSON "$si3p0DossierExportGeoJSON\3V\D30_3V avec doublons.geojson" -sridCible 4326 -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - Export D30_3V avec doublons.geojson.txt"))
+[void]$parametresJobs.Add((Parametrer-Job-SIg-Exporter-GeoJSON -requete 'select * from tmp.VVVSansDoublons_4Layer' -geoJSON "$si3p0DossierExportGeoJSON\3V\D30_3V sans doublons.geojson" -sridCible 4326 -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - Export D30_3V sans doublons.geojson.txt"))
+[void]$parametresJobs.Add((Parametrer-Job-SIg-Exporter-GeoJSON -requete 'select * from tmp.VVVInventaireD30_4Layer' -geoJSON "$si3p0DossierExportGeoJSON\3V\D30_Inventaire.geojson" -sridCible 4326 -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - Export D30_Inventaire.geojson.txt"))
+[void]$parametresJobs.Add((Parametrer-Job-SIg-Exporter-GeoJSON -requete 'select * from tmp.VVVPortionUniforme_4Layer' -geoJSON "$si3p0DossierExportGeoJSON\3V\D30_Portion uniforme.geojson" -sridCible 4326 -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - Export D30_Portion uniforme.geojson.txt"))
 
 # shp
 [void]$parametresJobs.Add((Parametrer-Job-SIg-Exporter-SHP -requete 'select * from tmp.VVVAvecDoublons_4SHP' -shp "$si3p0DossierExportSHP\3V\D30_3V avec doublons.shp" -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - Export D30_3V avec doublons.shp.txt"))
 [void]$parametresJobs.Add((Parametrer-Job-SIg-Exporter-SHP -requete 'select * from tmp.VVVSansDoublons_4SHP' -shp "$si3p0DossierExportSHP\3V\D30_3V sans doublons.shp" -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - Export D30_3V sans doublons.shp.txt"))
 
 # csv
-[void]$parametresJobs.Add((Parametrer-Job-SIg-Exporter-CSV -requete 'select * from tmp.VVVInventaireD30ParStatut_4Sheet' -csv "$si3p0TableursPortailWeb\Thématique 3V\csv\Inventaire 3V Gard par statut.csv"))
-[void]$parametresJobs.Add((Parametrer-Job-SIg-Exporter-CSV -requete 'select * from tmp.VVVInventaireD30ParPortion_4Sheet' -csv "$si3p0TableursPortailWeb\Thématique 3V\csv\Inventaire 3V Gard par portion.csv"))
-[void]$parametresJobs.Add((Parametrer-Job-SIg-Exporter-CSV -requete 'select * from tmp.VVVInventaireD30ParItineraires_4Sheet' -csv "$si3p0TableursPortailWeb\Thématique 3V\csv\Inventaire 3V Gard par itinéraires.csv"))
+[void]$parametresJobs.Add((Parametrer-Job-SIg-Exporter-CSV -requete 'select * from tmp.VVVInventaireD30ParStatut_4Sheet' -csv "$si3p0ThematiquesPortailWeb\3V\Tableaux\csv\Linéaire du Gard par statut.csv"))
+[void]$parametresJobs.Add((Parametrer-Job-SIg-Exporter-CSV -requete 'select * from tmp.VVVInventaireD30ParPortion_4Sheet' -csv "$si3p0ThematiquesPortailWeb\3V\Tableaux\csv\Linéaire du Gard par portion.csv"))
+[void]$parametresJobs.Add((Parametrer-Job-SIg-Exporter-CSV -requete 'select * from tmp.VVVInventaireD30ParItineraires_4Sheet' -csv "$si3p0ThematiquesPortailWeb\3V\Tableaux\csv\Linéaire du Gard par itinéraire.csv"))
 
 # partenaires
 [void]$parametresJobs.Add((Parametrer-Job-SIg-Exporter-GeoJSON -requete 'select * from tmp.VetTSegment_4Layer' -geoJSON "$si3p0DossierExportPartenaires\Vélo et Territoires\D30_V&T_Segment.geojson" -sridCible 4326 -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - Export D30_V&T_Segment.geojson.txt"))
@@ -47,9 +48,7 @@ $parametresJobs = New-Object System.Collections.ArrayList
 Executer-Jobs -parametresJobs $parametresJobs
 
 # génération des fichiers HTML correspondants aux CSV
-foreach ($csv in Get-ChildItem -Path "$si3p0TableursPortailWeb\Thématique 3V\csv\*.csv") {
-    SI3P0-Convertir-CSV-Vers-HTML -csv $csv -urlCsv "./csv/$($csv.BaseName).csv" -html "$si3p0TableursPortailWeb\Thématique 3V\$($csv.BaseName).html"
-}
+SI3P0-Generer-Tableaux-Portail -dossier "$si3p0ThematiquesPortailWeb\3V\Tableaux\csv" -urlDossier "./csv" -sortie "$si3p0ThematiquesPortailWeb\3V\Tableaux"
 
 # nettoyage final
 SIg-Executer-Fichier -fichier "$dossierSQL4Layer\tmp(.v).4Layer (drop).sql" -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - tmp(.v).4Layer (drop).txt"

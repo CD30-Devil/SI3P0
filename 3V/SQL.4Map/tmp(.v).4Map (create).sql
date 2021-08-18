@@ -84,7 +84,7 @@ group by
     ea.CodeEtatAvancement3V, ea.Description, r.CodeRevetement3V, r.Description, s.CodeStatut3V, s.Description, sc.AnneeOuverture, sc.SensUnique, sc.SourceGeometrie, sc.IdGeometrie, sc.DateSource, sc.Fictif, sc.Geom
 order by s.CodeStatut3V;
 
-create view tmp.VVVInventaireD30Agrege_4Map as
+create view tmp.VVVLineaireD30Agrege_4Map as
 with SegmentOuvertD30 as (
     select distinct sc.*
     from m.SegmentCyclable sc
@@ -108,7 +108,7 @@ select
     s.Description                                                                               as "Statut segments            ",
     round(ST_Length(ST_CollectionExtract(unnest(ST_ClusterWithin(sc.Geom, 1)), 2))::numeric, 2) as "Longueur segments           ",
     ST_CollectionExtract(unnest(ST_ClusterWithin(sc.Geom, 1)), 2) as Geom,
-    'Inventaire agrégé' as NomCouche,
+    'Linéaire agrégé' as NomCouche,
     s.Description as Legende,
     case s.CodeStatut3V
         when 'VV' then '#18CF3C'
@@ -125,7 +125,7 @@ left join m.Statut3V s on s.CodeStatut3V = sc.CodeStatut3V
 group by r.Description, s.CodeStatut3V, s.Description
 order by Legende;
 
-create view tmp.VVVInventaireD30Detail_4Map as
+create view tmp.VVVLineaireD30Detail_4Map as
 with SegmentOuvertD30 as (
     select distinct sc.*
     from m.SegmentCyclable sc
@@ -159,7 +159,7 @@ select
     string_agg(distinct gest.Denomination, ', ')                                      as "Gestionnaire(s)                                ",
     string_agg(distinct prop.Denomination, ', ')                                      as "Propri&eacute;taire(s)                          ",
     sc.Geom,
-    'Inventaire détaillé' as NomCouche,
+    'Linéaire détaillé' as NomCouche,
     s.Description as Legende,
     case s.CodeStatut3V
         when 'VV' then '#18CF3C'
