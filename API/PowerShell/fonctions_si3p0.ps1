@@ -95,15 +95,15 @@ function SI3P0-Generer-Thematique-Portail {
             [void]$contenu.AppendLine("</ul>")
 
         }
-        # cas 1 : le sous-dossier contient ne contient par une page index.html
-        else {
+        # cas 2 : le sous-dossier ne contient par une page index.html mais contient des pages HTML ou des fichiers PDF
+        elseif (Test-Path "$($dossier.FullName)\*" -Include '*.html', '*.pdf') {
             
             [void]$contenu.AppendLine("<ul class=`"arborescence`">")
             [void]$contenu.AppendLine("<li class=`"arborescence_depliee`">$dossier</li>")
             [void]$contenu.AppendLine("<ul class=`"arborescence`">")
             
-            # --> ajout d'un hyperlien vers les fichiers .html et .pdf
-            foreach ($fichier in Get-ChildItem "$($dossier.FullName)\*" -Include '*.pdf', '*.html') {
+            # --> ajout d'un hyperlien vers les fichiers .html, .htm et .pdf
+            foreach ($fichier in Get-ChildItem "$($dossier.FullName)\*" -Include '*.html', '*.pdf') {
                 [void]$contenu.AppendLine("<li class=`"arborescence_feuille`"><a href=`"./$($dossier.Name)/$($fichier.Name)`">$([IO.Path]::GetFileNameWithoutExtension($fichier))</a></li>")
             }
 
