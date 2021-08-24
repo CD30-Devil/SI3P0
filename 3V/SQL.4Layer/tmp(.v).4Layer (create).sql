@@ -151,14 +151,38 @@ group by r.Description, s.Description;
 
 -- portions uniformes
 create view tmp.VVVPortionUniforme_4Layer as
+with SegmentDistinct as (
+    select
+        distinct
+        pc.Nom as NomPortion,
+        s.Description as StatutSegment,
+        e.Description as EtatAvancementSegment,
+        sc.Geom
+    from m.SegmentCyclable sc
+    left join m.Statut3V s on sc.CodeStatut3V = s.CodeStatut3V
+    left join m.EtatAvancement3V e on sc.CodeEtatAvancement3V = e.CodeEtatAvancement3V
+    left join m.SegmentCyclable_PortionCyclable sp on sp.IdSegmentCyclable = sc.IdSegmentCyclable
+    left join m.PortionCyclable pc on pc.IdPortionCyclable = sp.IdPortionCyclable
+)
 select
-	pc.Nom as "Nom",
-	s.Description as "Statut",
-	e.Description as "EtatAvancement",
-    ST_Multi(ST_LineMerge(ST_CollectionExtract(unnest(ST_ClusterIntersecting(sc.geom)), 2))) as Geom
+    NomPortion as "Nom",
+    StatutSegment as "Statut",
+    EtatAvancementSegment as "EtatAvancement",
+    (ST_Dump(ST_LineMerge(ST_CollectionExtract(unnest(ST_ClusterIntersecting(geom)), 2)))).Geom
+from SegmentDistinct
+group by NomPortion, StatutSegment, EtatAvancementSegment;
+
+-- étiquetage itinéraires
+create view tmp.VVVEtiquetageItineraire_4Layer as
+select
+    ic.NumeroItineraireCyclable as "NumeroItineraire",
+    ic.NomOfficiel as "NomOfficielItineraire",
+    ic.NiveauSchema as "NiveauSchema",
+    ST_Force2D(ST_PointOnSurface(ST_Collect(geom))) as Geom
 from m.SegmentCyclable sc
-left join m.Statut3V s on sc.CodeStatut3V = s.CodeStatut3V
-left join m.EtatAvancement3V e on sc.CodeEtatAvancement3V = e.CodeEtatAvancement3V
 left join m.SegmentCyclable_PortionCyclable sp on sp.IdSegmentCyclable = sc.IdSegmentCyclable
 left join m.PortionCyclable pc on pc.IdPortionCyclable = sp.IdPortionCyclable
-group by pc.Nom, s.Description, e.Description;
+left join m.PortionCyclable_ItineraireCyclable pi ON pi.IdPortionCyclable = pc.IdPortionCyclable
+left join m.ItineraireCyclable ic ON ic.NumeroItineraireCyclable = pi.NumeroItineraireCyclable
+where pc.CodeTypePortionCyclable = 'ETP'
+group by ic.NumeroItineraireCyclable;

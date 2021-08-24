@@ -2,7 +2,12 @@
 
 create view tmp.SegmentEtatAvancement_4Map as
 select
-    ea.Description                                                                    as "Etat d'avancement segment ",
+    case sc.CodeEtatAvancement3V
+        when 4 then 'Ouvert'
+        when 3 then 'Travaux en cours'
+        when 2 then 'Etudes en cours'
+        when 1 then 'Tracé d''intention'
+    end                                                                               as "Etat d'avancement segment ",
     r.Description                                                                     as "Rev&ecirc;tement segment   ",
     s.Description                                                                     as "Statut segment              ",
     sc.AnneeOuverture                                                                 as "Ann&eacute;e d'ouverture segment ",
@@ -16,8 +21,13 @@ select
     string_agg(distinct prop.Denomination, ', ')                                      as "Propri&eacute;taire(s)                         ",
     sc.Geom,
     'Segments cyclables par état d''avancement' as NomCouche,
-    ea.Description as Legende,
-    case ea.CodeEtatAvancement3V
+    case sc.CodeEtatAvancement3V
+        when 4 then 'Ouvert'
+        when 3 then 'Travaux en cours'
+        when 2 then 'Etudes en cours'
+        when 1 then 'Tracé d''intention'
+    end as Legende,
+    case sc.CodeEtatAvancement3V
         when 4 then '#60D701'
         when 3 then '#FFDB01'
         when 2 then '#FF6E0B'
@@ -25,7 +35,6 @@ select
         else '#FF0000'
     end as Couleur
 from m.SegmentCyclable sc
-left join m.EtatAvancement3V ea on ea.CodeEtatAvancement3V = sc.CodeEtatAvancement3V
 left join m.Revetement3V r on r.CodeRevetement3V = sc.CodeRevetement3V
 left join m.Statut3V s on s.CodeStatut3V = sc.CodeStatut3V
 left join m.SegmentCyclable_PortionCyclable sp on sp.IdSegmentCyclable = sc.IdSegmentCyclable
@@ -38,12 +47,17 @@ left join d.Sirene_UniteLegale gest on gest.Siren = scg.Siren
 left join m.SegmentCyclable_Proprietaire scp on scp.IdsegmentCyclable = sc.IdSegmentCyclable
 left join d.Sirene_UniteLegale prop on prop.Siren = scp.Siren
 group by
-    ea.CodeEtatAvancement3V, ea.Description, r.CodeRevetement3V, r.Description, s.CodeStatut3V, s.Description, sc.AnneeOuverture, sc.SensUnique, sc.SourceGeometrie, sc.IdGeometrie, sc.DateSource, sc.Fictif, sc.Geom
-order by ea.CodeEtatAvancement3V;
+    sc.CodeEtatAvancement3V, r.CodeRevetement3V, r.Description, s.CodeStatut3V, s.Description, sc.AnneeOuverture, sc.SensUnique, sc.SourceGeometrie, sc.IdGeometrie, sc.DateSource, sc.Fictif, sc.Geom
+order by sc.CodeEtatAvancement3V;
 
 create view tmp.SegmentStatut_4Map as
 select
-    ea.Description                                                                    as "Etat d'avancement segment ",
+    case sc.CodeEtatAvancement3V
+        when 4 then 'Ouvert'
+        when 3 then 'Travaux en cours'
+        when 2 then 'Etudes en cours'
+        when 1 then 'Tracé d''intention'
+    end                                                                               as "Etat d'avancement segment ",
     r.Description                                                                     as "Rev&ecirc;tement segment   ",
     s.Description                                                                     as "Statut segment              ",
     sc.AnneeOuverture                                                                 as "Ann&eacute;e d'ouverture segment ",
@@ -68,7 +82,6 @@ select
         else '#FF0000'
     end as Couleur
 from m.SegmentCyclable sc
-left join m.EtatAvancement3V ea on ea.CodeEtatAvancement3V = sc.CodeEtatAvancement3V
 left join m.Revetement3V r on r.CodeRevetement3V = sc.CodeRevetement3V
 left join m.Statut3V s on s.CodeStatut3V = sc.CodeStatut3V
 left join m.SegmentCyclable_PortionCyclable sp on sp.IdSegmentCyclable = sc.IdSegmentCyclable
@@ -81,7 +94,7 @@ left join d.Sirene_UniteLegale gest on gest.Siren = scg.Siren
 left join m.SegmentCyclable_Proprietaire scp on scp.IdsegmentCyclable = sc.IdSegmentCyclable
 left join d.Sirene_UniteLegale prop on prop.Siren = scp.Siren
 group by
-    ea.CodeEtatAvancement3V, ea.Description, r.CodeRevetement3V, r.Description, s.CodeStatut3V, s.Description, sc.AnneeOuverture, sc.SensUnique, sc.SourceGeometrie, sc.IdGeometrie, sc.DateSource, sc.Fictif, sc.Geom
+    sc.CodeEtatAvancement3V, r.CodeRevetement3V, r.Description, s.CodeStatut3V, s.Description, sc.AnneeOuverture, sc.SensUnique, sc.SourceGeometrie, sc.IdGeometrie, sc.DateSource, sc.Fictif, sc.Geom
 order by s.CodeStatut3V;
 
 create view tmp.VVVLineaireD30Agrege_4Map as
@@ -145,7 +158,12 @@ SegmentACompter as (
     and IdGeometrie not in (select IdIGN from m.Troncon)
 )
 select
-    ea.Description                                                                    as "Etat d'avancement segment ",
+    case sc.CodeEtatAvancement3V
+        when 4 then 'Ouvert'
+        when 3 then 'Travaux en cours'
+        when 2 then 'Etudes en cours'
+        when 1 then 'Tracé d''intention'
+    end                                                                               as "Etat d'avancement segment ",
     r.Description                                                                     as "Rev&ecirc;tement segment   ",
     s.Description                                                                     as "Statut segment              ",
     sc.AnneeOuverture                                                                 as "Ann&eacute;e d'ouverture segment ",
@@ -171,7 +189,6 @@ select
         else '#FF0000'
     end as Couleur
 from SegmentACompter sc
-left join m.EtatAvancement3V ea on ea.CodeEtatAvancement3V = sc.CodeEtatAvancement3V
 left join m.Revetement3V r on r.CodeRevetement3V = sc.CodeRevetement3V
 left join m.Statut3V s on s.CodeStatut3V = sc.CodeStatut3V
 left join m.SegmentCyclable_PortionCyclable sp on sp.IdSegmentCyclable = sc.IdSegmentCyclable
@@ -184,5 +201,5 @@ left join d.Sirene_UniteLegale gest on gest.Siren = scg.Siren
 left join m.SegmentCyclable_Proprietaire scp on scp.IdsegmentCyclable = sc.IdSegmentCyclable
 left join d.Sirene_UniteLegale prop on prop.Siren = scp.Siren
 group by
-    ea.CodeEtatAvancement3V, ea.Description, r.CodeRevetement3V, r.Description, s.CodeStatut3V, s.Description, sc.AnneeOuverture, sc.SensUnique, sc.SourceGeometrie, sc.IdGeometrie, sc.DateSource, sc.Fictif, sc.Geom
+    sc.CodeEtatAvancement3V, r.CodeRevetement3V, r.Description, s.CodeStatut3V, s.Description, sc.AnneeOuverture, sc.SensUnique, sc.SourceGeometrie, sc.IdGeometrie, sc.DateSource, sc.Fictif, sc.Geom
 order by Legende;
