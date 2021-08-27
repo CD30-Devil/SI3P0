@@ -2,7 +2,8 @@
 # Constantes
 # -----------------------------------------------------------------------------
 
-$email_contact = '<contact@ma-collectivité.fr>'
+$email_generique = '<contact@ma-collectivité.fr>'
+$email_contact = '<moi@ma-collectivité.fr>'
 
 $racinePostgreSQL = '<C:\PostgreSQL\10>'
 $racineOSGeo4W = '<C:\OSGeo4W64>'
@@ -33,8 +34,9 @@ $ogr2ogr = "$racineOSGeo4W\bin\ogr2ogr.exe"
 # chemin vers 7-Zip
 $7z = "$env:ProgramFiles\7-Zip\7z.exe"
 
-# chemin vers Google Chrome
-$chrome = "${env:ProgramFiles(x86)}\Google\Chrome\Application\chrome.exe"
+# chemin vers un navigateur basé sur Chromium (Google Chrome, Microsoft Edge, ...)
+$chromium = "${env:ProgramFiles(x86)}\Google\Chrome\Application\chrome.exe"
+#$chromium = "${env:ProgramFiles(x86)}\Microsoft\Edge\Application\msedge.exe"
 
 # serveur e-mail sortant
 $serveurSMTP = '<mon-serveur-smtp>'

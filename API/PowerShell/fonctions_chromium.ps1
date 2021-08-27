@@ -1,16 +1,16 @@
 ﻿. ("$PSScriptRoot\constantes.ps1")
 
 # -----------------------------------------------------------------------------
-# Exécution de Google Chrome.
+# Exécution du navigateur Chromium.
 #
-# $parametres : Les paramètres d'appel à Google Chrome.
+# $parametres : Les paramètres d'appel à Chromium.
 # -----------------------------------------------------------------------------
-Function Executer-Chrome {
+Function Executer-Chromium {
     param(
         [string[]] $parametres = $null
     )
 
-    Start-Process -FilePath "`"$chrome`"" -Wait -ArgumentList $parametres
+    Start-Process -FilePath "`"$Chromium`"" -Wait -ArgumentList $parametres
 }
 
 # -----------------------------------------------------------------------------
@@ -21,7 +21,7 @@ Function Executer-Chrome {
 # $taille : La taille de la capture.
 # $delai : Le délai d'attente pour le chargement complet de la page.
 # -----------------------------------------------------------------------------
-function Chrome-Capturer-Page {
+function Chromium-Capturer-Page {
     param(
         [parameter(Mandatory=$true)] [string] $url,
         [parameter(Mandatory=$true)] [string] $sortie,
@@ -41,5 +41,5 @@ function Chrome-Capturer-Page {
     [void]$parametres.Add("--virtual-time-budget=$delai")
 
     Afficher-Message-Date -message "Capture de $url vers $sortie ($taille)."
-    Executer-Chrome -parametres $parametres
+    Executer-Chromium -parametres $parametres
 }
