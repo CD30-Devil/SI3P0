@@ -2,6 +2,7 @@
 
 Executer-FichierPS -chemin "$PSScriptRoot\TU constantes.ps1" -process $true
 Executer-FichierPS -chemin "$PSScriptRoot\TU fonctions_archives.ps1" -process $true
+Executer-FichierPS -chemin "$PSScriptRoot\TU fonctions_chrome.ps1" -process $true
 Executer-FichierPS -chemin "$PSScriptRoot\TU fonctions_es.ps1" -process $true
 Executer-FichierPS -chemin "$PSScriptRoot\TU fonctions_excel.ps1" -process $true
 Executer-FichierPS -chemin "$PSScriptRoot\TU fonctions_géodonnées.ps1" -process $false

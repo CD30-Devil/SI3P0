@@ -24,28 +24,60 @@ function Telecharger {
 # -----------------------------------------------------------------------------
 # Envoi d'un e-mail.
 #
-# $de : Emetteur.
-# $a : Destinataire(s).
-# $sujet : Sujet.
-# $corps : Corps du mail
-# $cc : Copies carbones.
+# $de : L'émetteur.
+# $a : Les destinataires.
+# $cc : Les destinataires en copie.
+# $sujet : Le sujet du message.
+# $corps : Le corps du message.
+# $pjLes pièces jointes.
 # -----------------------------------------------------------------------------
 function Envoyer-Mail {
     param (
         [parameter(mandatory=$true)] [string] $de,
-        [parameter(mandatory=$true)] [string] $a,
+        [parameter(mandatory=$true)] [string[]] $a,
+        [string[]] $cc = $null,
         [parameter(mandatory=$true)] [string] $sujet,
         [parameter(mandatory=$true)] [string] $corps,
-        [string] $cc = $null
+        [string[]] $pj = $null
     )
+    
+    Afficher-Message-Date -message "Envoie d'un e-mail de $de à $([string]::Join(', ', $a))."
 
-    Afficher-Message-Date -message "Envoie d'un e-mail de $de à $a."
-
-    # si inclus dans l'appel, pas de valeur vide par défaut pour cc sinon bug 
-    if ($cc) {
-          Send-MailMessage -From $de -to $a -Subject $sujet -SmtpServer $serveurSMTP -BodyAsHtml $corps -Priority Normal -Cc $cc -Encoding ([System.Text.Encoding]::UTF8)
+    # test préalable des paramètres car l'appel n'autorise pas les $null ou vide
+    if ($cc -and $pj) {
+        Send-MailMessage `
+            -SmtpServer $serveurSMTP `
+            -From $de `
+            -to $a `
+            -Cc $cc `
+            -Attachments $pj `
+            -Subject $sujet `
+            -BodyAsHtml $corps `            -Priority Normal `            -Encoding ([System.Text.Encoding]::UTF8)
+    }
+    elseif ($cc) {
+        Send-MailMessage `
+            -SmtpServer $serveurSMTP `
+            -From $de `
+            -to $a `
+            -Cc $cc `
+            -Subject $sujet `
+            -BodyAsHtml $corps `            -Priority Normal `            -Encoding ([System.Text.Encoding]::UTF8)
+    }
+    elseif ($pj) {
+        Send-MailMessage `
+            -SmtpServer $serveurSMTP `
+            -From $de `
+            -to $a `
+            -Attachments $pj `
+            -Subject $sujet `
+            -BodyAsHtml $corps `            -Priority Normal `            -Encoding ([System.Text.Encoding]::UTF8)
     }
     else {
-        Send-MailMessage -From $de -to $a -Subject $sujet -SmtpServer $serveurSMTP -BodyAsHtml $corps -Priority Normal -Encoding ([System.Text.Encoding]::UTF8)
+        Send-MailMessage `
+            -SmtpServer $serveurSMTP `
+            -From $de `
+            -to $a `
+            -Subject $sujet `
+            -BodyAsHtml $corps `            -Priority Normal `            -Encoding ([System.Text.Encoding]::UTF8)
     }
 }
