@@ -7,9 +7,17 @@ with Alerte2hProcheRD as (
         case
             when IdTypeAlerteWaze = 'ACCIDENT' then 'ACCIDENT'
             when IdTypeAlerteWaze = 'ROAD_CLOSED' then 'ROAD_CLOSED'
+            when IdSousTypeAlerteWaze = 'HAZARD_ON_ROAD_CAR_STOPPED' then 'HAZARD_ON_ROAD_CAR_STOPPED'
+            when IdSousTypeAlerteWaze = 'HAZARD_ON_ROAD_ICE' then 'HAZARD_ON_ROAD_ICE'
             when IdSousTypeAlerteWaze = 'HAZARD_ON_ROAD_OBJECT' then 'HAZARD_ON_ROAD_OBJECT'
-            when IdSousTypeAlerteWaze = 'HAZARD_ON_ROAD_ROAD_KILL' then 'HAZARD_ON_ROAD_ROAD_KILL'
             when IdSousTypeAlerteWaze = 'HAZARD_ON_ROAD_OIL' then 'HAZARD_ON_ROAD_OIL'
+            when IdSousTypeAlerteWaze = 'HAZARD_ON_ROAD_ROAD_KILL' then 'HAZARD_ON_ROAD_ROAD_KILL'
+            when IdSousTypeAlerteWaze = 'HAZARD_WEATHER_FLOOD' then 'HAZARD_WEATHER_FLOOD'
+            when IdSousTypeAlerteWaze = 'HAZARD_WEATHER_FOG' then 'HAZARD_WEATHER_FOG'
+            when IdSousTypeAlerteWaze = 'HAZARD_WEATHER_FREEZING_RAIN' then 'HAZARD_WEATHER_FREEZING_RAIN'
+            when IdSousTypeAlerteWaze = 'HAZARD_WEATHER_HAIL' then 'HAZARD_WEATHER_HAIL'
+            when IdSousTypeAlerteWaze = 'HAZARD_WEATHER_HEAVY_RAIN' then 'HAZARD_WEATHER_HEAVY_RAIN'
+            when IdSousTypeAlerteWaze = 'HAZARD_WEATHER_HEAVY_SNOW' then 'HAZARD_WEATHER_HEAVY_SNOW'
             else '...'
         end as TypeAlerte,
         case
@@ -30,9 +38,17 @@ HistoAlerte2hProcheRD as (
         case
             when IdTypeAlerteWaze = 'ACCIDENT' then 'ACCIDENT'
             when IdTypeAlerteWaze = 'ROAD_CLOSED' then 'ROAD_CLOSED'
+            when IdSousTypeAlerteWaze = 'HAZARD_ON_ROAD_CAR_STOPPED' then 'HAZARD_ON_ROAD_CAR_STOPPED'
+            when IdSousTypeAlerteWaze = 'HAZARD_ON_ROAD_ICE' then 'HAZARD_ON_ROAD_ICE'
             when IdSousTypeAlerteWaze = 'HAZARD_ON_ROAD_OBJECT' then 'HAZARD_ON_ROAD_OBJECT'
-            when IdSousTypeAlerteWaze = 'HAZARD_ON_ROAD_ROAD_KILL' then 'HAZARD_ON_ROAD_ROAD_KILL'
             when IdSousTypeAlerteWaze = 'HAZARD_ON_ROAD_OIL' then 'HAZARD_ON_ROAD_OIL'
+            when IdSousTypeAlerteWaze = 'HAZARD_ON_ROAD_ROAD_KILL' then 'HAZARD_ON_ROAD_ROAD_KILL'
+            when IdSousTypeAlerteWaze = 'HAZARD_WEATHER_FLOOD' then 'HAZARD_WEATHER_FLOOD'
+            when IdSousTypeAlerteWaze = 'HAZARD_WEATHER_FOG' then 'HAZARD_WEATHER_FOG'
+            when IdSousTypeAlerteWaze = 'HAZARD_WEATHER_FREEZING_RAIN' then 'HAZARD_WEATHER_FREEZING_RAIN'
+            when IdSousTypeAlerteWaze = 'HAZARD_WEATHER_HAIL' then 'HAZARD_WEATHER_HAIL'
+            when IdSousTypeAlerteWaze = 'HAZARD_WEATHER_HEAVY_RAIN' then 'HAZARD_WEATHER_HEAVY_RAIN'
+            when IdSousTypeAlerteWaze = 'HAZARD_WEATHER_HEAVY_SNOW' then 'HAZARD_WEATHER_HEAVY_SNOW'
             else '...'
         end as TypeAlerte,
         case
