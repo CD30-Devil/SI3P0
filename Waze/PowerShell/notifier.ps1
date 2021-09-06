@@ -41,7 +41,7 @@ if (($alertes | Measure-Object).Count -gt 0) {
                 [void]$statut.Append("Fermeture de route signalée ")
             }
             'HAZARD_ON_ROAD_CAR_STOPPED' {
-                [void]$statut.Append("véhicule arrêté sur la route signalé ")
+                [void]$statut.Append("Véhicule arrêté sur la route signalé ")
             }
             'HAZARD_ON_ROAD_ICE' {
                 [void]$statut.Append("Verglas signalé ")
@@ -85,7 +85,7 @@ if (($alertes | Measure-Object).Count -gt 0) {
 
         # ajout d'éléments permettant d'apprécier la fiabilité de l'alerte
         if ($alerte.NbSignalements -eq '1') {
-            [void]$statut.AppendLine("(1 signalement de fiabilité $($alerte.Fiabilite))")
+            [void]$statut.AppendLine("(1 signalement à $($alerte.HeurePremierSignalement), fiabilité $($alerte.Fiabilite))")
         }
         else {
             [void]$statut.AppendLine("($($alerte.NbSignalements) signalements entre $($alerte.HeurePremierSignalement) et $($alerte.HeureDernierSignalement))")

@@ -7,7 +7,6 @@ with Alerte2hProcheRD as (
         case
             when IdTypeAlerteWaze = 'ACCIDENT' then 'ACCIDENT'
             when IdTypeAlerteWaze = 'ROAD_CLOSED' then 'ROAD_CLOSED'
-            when IdSousTypeAlerteWaze = 'HAZARD_ON_ROAD_CAR_STOPPED' then 'HAZARD_ON_ROAD_CAR_STOPPED'
             when IdSousTypeAlerteWaze = 'HAZARD_ON_ROAD_ICE' then 'HAZARD_ON_ROAD_ICE'
             when IdSousTypeAlerteWaze = 'HAZARD_ON_ROAD_OBJECT' then 'HAZARD_ON_ROAD_OBJECT'
             when IdSousTypeAlerteWaze = 'HAZARD_ON_ROAD_OIL' then 'HAZARD_ON_ROAD_OIL'
@@ -38,7 +37,6 @@ HistoAlerte2hProcheRD as (
         case
             when IdTypeAlerteWaze = 'ACCIDENT' then 'ACCIDENT'
             when IdTypeAlerteWaze = 'ROAD_CLOSED' then 'ROAD_CLOSED'
-            when IdSousTypeAlerteWaze = 'HAZARD_ON_ROAD_CAR_STOPPED' then 'HAZARD_ON_ROAD_CAR_STOPPED'
             when IdSousTypeAlerteWaze = 'HAZARD_ON_ROAD_ICE' then 'HAZARD_ON_ROAD_ICE'
             when IdSousTypeAlerteWaze = 'HAZARD_ON_ROAD_OBJECT' then 'HAZARD_ON_ROAD_OBJECT'
             when IdSousTypeAlerteWaze = 'HAZARD_ON_ROAD_OIL' then 'HAZARD_ON_ROAD_OIL'
