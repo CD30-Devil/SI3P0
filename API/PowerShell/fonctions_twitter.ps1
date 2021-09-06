@@ -1,5 +1,34 @@
 ﻿#region Fonctions outils pour l'appel à l'API Twitter.
 
+Add-Type -AssemblyName System.Web
+
+# -----------------------------------------------------------------------------
+# Encodage d'un chaîne pour appel à Twitter.
+#
+# Cette fonction complète l'appel à [Uri]::EscapeDataString qui en version 4.0
+# du framework n'encodait pas certains caractères.
+#
+# Fonction modifiée en 4.5 : 
+# https://docs.microsoft.com/en-us/dotnet/framework/migration-guide/runtime/4.0-4.5
+#
+# $chaine : La chaine à encoder.
+# -----------------------------------------------------------------------------
+function Twitter-Encoder-Chaine {
+    param (
+        [parameter(Mandatory=$true)] [string] $chaine
+    )
+
+    $encode = [Uri]::EscapeDataString($chaine)
+
+    # réencodage de certains caractères
+    $speciaux = @("!", "*", "'", "(", ")")
+    foreach ($special in $speciaux) {
+        $encode = $encode.Replace($special, [Uri]::HexEscape($special))
+    }
+
+    $encode
+}
+
 # -----------------------------------------------------------------------------
 # Création d'un objet porteur des différentes informations d'identification
 # nécessaires pour l'appel à l'API Twitter.
@@ -98,19 +127,19 @@ function Twitter-Calculer-Signature {
     [void]$baseSignature.Append($hash['method'])
     [void]$baseSignature.Append('&')
 
-    [void]$baseSignature.Append([Uri]::EscapeDataString($hash['url']))
+    [void]$baseSignature.Append((Twitter-Encoder-Chaine -chaine $hash['url']))
     [void]$baseSignature.Append('&')
 
     [void]$baseSignature.Append(
-        [Uri]::EscapeDataString(
+        (Twitter-Encoder-Chaine -chaine (`
             ($hash.GetEnumerator() `
                 | sort { [Uri]::EscapeDataString($_.Key) } `                | where { $_.Key -ne 'method' -and $_.Key -ne 'url' } `
-                | select @{ label = 'paire'; expression = { "$($_.Key)=$($_.Value)" } } `                | select -ExpandProperty 'paire' `            ) -join '&'
+                | select @{ label = 'paire'; expression = { "$($_.Key)=$($_.Value)" } } `                | select -ExpandProperty 'paire' `            ) -join '&')
         )
     )
 
     # cf. section de la documentation Twitter : Getting a signing key
-    $cleDeSignature = "$([Uri]::EscapeDataString($identifiants.cleSecrete))&$([Uri]::EscapeDataString($identifiants.jetonSecret))"
+    $cleDeSignature = "$(Twitter-Encoder-Chaine -chaine $identifiants.cleSecrete)&$(Twitter-Encoder-Chaine -chaine $identifiants.jetonSecret)"
 
     # cf. section de la documentation Twitter : Calculating the signature
     $hmacsha1 = [Security.Cryptography.HMACSHA1]::new([Text.Encoding]::ASCII.GetBytes($cleDeSignature))
@@ -138,7 +167,7 @@ function Twitter-Calculer-Authentification {
 
     $entete = 'OAuth '
 
-    $entete += (        $infosAppel.paramsAuthentification.GetEnumerator() `            | sort -Property { $_.Key } `            | select @{label = 'paire'; expression = { "$($_.Key)=`"$([Uri]::EscapeDataString($_.Value))`"" } } `
+    $entete += (        $infosAppel.paramsAuthentification.GetEnumerator() `            | sort -Property { $_.Key } `            | select @{label = 'paire'; expression = { "$($_.Key)=`"$(Twitter-Encoder-Chaine -chaine $_.Value)`"" } } `
             | select -ExpandProperty 'paire'
     ) -join ', '
     
@@ -168,7 +197,7 @@ function Twitter-Appeler {
                 | select -ExpandProperty 'paire'
         ) -join '&'
 
-        Invoke-RestMethod `            -Method $infosAppel.methodeAppel `            -Uri "$($infosAppel.pointAppel)?$paramsAppel" `            -Headers @{ 'Authorization' = $(Twitter-Calculer-Authentification -infosAppel $infosAppel) } `            -ContentType $infosAppel.typeMIME `
+        Invoke-RestMethod `            -UseBasicParsing `            -Method $infosAppel.methodeAppel `            -Uri "$($infosAppel.pointAppel)?$paramsAppel" `            -Headers @{ 'Authorization' = $(Twitter-Calculer-Authentification -infosAppel $infosAppel) } `            -ContentType $infosAppel.typeMIME `
 
     }
 
@@ -179,7 +208,7 @@ function Twitter-Appeler {
                 | select -ExpandProperty 'paire'
         ) -join '&'
 
-        Invoke-RestMethod `            -Method $infosAppel.methodeAppel `            -Uri $infosAppel.pointAppel `            -Headers @{ 'Authorization' = $(Twitter-Calculer-Authentification -infosAppel $infosAppel) } `            -ContentType $infosAppel.typeMIME `            -Body $paramsAppel
+        Invoke-RestMethod `            -UseBasicParsing `            -Method $infosAppel.methodeAppel `            -Uri $infosAppel.pointAppel `            -Headers @{ 'Authorization' = $(Twitter-Calculer-Authentification -infosAppel $infosAppel) } `            -ContentType $infosAppel.typeMIME `            -Body $paramsAppel
 
     }
 
@@ -197,7 +226,7 @@ function Twitter-Appeler {
         $paramsAppel += "--$demarcation--"
 
         # -ContentType "multipart/form-data; boundary=`"$demarcation`"" `
-        Invoke-RestMethod `            -Method $infosAppel.methodeAppel `            -Uri $infosAppel.pointAppel `            -Headers @{ 'Authorization' = $(Twitter-Calculer-Authentification -infosAppel $infosAppel) } `            -ContentType "multipart/form-data; boundary=`"$demarcation`"" `            -Body $paramsAppel
+        Invoke-RestMethod `            -UseBasicParsing `            -Method $infosAppel.methodeAppel `            -Uri $infosAppel.pointAppel `            -Headers @{ 'Authorization' = $(Twitter-Calculer-Authentification -infosAppel $infosAppel) } `            -ContentType "multipart/form-data; boundary=`"$demarcation`"" `            -Body $paramsAppel
 
     }
 
@@ -238,14 +267,14 @@ function Twitter-Modifier-Statut {
     )
 
     $paramsAppel = @{
-        'status' = [Uri]::EscapeDataString($statut)
+        'status' = (Twitter-Encoder-Chaine -chaine $statut)
     }
 
     if ($enReponseA) { $paramsAppel['in_reply_to_status_id'] = $enReponseA }
     if ($mentionsAutomatique) { $paramsAppel['auto_populate_reply_metadata'] = 'true' }
-    if ($exclureMentions) { $paramsAppel['exclude_reply_user_ids'] = [Uri]::EscapeDataString($exclureMentions -join ',') }
-    if ($idMedias) { $paramsAppel['media_ids'] = [Uri]::EscapeDataString(($idMedias | select -first 4) -join ',') }
-    if ($urlAttachee) { $paramsAppel['attachment_url'] = [Uri]::EscapeDataString($urlAttachee) }
+    if ($exclureMentions) { $paramsAppel['exclude_reply_user_ids'] = (Twitter-Encoder-Chaine -chaine ($exclureMentions -join ',')) }
+    if ($idMedias) { $paramsAppel['media_ids'] = (Twitter-Encoder-Chaine -chaine (($idMedias | select -first 4) -join ',')) }
+    if ($urlAttachee) { $paramsAppel['attachment_url'] = (Twitter-Encoder-Chaine -chaine $urlAttachee) }
     if ($sensible) { $paramsAppel['possibly_sensitive'] = 'true' }
     if ($lat) { $paramsAppel['lat'] = $lat }
     if ($long) { $paramsAppel['long'] = $long }
@@ -254,7 +283,7 @@ function Twitter-Modifier-Statut {
     if ($reduireUtilisateur) { $paramsAppel['trim_user'] = 'true' }
     if ($activerCommandesDM) { $paramsAppel['enable_dmcommands'] = 'true' }
     if ($echecCommandesDM) { $paramsAppel['fail_dmcommands'] = 'true' }
-    if ($uriCarte) { $paramsAppel['card_uri'] = [Uri]::EscapeDataString($uriCarte) }
+    if ($uriCarte) { $paramsAppel['card_uri'] = (Twitter-Encoder-Chaine -chaine $uriCarte) }
 
     $infosAppel = Twitter-Preparer-Appel `        -pointAppel 'https://api.twitter.com/1.1/statuses/update.json' `        -methodeAppel 'POST' `        -paramsAppel $paramsAppel
 
@@ -351,7 +380,7 @@ function Twitter-Televerser-Media {
         'media_type' = [Web.MimeMapping]::GetMimeMapping($cheminMedia)
     }
 
-    if ($autresProprietaires) { $paramsAppel['additional_owners'] = [Uri]::EscapeDataString($autresProprietaires -join ',') }
+    if ($autresProprietaires) { $paramsAppel['additional_owners'] = (Twitter-Encoder-Chaine -chaine ($autresProprietaires -join ',')) }
 
     $infosAppel = Twitter-Preparer-Appel `        -pointAppel 'https://upload.twitter.com/1.1/media/upload.json' `        -methodeAppel 'POST' `        -paramsAppel $paramsAppel
 
@@ -424,7 +453,7 @@ function Twitter-Televerser-Media-Simple {
         'media' = $media.ToString()
     }
 
-    if ($autresProprietaires) { $paramsAppel['additional_owners'] = [Uri]::EscapeDataString($autresProprietaires -join ',') }
+    if ($autresProprietaires) { $paramsAppel['additional_owners'] = (Twitter-Encoder-Chaine -chaine ($autresProprietaires -join ',')) }
 
     $infosAppel = Twitter-Preparer-Appel `        -pointAppel 'https://upload.twitter.com/1.1/media/upload.json' `        -methodeAppel 'POST' `        -typeMIME 'multipart/form-data' `        -paramsAppel @{
             'media' = $media.ToString()
