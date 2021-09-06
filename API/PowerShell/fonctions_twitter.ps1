@@ -18,15 +18,13 @@ function Twitter-Encoder-Chaine {
         [parameter(Mandatory=$true)] [string] $chaine
     )
 
-    $encode = [Uri]::EscapeDataString($chaine)
+    $encode = [Text.StringBuilder]::new([Uri]::EscapeDataString($chaine))
 
-    # réencodage de certains caractères
-    $speciaux = @("!", "*", "'", "(", ")")
-    foreach ($special in $speciaux) {
-        $encode = $encode.Replace($special, [Uri]::HexEscape($special))
+    foreach ($special in @("!", "*", "'", "(", ")")) {
+        [void]$encode.Replace($special, [Uri]::HexEscape($special))
     }
 
-    $encode
+    $encode.ToString()
 }
 
 # -----------------------------------------------------------------------------
