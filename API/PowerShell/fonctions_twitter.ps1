@@ -142,7 +142,7 @@ function Twitter-Calculer-Signature {
     [void]$baseSignature.Append(
         (Twitter-Encoder-Chaine -chaine (`
             ($hash.GetEnumerator() `
-                | sort { [Uri]::EscapeDataString($_.Key) } `                | where { $_.Key -ne 'method' -and $_.Key -ne 'url' } `
+                | sort { (Twitter-Encoder-Chaine -chaine $_.Key) } `                | where { $_.Key -ne 'method' -and $_.Key -ne 'url' } `
                 | select @{ label = 'paire'; expression = { "$($_.Key)=$($_.Value)" } } `                | select -ExpandProperty 'paire' `            ) -join '&')
         )
     )
