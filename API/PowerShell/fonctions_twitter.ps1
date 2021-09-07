@@ -3,13 +3,14 @@
 Add-Type -AssemblyName System.Web
 
 # -----------------------------------------------------------------------------
-# Encodage d'un chaîne pour appel à Twitter.
+# Encodage d'un chaîne en RFC 3986.
 #
-# Cette fonction complète l'appel à [Uri]::EscapeDataString qui en version 4.0
-# du framework n'encodait pas certains caractères.
-#
-# Fonction modifiée en 4.5 : 
+# /!\ Suivant les versions du framewok, la fonction [Uri]::EscapeDataString
+# n'encode pas de la même façon d'où l'utilisation de cette fonction, cf.
 # https://docs.microsoft.com/en-us/dotnet/framework/migration-guide/runtime/4.0-4.5
+#
+# Mention à Flammrock pour son aide, cf.
+# https://www.developpez.net/forums/d2117149/general-developpement/programmation-systeme/windows/scripts-batch/escapedatastring-parantheses/
 #
 # $chaine : La chaine à encoder.
 # -----------------------------------------------------------------------------
@@ -18,12 +19,22 @@ function Twitter-Encoder-Chaine {
         [parameter(Mandatory=$true)] [string] $chaine
     )
 
-    $encode = [Text.StringBuilder]::new([Uri]::EscapeDataString($chaine))
+    $encode = [Text.StringBuilder]::new()
+    $octets = [Text.Encoding]::UTF8.GetBytes($chaine)
 
-    foreach ($special in @("!", "*", "'", "(", ")")) {
-        [void]$encode.Replace($special, [Uri]::HexEscape($special))
+    foreach ($octet in $octets) {
+
+        if (
+            ($octet -ge 0x41 -and $octet -le 0x5A) -or ` # alpha            ($octet -ge 0x61 -and $octet -le 0x7A) -or ` # ALPHA
+            ($octet -ge 0x30 -and $octet -le 0x39) -or ` # 0123456789            ($octet -eq [int][char]'-') -or ` # -            ($octet -eq [int][char]'.') -or ` # .            ($octet -eq [int][char]'_') -or ` # _            ($octet -eq [int][char]'~') # ~
+        ) {
+            [void]$encode.Append([Text.Encoding]::ASCII.GetString($octet))
+        }
+        else {
+            [void]$encode.Append([Uri]::HexEscape($octet))
+        }
     }
-
+    
     $encode.ToString()
 }
 
