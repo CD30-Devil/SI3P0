@@ -321,6 +321,10 @@ Comme tu as pu le voir précédemment, on trouve là plusieurs constantes utiles
 
 Dans ce fichier se trouvent les fonctions de manipulation des archives Zip, GZip ainsi que les fonctions d’appel à 7-Zip.
 
+**fonctions_chromium.ps1**
+
+Ce fichier propose une fonction de conversion d'une page HTML en image grâce à un navigateur basé sur Chromium (Google Chrome ou Microsft Edge).
+
 **fonctions_es.ps1**
 
 Pour l’instant, il n’y a là qu’une fonction pour changer l’encodage d’un fichier.
@@ -354,6 +358,14 @@ Pratique pour l’import/export de GeoJSON et SHP vers/depuis une base PostgreSQ
 **fonctions_postgresql.ps1**
 
 Et bien je crois que c’est clair, non ? Tu trouveras dans ce fichier ce qu’il faut pour exploiter une base PostgreSQL.
+
+**fonctions_twitter.ps1**
+
+Dans ce fichier, tu trouveras plusieurs fonctions d'appel à l'API v1.1 de Twitter.
+
+**fonctions_twitter_en.ps1**
+
+Re-mappage en anglais des versions françaises des fonctions du fichier fonctions_twitter.ps1.
 
 **fonctions_web.ps1**
 
