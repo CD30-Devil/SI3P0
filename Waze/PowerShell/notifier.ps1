@@ -32,46 +32,43 @@ if (($alertes | Measure-Object).Count -gt 0) {
         switch ($alerte.TypeAlerte) {
             'ACCIDENT' {
                 switch ($alerte.Gravite) {
-                    2 { [void]$statut.Append("Accident grave signalé ") }
-                    1 { [void]$statut.Append("Accident léger signalé ") }
-                    default { [void]$statut.Append("Accident signalé ") }
+                    2 { [void]$statut.Append("#Accident grave signalé ") }
+                    1 { [void]$statut.Append("#Accident léger signalé ") }
+                    default { [void]$statut.Append("#Accident signalé ") }
                 }
             }
             'ROAD_CLOSED' {
                 [void]$statut.Append("Fermeture de route signalée ")
             }
-            'HAZARD_ON_ROAD_CAR_STOPPED' {
-                [void]$statut.Append("Véhicule arrêté sur la route signalé ")
-            }
             'HAZARD_ON_ROAD_ICE' {
-                [void]$statut.Append("Verglas signalé ")
+                [void]$statut.Append("#Verglas signalé ")
             }
             'HAZARD_ON_ROAD_OBJECT' {
-                [void]$statut.Append("Objet sur la route signalé ")
+                [void]$statut.Append("#Objet sur la route signalé ")
             }
             'HAZARD_ON_ROAD_OIL' {
-                [void]$statut.Append("Traces d'hydrocarbure signalées ")
+                [void]$statut.Append("Traces d'#hydrocarbure signalées ")
             }
             'HAZARD_ON_ROAD_ROAD_KILL' {
-                [void]$statut.Append("Animal mort sur la route signalé ")
+                [void]$statut.Append("#Animal mort sur la route signalé ")
             }
             'HAZARD_WEATHER_FLOOD' {
-                [void]$statut.Append("Inondations signalées ")
+                [void]$statut.Append("#Inondations signalées ")
             }
             'HAZARD_WEATHER_FOG' {
-                [void]$statut.Append("Brouillard signalé ")
+                [void]$statut.Append("#Brouillard signalé ")
             }
             'HAZARD_WEATHER_FREEZING_RAIN' {
-                [void]$statut.Append("Pluies verglaçantes signalées ")
+                [void]$statut.Append("Pluies #verglaçantes signalées ")
             }
             'HAZARD_WEATHER_HAIL' {
-                [void]$statut.Append("Grêle signalée ")
+                [void]$statut.Append("#Grêle signalée ")
             }
             'HAZARD_WEATHER_HEAVY_RAIN' {
-                [void]$statut.Append("Fortes pluies signalées ")
+                [void]$statut.Append("Fortes #pluies signalées ")
             }
             'HAZARD_WEATHER_HEAVY_SNOW' {
-                [void]$statut.Append("Fortes chutes de neige signalées ")
+                [void]$statut.Append("Fortes chutes de #neige signalées ")
             }
         }
         
@@ -93,7 +90,7 @@ if (($alertes | Measure-Object).Count -gt 0) {
         
         # ajout des communes et PER concernés
         [void]$statut.AppendLine()
-        [void]$statut.AppendLine("Communes(s) : $($alerte.Communes)")
+        [void]$statut.AppendLine("Commune(s) : $($alerte.Communes)")
         [void]$statut.AppendLine("PER : $($alerte.PER)")
 
         # si le taille du statut le permet, ajout du lien vers la LiveMap Waze
