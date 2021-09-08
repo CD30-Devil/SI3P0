@@ -14,8 +14,8 @@ Ce fichier est indépendant des autres sources de la boîte à outils SI3P0, MAI
 **Pré-requis :**
 
 * Avoir un poste Windows pouvant exécuter du PowerShell (testé en 5.1)
-* Pour faire un Bot simple : Télécharger et référencer ([en Dot-Sourcing](https://mcpmag.com/articles/2017/02/02/exploring-dot-sourcing-in-powershell.aspx){:target="_blank"}) les fichiers [fonctions_twitter.ps1](https://github.com/CD30-Devil/SI3P0/blob/main/API/PowerShell/fonctions_twitter.ps1){:target="_blank"} et [fonctions_chromium.ps1](https://github.com/CD30-Devil/SI3P0/blob/main/API/PowerShell/fonctions_chromium.ps1){:target="_blank"}.
-* Pour faire un GéoBot avec la boîte à outils SI3P0 : [Avoir suivi le tuto de prise en main de l'API SI3P0](./MD/API - Prise en main.html]){:target="_blank"}.
+* Pour faire un Bot simple : télécharger et référencer ([en Dot-Sourcing](https://mcpmag.com/articles/2017/02/02/exploring-dot-sourcing-in-powershell.aspx){:target="_blank"}) les fichiers [fonctions_twitter.ps1](https://github.com/CD30-Devil/SI3P0/blob/main/API/PowerShell/fonctions_twitter.ps1){:target="_blank"} et [fonctions_chromium.ps1](https://github.com/CD30-Devil/SI3P0/blob/main/API/PowerShell/fonctions_chromium.ps1){:target="_blank"}.
+* Pour faire un GéoBot avec la boîte à outils SI3P0 : [avoir suivi le tuto de prise en main de l'API SI3P0](/MD/API - Prise en main.html]){:target="_blank"}.
 
 **Table des matières**
 
