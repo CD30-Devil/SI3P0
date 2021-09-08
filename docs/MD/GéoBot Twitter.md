@@ -14,8 +14,10 @@ Ce fichier est indépendant des autres sources de la boîte à outils SI3P0, MAI
 **Pré-requis :**
 
 * Avoir un poste Windows pouvant exécuter du PowerShell (testé en 5.1)
+
 * Pour faire un Bot simple :
     * Télécharger et référencer ([en Dot-Sourcing](https://mcpmag.com/articles/2017/02/02/exploring-dot-sourcing-in-powershell.aspx){:target="_blank"}) les fichiers [fonctions_twitter.ps1](https://github.com/CD30-Devil/SI3P0/blob/main/API/PowerShell/fonctions_twitter.ps1){:target="_blank"} et [fonctions_chromium.ps1](https://github.com/CD30-Devil/SI3P0/blob/main/API/PowerShell/fonctions_chromium.ps1){:target="_blank"}.
+    
 * Pour faire un GéoBot avec la boîte à outils SI3P0 :
     * [./MD/API - Prise en main.html](Avoir suivi le tuto de prise en main de l'API SI3P0){:target="_blank"}.
 
@@ -45,7 +47,7 @@ Avant de t'attaquer à la partie développement, tu dois :
 1. Créer le compte Twitter du Bot.
 2. Demander un accès développeur à l'API standard (gratuite) v1.1 via un formulaire où tu devras préciser à _"la firme"_ tes intentions.
 3. Créer un projet.
-4. Ajouter une application au projet et noter ses identifiants (_API Key_, _API Key Secret_, _Bearer Token_).
+4. Ajouter une application au projet et noter ses identifiants (_API Key_, _API Key Secret_, _Bearer Token_ ; ce dernier est proposé automatiquement à la création de l'app mais n'est pas utile pour ce tuto).
 5. Modifier les permissions de l'application en _Read and Write_.
 6. Générer et conserver les _Access Token_ et _Access Secret Token_ pour l'application.
 
@@ -54,7 +56,7 @@ Toute la documentation nécessaire est disponible en ligne que ce soit dans l'ai
 Ci-dessous quelques liens qui devraient t'aider :
 * [S'inscrire sur Twitter (FR)](https://help.twitter.com/fr/using-twitter/create-twitter-account){:target="_blank"}.
 * [Demander un accès développeur (EN)](https://developer.twitter.com/en/apply-for-access){:target="_blank"}.
-* [Vu d'ensemble des projets et apps (EN)](https://developer.twitter.com/en/portal/projects-and-apps){:target="_blank"}.
+* [Vu d'ensemble des projets et apps (EN - accessible après création du compte développeur)](https://developer.twitter.com/en/portal/projects-and-apps){:target="_blank"}.
 * [A propos des API Twitter (FR)](https://help.twitter.com/fr/rules-and-policies/twitter-api){:target="_blank"}.
 * [Documentation de la plateforme développeur (EN)](https://developer.twitter.com/en/docs){:target="_blank"}.
 
