@@ -58,7 +58,12 @@ Ci-dessous quelques liens qui devraient t'aider :
 
 ## <a name="_2"></a>2. Le fichier fonctions_twitter.ps1
 
-TODO
+Le fichier [fonctions_twitter.ps1](https://github.com/CD30-Devil/SI3P0/blob/main/API/PowerShell/fonctions_twitter.ps1){:target="_blank"} est découpé en régions avec :
+* une première région dans laquelle on trouve la _"machinerie"_ d'appel,
+* suivie de régions correspondantes aux sections de la documentation de l'API disponible à l'adresse [https://developer.twitter.com/en/docs/twitter-api/v1](https://developer.twitter.com/en/docs/twitter-api/v1){:target="_blank"}.
+
+Au moment où je rédige ces lignes, seules quelques fonctions nécessaires à nos besoins internes ont été "mappées".
+Cependant, la tuyauterie est là est l'appel aux autres fonctions ne devrait pas trop poser de problèmes.
 
 ### <a name="_21"></a>2.1. Appel à une fonction "mappée" de l'API Twitter
 
