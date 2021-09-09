@@ -116,7 +116,7 @@ Le résultat de l'appel est désérialisé (merci [Invoke-RestMethod](https://do
 
 Du coup, il devrait être assez simple d'appeler une fonction non "mappée"...enfin j'sais pas, enfin peut-être.
 
-<iframe src="http://www.youtube.com/embed/UhjWQKr0b0g" width="560" height="315" frameborder="0" allowfullscreen> </iframe>
+[![enfin j'sais pas, enfin peut-être](https://img.youtube.com/vi/UhjWQKr0b0g/0.jpg)](https://www.youtube.com/watch?v=UhjWQKr0b0g)
 
 ## <a name="_3"></a>3. Création de l'objet d'identification
 
