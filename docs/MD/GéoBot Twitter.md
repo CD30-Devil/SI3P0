@@ -59,7 +59,7 @@ Ci-dessous quelques liens qui devraient t'aider :
 ## <a name="_2"></a>2. Le fichier fonctions_twitter.ps1
 
 Le fichier [fonctions_twitter.ps1](https://github.com/CD30-Devil/SI3P0/blob/main/API/PowerShell/fonctions_twitter.ps1){:target="_blank"} est découpé en régions avec :
-* une première région dans laquelle on trouve la _"machinerie"_ d'appel,
+* une première région dans laquelle on trouve la machinerie d'appel,
 * suivie de régions correspondantes aux sections de la documentation de l'API disponible à l'adresse [https://developer.twitter.com/en/docs/twitter-api/v1](https://developer.twitter.com/en/docs/twitter-api/v1){:target="_blank"}.
 
 Au moment où je rédige ces lignes, seules quelques fonctions nécessaires à nos besoins internes ont été "mappées".
@@ -67,7 +67,18 @@ Cependant, la tuyauterie est là est l'appel aux autres fonctions ne devrait pas
 
 ### <a name="_21"></a>2.1. Appel à une fonction "mappée" de l'API Twitter
 
-TODO
+Pour l'heure, les fonctions "mappées" de l'API sont :
+* `Twitter-Modifier-Statut`, cf. [https://developer.twitter.com/en/docs/twitter-api/v1/tweets/post-and-engage/api-reference/post-statuses-update](https://developer.twitter.com/en/docs/twitter-api/v1/tweets/post-and-engage/api-reference/post-statuses-update){:target="_blank"}.
+* `Twitter-Effacer-Statut`, cf. [https://developer.twitter.com/en/docs/twitter-api/v1/tweets/post-and-engage/api-reference/post-statuses-destroy-id](https://developer.twitter.com/en/docs/twitter-api/v1/tweets/post-and-engage/api-reference/post-statuses-destroy-id){:target="_blank"}.
+* `Twitter-Obtenir-Statuts`, cf. [https://developer.twitter.com/en/docs/twitter-api/v1/tweets/timelines/api-reference/get-statuses-home_timeline](https://developer.twitter.com/en/docs/twitter-api/v1/tweets/timelines/api-reference/get-statuses-home_timeline){:target="_blank"}.
+* `Twitter-Televerser-Media`, cette fonction étant en fait une succession de plusieurs appels :
+    * `INIT`, cf. [https://developer.twitter.com/en/docs/twitter-api/v1/media/upload-media/api-reference/post-media-upload-init](https://developer.twitter.com/en/docs/twitter-api/v1/media/upload-media/api-reference/post-media-upload-init){:target="_blank"},
+    * `APPEND`, cf. [https://developer.twitter.com/en/docs/twitter-api/v1/media/upload-media/api-reference/post-media-upload-append](https://developer.twitter.com/en/docs/twitter-api/v1/media/upload-media/api-reference/post-media-upload-append){:target="_blank"},
+    * `FINALIZE`, cf. [https://developer.twitter.com/en/docs/twitter-api/v1/media/upload-media/api-reference/post-media-upload-finalize](https://developer.twitter.com/en/docs/twitter-api/v1/media/upload-media/api-reference/post-media-upload-finalize){:target="_blank"}.
+* `Twitter-Televerser-Media-Simple`, cf. [https://developer.twitter.com/en/docs/twitter-api/v1/media/upload-media/api-reference/post-media-upload](https://developer.twitter.com/en/docs/twitter-api/v1/media/upload-media/api-reference/post-media-upload){:target="_blank"}.
+
+Toutes ces fonctions prennent un paramètre obligatoire qui permet l'identification auprès de Twitter.
+Celui-ci est obtenu par appel à la fonction `Twitter-Creer-Identifiants`.
 
 ### <a name="_22"></a>2.2. Appel à une autre fonction de l'API Twitter
 
