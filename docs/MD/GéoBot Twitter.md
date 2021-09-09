@@ -69,12 +69,16 @@ Cependant, la tuyauterie est là est l'appel aux autres fonctions ne devrait pas
 
 Pour l'heure, les fonctions "mappées" de l'API sont :
 * `Twitter-Modifier-Statut`, cf. [https://developer.twitter.com/en/docs/twitter-api/v1/tweets/post-and-engage/api-reference/post-statuses-update](https://developer.twitter.com/en/docs/twitter-api/v1/tweets/post-and-engage/api-reference/post-statuses-update){:target="_blank"}.
+
 * `Twitter-Effacer-Statut`, cf. [https://developer.twitter.com/en/docs/twitter-api/v1/tweets/post-and-engage/api-reference/post-statuses-destroy-id](https://developer.twitter.com/en/docs/twitter-api/v1/tweets/post-and-engage/api-reference/post-statuses-destroy-id){:target="_blank"}.
+
 * `Twitter-Obtenir-Statuts`, cf. [https://developer.twitter.com/en/docs/twitter-api/v1/tweets/timelines/api-reference/get-statuses-home_timeline](https://developer.twitter.com/en/docs/twitter-api/v1/tweets/timelines/api-reference/get-statuses-home_timeline){:target="_blank"}.
+
 * `Twitter-Televerser-Media`, cette fonction étant en fait une succession de plusieurs appels :
     * `INIT`, cf. [https://developer.twitter.com/en/docs/twitter-api/v1/media/upload-media/api-reference/post-media-upload-init](https://developer.twitter.com/en/docs/twitter-api/v1/media/upload-media/api-reference/post-media-upload-init){:target="_blank"},
     * `APPEND`, cf. [https://developer.twitter.com/en/docs/twitter-api/v1/media/upload-media/api-reference/post-media-upload-append](https://developer.twitter.com/en/docs/twitter-api/v1/media/upload-media/api-reference/post-media-upload-append){:target="_blank"},
     * `FINALIZE`, cf. [https://developer.twitter.com/en/docs/twitter-api/v1/media/upload-media/api-reference/post-media-upload-finalize](https://developer.twitter.com/en/docs/twitter-api/v1/media/upload-media/api-reference/post-media-upload-finalize){:target="_blank"}.
+    
 * `Twitter-Televerser-Media-Simple`, cf. [https://developer.twitter.com/en/docs/twitter-api/v1/media/upload-media/api-reference/post-media-upload](https://developer.twitter.com/en/docs/twitter-api/v1/media/upload-media/api-reference/post-media-upload){:target="_blank"}.
 
 Toutes ces fonctions prennent un paramètre obligatoire qui permet l'identification auprès de Twitter.
