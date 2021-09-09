@@ -2,14 +2,6 @@
 
 #region Tools functions for Twitter API call
 
-function Twitter-Escape-String {
-    param (
-        [parameter(Mandatory=$true)] [string] $string
-    )
-
-    Twitter-Encoder-Chaine -chaine $string
-}
-
 function Twitter-Create-Identifiers {
     param (
         [parameter(Mandatory=$true)] [string] $apiKey,
@@ -19,6 +11,14 @@ function Twitter-Create-Identifiers {
     )
 
     Twitter-Creer-Identifiants -cle $apiKey -cleSecrete $apiSecretKey -jeton $accessToken -jetonSecret $accessTokenSecret
+}
+
+function Twitter-Escape-String {
+    param (
+        [parameter(Mandatory=$true)] [string] $string
+    )
+
+    Twitter-Encoder-Chaine -chaine $string
 }
 
 function Twitter-Prepare-Call {

@@ -1,6 +1,31 @@
-﻿#region Fonctions outils pour l'appel à l'API Twitter.
+﻿Add-Type -AssemblyName System.Web
 
-Add-Type -AssemblyName System.Web
+#region Fonctions outils pour l'appel à l'API Twitter.
+
+# -----------------------------------------------------------------------------
+# Création d'un objet porteur des différentes informations d'identification
+# nécessaires pour l'appel à l'API Twitter.
+#
+# $cle : La clé (API key).
+# $cleSecrete : La clé secrète (API secret key).
+# $jeton : Le jeton d'accés (access token).
+# $jetonSecret : Le jeton secret d'accés (access token secret).
+# -----------------------------------------------------------------------------
+function Twitter-Creer-Identifiants {
+    param (
+        [parameter(Mandatory=$true)] [string] $cle,
+        [parameter(Mandatory=$true)] [string] $cleSecrete,
+        [parameter(Mandatory=$true)] [string] $jeton,
+        [parameter(Mandatory=$true)] [string] $jetonSecret
+    )
+
+    [pscustomobject] @{
+        cle = $cle
+        cleSecrete = $cleSecrete
+        jeton = $jeton
+        jetonSecret = $jetonSecret
+    }
+}
 
 # -----------------------------------------------------------------------------
 # Encodage d'un chaîne en RFC 3986.
@@ -36,31 +61,6 @@ function Twitter-Encoder-Chaine {
     }
     
     $encode.ToString()
-}
-
-# -----------------------------------------------------------------------------
-# Création d'un objet porteur des différentes informations d'identification
-# nécessaires pour l'appel à l'API Twitter.
-#
-# $cle : La clé (API key).
-# $cleSecrete : La clé secrète (API secret key).
-# $jeton : Le jeton d'accés (access token).
-# $jetonSecret : Le jeton secret d'accés (access token secret).
-# -----------------------------------------------------------------------------
-function Twitter-Creer-Identifiants {
-    param (
-        [parameter(Mandatory=$true)] [string] $cle,
-        [parameter(Mandatory=$true)] [string] $cleSecrete,
-        [parameter(Mandatory=$true)] [string] $jeton,
-        [parameter(Mandatory=$true)] [string] $jetonSecret
-    )
-
-    [pscustomobject] @{
-        cle = $cle
-        cleSecrete = $cleSecrete
-        jeton = $jeton
-        jetonSecret = $jetonSecret
-    }
 }
 
 # -----------------------------------------------------------------------------
