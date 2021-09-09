@@ -99,6 +99,7 @@ Cette fonction construit un `pscustomobject` contenant l'ensemble des informatio
 D'une part, l'objet retourné sert à calculer la signature d'appel grâce à la fonction `Twitter-Calculer-Signature`.
 
 Si t'as du temps à perdre, les détails sont ici : [https://developer.twitter.com/en/docs/authentication/oauth-1-0a/creating-a-signature](https://developer.twitter.com/en/docs/authentication/oauth-1-0a/creating-a-signature){:target="_blank"} mais en gros cette signature permet le calcul de l'entête _OAuth_ qui sert à authentifier l'appelant.
+
 Si tu n'as pas assez perdu de temps avec le lien précédent, tu peux aussi regarder celui là : [https://developer.twitter.com/en/docs/authentication/oauth-1-0a/authorizing-a-request](https://developer.twitter.com/en/docs/authentication/oauth-1-0a/authorizing-a-request){:target="_blank"}.
 
 Ensuite, ce même objet est passé à la fonction `Twitter-Appeler` pour invoquer l'API.
