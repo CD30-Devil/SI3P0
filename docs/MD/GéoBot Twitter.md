@@ -86,7 +86,37 @@ Celui-ci est obtenu par appel à la fonction `Twitter-Creer-Identifiants`.
 
 ### <a name="_22"></a>2.2. Appel à une autre fonction de l'API Twitter
 
-TODO
+Si tu regardes le code des fonctions "mappées", tu pourras voir que chaque appel est une succession de 3 fonctions.
+
+1. `Twitter-Preparer-Appel`
+
+Cette fonction construit un `pscustomobject` contenant l'ensemble des informations utiles à l'appel en préparation. On y trouve :
+* l'URL
+* la méthode (_GET_ / _POST_)
+* pour les appels en _POST_, le type MIME du corps de la requête (_application/x-www-form-urlencoded_, _multipart/form-data_)
+* les paramètres
+
+D'une part, l'objet retourné sert à calculer la signature d'appel grâce à la fonction `Twitter-Calculer-Signature`.
+
+Si t'as du temps à perdre, les détails sont ici : [https://developer.twitter.com/en/docs/authentication/oauth-1-0a/creating-a-signature](https://developer.twitter.com/en/docs/authentication/oauth-1-0a/creating-a-signature){:target="_blank"} mais en gros cette signature permet le calcul de l'entête _OAuth_ qui sert à authentifier l'appelant.
+Si tu n'as pas assez perdu de temps avec le lien précédent, tu peux aussi regarder celui là : [https://developer.twitter.com/en/docs/authentication/oauth-1-0a/authorizing-a-request](https://developer.twitter.com/en/docs/authentication/oauth-1-0a/authorizing-a-request){:target="_blank"}.
+
+Ensuite, ce même objet est passé à la fonction `Twitter-Appeler` pour invoquer l'API.
+
+2. `Twitter-Calculer-Signature`
+
+Et bien tu sais déjà tout ou presque, la fonction calcule la signature et l'ajoute au `pscustomobject` reçu en entrée, histoire de refiler l'info à la fonction `Twitter-Appeler`.
+
+3. `Twitter-Appeler`
+
+La fonction `Twitter-Appeler` appelle Twitter. Surpris ?
+
+Le résultat de l'appel est désérialisé (merci [Invoke-RestMethod](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/invoke-restmethod?view=powershell-7.1){:target="_blank"}) et retourné.
+
+
+Du coup, il devrait être assez simple d'appeler une fonction non "mappée"...enfin j'sais pas, enfin peut-être.
+
+<iframe src="http://www.youtube.com/embed/UhjWQKr0b0g" width="560" height="315" frameborder="0" allowfullscreen> </iframe>
 
 ## <a name="_3"></a>3. Création de l'objet d'identification
 
