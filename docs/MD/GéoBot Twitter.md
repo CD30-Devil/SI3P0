@@ -27,15 +27,17 @@ Ce fichier est indépendant des autres sources, MAIS, comme on aime bien la Géo
 
 &nbsp;&nbsp;&nbsp;&nbsp;[2.2. Appel à une autre fonction de l'API Twitter](#_22)
 
-[3. Création de l'objet d'identification](#_3)
+[3. Donnons vie au bot !](#_3)
 
-[4. Préparation des données et médias](#_4)
+&nbsp;&nbsp;&nbsp;&nbsp;[3.1. Création de l'objet d'identification](#_31)
 
-[5. Téléversement des médias](#_5)
+&nbsp;&nbsp;&nbsp;&nbsp;[3.2. Préparation des données et médias](#_32)
 
-[6. Publication des tweets](#_6)
+&nbsp;&nbsp;&nbsp;&nbsp;[3.3. Téléversement des médias](#_33)
 
-[7. Conclusion](#_7)
+&nbsp;&nbsp;&nbsp;&nbsp;[3.4. Publication des tweets](#_34)
+
+[4. Conclusion](#_4)
 
 ## <a name="_1"></a>1. @MonBotTwitter
 
@@ -119,23 +121,29 @@ Du coup, il devrait être assez simple d'appeler une fonction non "mappée"...en
 
 [![enfin j'sais pas, enfin peut-être](https://img.youtube.com/vi/UhjWQKr0b0g/0.jpg)](https://www.youtube.com/watch?v=UhjWQKr0b0g){:target="_blank"}
 
-## <a name="_3"></a>3. Création de l'objet d'identification
+## <a name="_3"></a>3. Donnons vie au bot !
+
+Le compte Twitter et le mode développeur sont actifs. Nous avons passé rapidement en revue les fonctions.
+
+Il est désormais temps de donner vie au bot.
+
+### <a name="_31"></a>3.1. Création de l'objet d'identification
 
 TODO
 
-## <a name="_4"></a>4. Préparation des données et médias
+### <a name="_32"></a>3.2. Préparation des données et médias
 
 TODO
 
-## <a name="_5"></a>5. Téléversement des médias
+### <a name="_33"></a>3.3. Téléversement des médias
 
 TODO
 
-## <a name="_6"></a>6. Publication des tweets
+### <a name="_34"></a>3.4. Publication des tweets
 
 TODO
 
-## <a name="_7"></a>7. Conclusion
+## <a name="_4"></a>4. Conclusion
 
 TODO
 
