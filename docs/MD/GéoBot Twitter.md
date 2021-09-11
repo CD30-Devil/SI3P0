@@ -123,9 +123,7 @@ Du coup, il devrait être assez simple d'appeler une fonction non "mappée"...en
 
 ## <a name="_3"></a>3. Donnons vie au bot !
 
-Le compte Twitter et le mode développeur sont actifs. Nous avons passé rapidement en revue les fonctions.
-
-Il est désormais temps de donner vie au bot.
+Le compte Twitter est actif et nous avons rapidement passé en revue les fonctions ; il est désormais temps de donner vie au bot.
 
 ### <a name="_31"></a>3.1. Création de l'objet d'identification
 
