@@ -221,7 +221,7 @@ InfosCommune as (
         ST_Y(ST_Transform(ST_Centroid(c.Geom), 4326)) as Y,
         
         '"https://www.geoportail.gouv.fr/embed/visu.html?c=' || ST_X(ST_Transform(ST_Centroid(c.Geom), 4326)) || ',' || ST_Y(ST_Transform(ST_Centroid(c.Geom), 4326)) || '&z=13&l0=ORTHOIMAGERY.ORTHOPHOTOS::GEOPORTAIL:OGC:WMTS(1;g)&l1=LIMITES_ADMINISTRATIVES_EXPRESS.LATEST::GEOPORTAIL:OGC:WMTS(1)&permalink=yes"' as LienGeoportailLimiteAdm,
-        '"https://www.geoportail.gouv.fr/embed/visu.html?c=' || ST_X(ST_Transform(ST_Centroid(c.Geom), 4326)) || ',' || ST_Y(ST_Transform(ST_Centroid(c.Geom), 4326)) || '&z=13&l0=ORTHOIMAGERY.ORTHOPHOTOS::GEOPORTAIL:OGC:WMTS(1;g)&l1=LIMITES_ADMINISTRATIVES_EXPRESS.LATEST::GEOPORTAIL:OGC:WMTS(1)&l2=INSEE.FILOSOFI.POPULATION::GEOPORTAIL:OGC:WMTS(0.8)&permalink=yes"' as LienGeoportailDensitePop,
+        '"https://www.geoportail.gouv.fr/embed/visu.html?c=' || ST_X(ST_Transform(ST_Centroid(c.Geom), 4326)) || ',' || ST_Y(ST_Transform(ST_Centroid(c.Geom), 4326)) || '&z=13&l0=ORTHOIMAGERY.ORTHOPHOTOS::GEOPORTAIL:OGC:WMTS(1;g)&l1=INSEE.FILOSOFI.POPULATION::GEOPORTAIL:OGC:WMTS(0.8)&l2=LIMITES_ADMINISTRATIVES_EXPRESS.LATEST::GEOPORTAIL:OGC:WMTS(1)&permalink=yes"' as LienGeoportailDensitePop,
         '"https://www.geoportail.gouv.fr/embed/visu.html?c=' || ST_X(ST_Transform(ST_Centroid(c.Geom), 4326)) || ',' || ST_Y(ST_Transform(ST_Centroid(c.Geom), 4326)) || '&z=13&l0=OCSGE.COUVERTURE::GEOPORTAIL:OGC:WMTS(0.6)&l1=LIMITES_ADMINISTRATIVES_EXPRESS.LATEST::GEOPORTAIL:OGC:WMTS(1)&permalink=yes"' as LienGeoportailODS,
         '"https://www.amf.asso.fr/annuaire-communes-intercommunalites?refer=commune&insee=' || COGCommune || '"' as LienAMF
         
@@ -260,7 +260,48 @@ $idsTwitter = Twitter-Creer-Identifiants `
 
 ### <a name="_35"></a>3.5. Publication du 1er tweet
 
-TODO
+L'idée est de présenter chaque jour une commune aléatoirement choisie parmi celles de la région Occitanie.
+Le premier tweet va annoncer la commune retenue en associant au message un aperçu de ses limites administratives visibles sur le Géoportail.
+
+Préalablement à l'envoie du message, on réalise une capture d'écran du site de l'IGN. On utilise pour cela l'URL du permalien calculée par la requête au moment de [la préparation des données](#_33) et la fonction `Chromium-Capturer-Page` présente dans [fonctions_chromium.ps1](https://github.com/CD30-Devil/SI3P0/blob/main/API/PowerShell/fonctions_chromium.ps1){:target="_blank"}.
+
+```powershell
+Chromium-Capturer-Page `
+    -url $infosCommune.LienGeoportailLimiteAdm `
+    -sortie "$dossierTemp\$($infosCommune.COGCommune)_limite_adm.png" `
+    -delai 30000
+```
+
+Ensuite, l'image obtenue est téléversée vers Twitter. Le retour de l'API est stockée dans la variable `$retour` dont l'attribut `media_id` donne l'identifiant du média à référencer dans le tweet.
+
+```powershell
+$retour = Twitter-Televerser-Media `
+    -identifiants $idsTwitter `
+    -cheminMedia "$dossierRapports\$($infosCommune.COGCommune)_limite_adm.png"
+
+$idMedia = $retour.media_id
+```
+
+Il ne reste alors plus qu'à modifier le statut. Le message, en plus d'être géoréférencé grâce aux paramètres X et Y, est associé au média téléversé à l'étape précédente.
+
+```powershell
+$retour = Twitter-Modifier-Statut `
+    -identifiants $idsTwitter `
+    -lat $infosCommune.Y `
+    -long $infosCommune.X `
+    -idMedias $idMedia `
+    -statut @"
+Bonjour, aujourd'hui je vais vous parler de $($infosCommune.NomCommune), l'une des $($infosCommune.NbCommunesRegion) communes de la région @Occitanie.
+"@
+
+$idMessage = $retour.id
+```
+
+Le résultat d'appel permet de récupérer l'identifiant du tweet via l'attribut `id`. Celui-ci sera utile pour le deuxième tweet.
+
+Ce premier message est quant à lui aussitôt visible sur Twitter.
+
+![1er tweet](../Ressources/GéoBot Twitter/Tweet 1.png)
 
 ### <a name="_36"></a>3.6. Publication du 2ème tweet
 
