@@ -158,7 +158,7 @@ Vient ensuite le paramètrage du script par la création de plusieurs constantes
 
 D'une part, on définit un chemin vers un dossier temporaire de travail.
 
-D'autre part, c'est à ce niveau que l'on rensigne les différents clés et clés secrètes obtenues lors de la création de l'application sur Twitter.
+D'autre part, c'est à ce niveau que l'on renseigne les différents clés et clés secrètes obtenues lors de la création de l'application sur Twitter.
 A toi de choisir si tu souhaites les mettre directement dans le code ou bien les récupèrer avec une autre méthode...ces clés devant logiquement rester confidentielles.
 
 ```powershell
