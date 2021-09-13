@@ -13,7 +13,7 @@ Ce fichier est indépendant des autres sources, MAIS, comme on aime bien la Géo
 
 **Pré-requis :**
 
-* Avoir un poste Windows pouvant exécuter du PowerShell (testé en 5.1)
+* Avoir un poste Windows pouvant exécuter du PowerShell (testé en 5.1).
 * Pour faire un Bot simple : télécharger et référencer ([en Dot-Sourcing](https://mcpmag.com/articles/2017/02/02/exploring-dot-sourcing-in-powershell.aspx){:target="_blank"}) le fichier [fonctions_twitter.ps1](https://github.com/CD30-Devil/SI3P0/blob/main/API/PowerShell/fonctions_twitter.ps1){:target="_blank"}.
 * Pour faire un GéoBot avec la boîte à outils SI3P0 : [avoir suivi le tuto de prise en main de l'API SI3P0](/SI3P0/MD/API - Prise en main.html){:target="_blank"}.
 
@@ -74,7 +74,7 @@ Le fichier [fonctions_twitter.ps1](https://github.com/CD30-Devil/SI3P0/blob/main
 * suivie de régions correspondantes aux sections de la documentation de l'API disponible à l'adresse [https://developer.twitter.com/en/docs/twitter-api/v1](https://developer.twitter.com/en/docs/twitter-api/v1){:target="_blank"}.
 
 Au moment où je rédige ces lignes, seules quelques fonctions nécessaires à nos besoins internes ont été "mappées".
-Cependant, la tuyauterie est là est l'appel aux autres fonctions ne devrait pas trop poser de problèmes.
+Cependant, la tuyauterie est là et l'appel aux autres fonctions ne devrait pas trop poser de problèmes.
 
 ### <a name="_21"></a>2.1. Appel à une fonction "mappée" de l'API Twitter
 
@@ -102,18 +102,18 @@ Si tu regardes le code des fonctions "mappées", tu pourras voir que chaque appe
 1. `Twitter-Preparer-Appel`
 
     Cette fonction construit un `pscustomobject` contenant l'ensemble des informations utiles à l'appel en préparation. On y trouve :
-    * l'URL
-    * la méthode (_GET_ / _POST_)
-    * pour les appels en _POST_, le type MIME du corps de la requête (_application/x-www-form-urlencoded_, _multipart/form-data_)
-    * les paramètres
+    * l'URL,
+    * la méthode (_GET_ / _POST_),
+    * pour les appels en _POST_, le type MIME du corps de la requête (_application/x-www-form-urlencoded_, _multipart/form-data_),
+    * les paramètres.
 
-    D'une part, l'objet retourné sert à calculer la signature d'appel grâce à la fonction `Twitter-Calculer-Signature`.
+    L'objet retourné sert à calculer la signature d'appel grâce à la fonction `Twitter-Calculer-Signature`.
 
     Si t'as du temps à perdre, les détails sont ici : [https://developer.twitter.com/en/docs/authentication/oauth-1-0a/creating-a-signature](https://developer.twitter.com/en/docs/authentication/oauth-1-0a/creating-a-signature){:target="_blank"} mais en gros cette signature permet le calcul de l'entête _OAuth_ qui sert à authentifier l'appelant.
 
     Si tu n'as pas assez perdu de temps avec le lien précédent, tu peux aussi regarder celui là : [https://developer.twitter.com/en/docs/authentication/oauth-1-0a/authorizing-a-request](https://developer.twitter.com/en/docs/authentication/oauth-1-0a/authorizing-a-request){:target="_blank"}.
 
-    Ensuite, ce même objet est passé à la fonction `Twitter-Appeler` pour invoquer l'API.
+    Ce même objet est également passé à la fonction `Twitter-Appeler` pour invoquer l'API.
 
 2. `Twitter-Calculer-Signature`
 
@@ -126,7 +126,7 @@ Si tu regardes le code des fonctions "mappées", tu pourras voir que chaque appe
     Le résultat de l'appel est désérialisé (merci [Invoke-RestMethod](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/invoke-restmethod?view=powershell-7.1){:target="_blank"}) et retourné.
 
 
-    Du coup, il devrait être assez simple d'appeler une fonction non "mappée"...enfin j'sais pas, enfin peut-être.
+    Du coup, il devrait être assez simple d'appeler une fonction non "mappée"..._"enfin j'sais pas, enfin peut-être"_.
 
     [![enfin j'sais pas, enfin peut-être](https://img.youtube.com/vi/UhjWQKr0b0g/0.jpg)](https://www.youtube.com/watch?v=UhjWQKr0b0g){:target="_blank"}
 
