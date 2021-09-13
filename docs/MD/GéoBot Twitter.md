@@ -261,7 +261,7 @@ $idsTwitter = Twitter-Creer-Identifiants `
 ### <a name="_35"></a>3.5. Publication du 1er tweet
 
 L'idée est de présenter chaque jour une commune aléatoirement choisie parmi celles de la région Occitanie.
-Le premier tweet va annoncer la commune retenue en associant au message un aperçu de ses limites administratives visibles sur le Géoportail.
+Le premier tweet va annoncer la commune retenue en associant au message un aperçu de ses limites administratives visibles sur le [Géoportail](https://www.geoportail.gouv.fr/){:target="_blank"}.
 
 Préalablement à l'envoie du message, on réalise une capture d'écran du site de l'IGN. On utilise pour cela l'URL du permalien calculée par la requête au moment de [la préparation des données](#_33) et la fonction `Chromium-Capturer-Page` présente dans [fonctions_chromium.ps1](https://github.com/CD30-Devil/SI3P0/blob/main/API/PowerShell/fonctions_chromium.ps1){:target="_blank"}.
 
