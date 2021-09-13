@@ -27,3 +27,4 @@ Cette bibliothèque, et les possibilités de manipulation des données offertes 
 
 ## Les ressources
 * [Tutoriel : Prendre en main l’API PowerShell SI3P0](./MD/API - Prise en main.html).
+* [Tutoriel : Réaliser un (Géo)Bot Twitter](./MD/GéoBot Twitter.html).
