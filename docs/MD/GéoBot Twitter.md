@@ -245,7 +245,18 @@ $infosCommune = Import-Csv `
 
 ### <a name="_34"></a>3.4. Création de l'objet d'identification
 
-TODO
+Ultime étape avant d'invoquer l'API Twitter : la création de l'objet d'identification qui sera passé aux différentes fonctions.
+
+L'objet est construit grâce aux constantes définies à l'étape [3.2. Constantes et nettoyage préalable](#_32).
+
+```powershell
+# création de l'objet d'identification
+$idsTwitter = Twitter-Creer-Identifiants `
+    -cle $cleBotTwitter `
+    -cleSecrete $cleSecreteBotTwitter `
+    -jeton $jetonBotTwitter `
+    -jetonSecret $jetonSecretBotTwitter
+````
 
 ### <a name="_35"></a>3.5. Publication du 1er tweet
 
