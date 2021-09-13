@@ -305,11 +305,114 @@ Ce premier message est quant à lui aussitôt visible sur Twitter.
 
 ### <a name="_36"></a>3.6. Publication du 2ème tweet
 
-TODO
+Le deuxième message est envoyé en réponse au précédent de sorte à créer un _"thread"_.
+
+```powershell
+$retour = Twitter-Modifier-Statut `
+    -identifiants $idsTwitter `
+    -lat $infosCommune.Y `
+    -long $infosCommune.X `
+    -enReponseA $idMessage `
+    -statut @"
+Le Code Officiel Géographique (COG) de $($infosCommune.NomCommune) est : $($infosCommune.COGCommune).
+Son code postal est : $($infosCommune.CPCommune).
+"@
+
+$idMessage = $retour.id
+```
 
 ### <a name="_37"></a>3.7. Publication des tweets suivants
 
-TODO
+La suite est une succession de messages envoyés en réponse à celui qui le précède.
+
+```powershell
+# Message 3 - Département
+$retour = Twitter-Modifier-Statut `
+    -identifiants $idsTwitter `
+    -lat $infosCommune.Y `
+    -long $infosCommune.X `
+    -enReponseA $idMessage `
+    -statut @"
+Vous l'aurez peut-être devinez, le département de $($infosCommune.NomCommune) est : $($infosCommune.NomDepartement) ($($infosCommune.COGDepartement)).
+"@
+
+$idMessage = $retour.id
+
+# Message 4 - Population
+Chromium-Capturer-Page `
+    -url $infosCommune.LienGeoportailDensitePop `
+    -sortie "$dossierRapports\$($infosCommune.COGCommune)_densite_pop.png" `
+    -delai 30000
+
+$retour = Twitter-Televerser-Media `
+    -identifiants $idsTwitter `
+    -cheminMedia "$dossierRapports\$($infosCommune.COGCommune)_densite_pop.png"
+
+$idMedia = $retour.media_id
+
+$retour = Twitter-Modifier-Statut `
+    -identifiants $idsTwitter `
+    -lat $infosCommune.Y `
+    -long $infosCommune.X `
+    -enReponseA $idMessage `
+    -idMedias $idMedia `
+    -statut @"
+Sa population est de $($infosCommune.PopulationCommune) hab. ce qui la place en numéro $($infosCommune.PositionPopulationDepartement)/$($infosCommune.NbCommunesDepartement) dans son département et en $($infosCommune.PositionPopulationRegion)/$($infosCommune.NbCommunesRegion) en #Occitanie.
+
+Cela représente $($infosCommune.PartPopulationDepartement) ‰ de la population du département et $($infosCommune.PartPopulationRegion) ‰ de la région.
+"@
+
+$idMessage = $retour.id
+
+# Message 5 - Superficie
+Chromium-Capturer-Page `
+    -url $infosCommune.LienGeoportailODS `
+    -sortie "$dossierRapports\$($infosCommune.COGCommune)_ods.png" `
+    -delai 30000
+
+$retour = Twitter-Televerser-Media `
+    -identifiants $idsTwitter `
+    -cheminMedia "$dossierRapports\$($infosCommune.COGCommune)_ods.png"
+
+$idMedia = $retour.media_id
+
+$retour = Twitter-Modifier-Statut `
+    -identifiants $idsTwitter `
+    -lat $infosCommune.Y `
+    -long $infosCommune.X `
+    -enReponseA $idMessage `
+    -idMedias $idMedia `
+    -statut @"
+Sa superficie est de $($infosCommune.HectaresCommune) hect. ce qui la place en numéro $($infosCommune.PositionSuperficieDepartement)/$($infosCommune.NbCommunesDepartement) dans son département et en $($infosCommune.PositionSuperficieRegion)/$($infosCommune.NbCommunesRegion) en #Occitanie.
+
+Cela représente $($infosCommune.PartSuperficieDepartement) ‰ de la superficie du département et $($infosCommune.PartSuperficieRegion) ‰ de la région.
+"@
+
+$idMessage = $retour.id
+
+# Message 6 - AMF
+Chromium-Capturer-Page `
+    -url $infosCommune.LienAMF `
+    -sortie "$dossierRapports\$($infosCommune.COGCommune)_amf.png" `
+    -delai 30000
+
+$retour = Twitter-Televerser-Media `
+    -identifiants $idsTwitter `
+    -cheminMedia "$dossierRapports\$($infosCommune.COGCommune)_amf.png"
+
+$idMedia = $retour.media_id
+
+$retour = Twitter-Modifier-Statut `
+    -identifiants $idsTwitter `
+    -lat $infosCommune.Y `
+    -long $infosCommune.X `
+    -enReponseA $idMessage `
+    -idMedias $idMedia `
+    -statut @"
+Vous trouverez plus d'informations sur l'annuaire de l'Association des Maires de France (AMF - @l_amf) grâce à ce lien :
+$($infosCommune.LienAMF)
+"@
+```
 
 ## <a name="_4"></a>4. Conclusion
 
