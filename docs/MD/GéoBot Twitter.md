@@ -147,7 +147,7 @@ $cheminAPISI3P0 = "$PSScriptRoot\..\..\..\API\PowerShell\"
 . ("$cheminAPISI3P0\api_complète.ps1")
 ```
 
-Ici, nous utilisons l'API complète mais tu peux te limiter au fichier [fonctions_twitter.ps1](https://github.com/CD30-Devil/SI3P0/blob/main/API/PowerShell/fonctions_twitter.ps1){:target="_blank"}.
+Nous utilisons pour ce tuto l'API complète mais tu peux te limiter au fichier [fonctions_twitter.ps1](https://github.com/CD30-Devil/SI3P0/blob/main/API/PowerShell/fonctions_twitter.ps1){:target="_blank"}.
 
 Le fichier [fonctions_chromium.ps1](https://github.com/CD30-Devil/SI3P0/blob/main/API/PowerShell/fonctions_chromium.ps1){:target="_blank"} est également facultatif. Il permet de faire des "captures d'écrans" de pages Web à l'aide d'un navigateur Chromium.
 Si tu inclus ce fichier, sache qu'il utilise [constantes.ps1](https://github.com/CD30-Devil/SI3P0/blob/main/API/PowerShell/constantes.ps1){:target="_blank"} pour connaitre le chemin vers l'exécutable du navigateur à utiliser.
@@ -158,7 +158,7 @@ Vient ensuite le paramètrage du script par la création de plusieurs constantes
 
 D'une part, on définit un chemin vers un dossier temporaire de travail.
 
-D'autre part, c'est à ce niveau que l'on renseigne les différents clés et clés secrètes obtenues lors de la création de l'application sur Twitter.
+D'autre part, c'est à ce niveau que l'on renseigne les différentes clés et clés secrètes obtenues lors de la création de l'application sur Twitter.
 A toi de choisir si tu souhaites les mettre directement dans le code ou bien les récupèrer avec une autre méthode...ces clés devant logiquement rester confidentielles.
 
 ```powershell
@@ -417,7 +417,7 @@ $($infosCommune.LienAMF)
 ## <a name="_4"></a>4. Conclusion
 
 On vient de voir avec ce tuto que, grâce aux fonctions du fichier [fonctions_twitter.ps1](https://github.com/CD30-Devil/SI3P0/blob/main/API/PowerShell/fonctions_twitter.ps1){:target="_blank"}, tu peux aisément créer un Bot Twitter.
-Couplé à [la boîte à outils SI3P0](/SI3P0/MD/API - Prise en main.html){:target="_blank"}, il devient possible de faire un Bot qui parle de géographie.
+Couplées à [la boîte à outils SI3P0](/SI3P0/MD/API - Prise en main.html){:target="_blank"}, il devient possible de faire un Bot qui parle de géographie.
 
 Le script complet vu dans ce tuto est disponible à l'adresse suivante :
 [https://github.com/CD30-Devil/SI3P0/blob/main/docs/Ressources/GéoBot Twitter/bot.ps1](https://github.com/CD30-Devil/SI3P0/blob/main/docs/Ressources/GéoBot Twitter/bot.ps1){:target="_blank"}.
