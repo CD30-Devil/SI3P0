@@ -10,7 +10,7 @@ Le Système d'Information géographique (SIg) dont elle assure l'exploitation po
 
 ## A propos de SI3P0
 
-SI3P0 est un SIg qui s'appuie fortement sur PostgreSQL/Postgis.
+SI3P0 est un SIg qui s'appuie fortement sur PostgreSQL/PostGIS.
 Le moteur ne sert pas seulement pour le stockage des données mais est également utilisé pour l'ensemble des (géo)traitements.
 
 La base de données est scindée en 7 schémas :
@@ -22,7 +22,7 @@ La base de données est scindée en 7 schémas :
 * tmp : schéma de travail pour le stockage de tables, vues et fonctions temporaires
 * v : schéma contenant des vues sur le modèle
 
-Pour interagir avec PostgreSQL/Postgis et automatiser un certain nombre de tâches, la MSI a développé une bibliothèque de fonctions PowerShell disponible dans le dossier API du projet.
+Pour interagir avec PostgreSQL/PostGIS et automatiser un certain nombre de tâches, la MSI a développé une bibliothèque de fonctions PowerShell disponible dans le dossier API du projet.
 Cette bibliothèque, et les possibilités de manipulation des données offertes par PostgreSQL/Postigs, permettent à la MSI de se passer d’ETL.
 
 ## Les ressources
