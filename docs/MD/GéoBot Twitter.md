@@ -422,7 +422,7 @@ Couplé à [la boîte à outils SI3P0](/SI3P0/MD/API - Prise en main.html){:targ
 Le script complet vu dans ce tuto est disponible à l'adresse suivante :
 [https://github.com/CD30-Devil/SI3P0/blob/main/docs/Ressources/GéoBot Twitter/bot.ps1](https://github.com/CD30-Devil/SI3P0/blob/main/docs/Ressources/GéoBot Twitter/bot.ps1){:target="_blank"}.
 
-Tu peux aussi t'abonner au compte Twitter correspond : [@1J1C_Occitanie](https://twitter.com/1J1C_Occitanie){:target="_blank"}.
+Tu peux aussi t'abonner au compte Twitter correspondant : [@1J1C_Occitanie](https://twitter.com/1J1C_Occitanie){:target="_blank"}.
 
 
 Pour la MSI,
