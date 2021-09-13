@@ -416,12 +416,11 @@ $($infosCommune.LienAMF)
 
 ## <a name="_4"></a>4. Conclusion
 
-On vient de voir que grâce aux fonctions du fichier [fonctions_twitter.ps1](https://github.com/CD30-Devil/SI3P0/blob/main/API/PowerShell/fonctions_twitter.ps1){:target="_blank"} tu peux aisément créer un Bot Twitter.
-
+On vient de voir avec ce tuto que, grâce aux fonctions du fichier [fonctions_twitter.ps1](https://github.com/CD30-Devil/SI3P0/blob/main/API/PowerShell/fonctions_twitter.ps1){:target="_blank"}, tu peux aisément créer un Bot Twitter.
 Couplé à [la boîte à outils SI3P0](/SI3P0/MD/API - Prise en main.html){:target="_blank"}, il devient possible de faire un Bot qui parle de géographie.
 
 Le script complet vu dans ce tuto est disponible à l'adresse suivante :
-[fonctions_twitter.ps1](https://github.com/CD30-Devil/SI3P0/blob/main/docs/Ressources/Géobot Twitter/bot.ps1){:target="_blank"}.
+[https://github.com/CD30-Devil/SI3P0/blob/main/docs/Ressources/GéoBot Twitter/bot.ps1](https://github.com/CD30-Devil/SI3P0/blob/main/docs/Ressources/GéoBot Twitter/bot.ps1){:target="_blank"}.
 
 Tu peux aussi t'abonner au compte Twitter correspond : [@1J1C_Occitanie](https://twitter.com/1J1C_Occitanie){:target="_blank"}.
 
