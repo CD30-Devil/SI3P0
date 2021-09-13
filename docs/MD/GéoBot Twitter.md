@@ -154,7 +154,27 @@ Si tu inclus ce fichier, sache qu'il utilise [constantes.ps1](https://github.com
 
 ### <a name="_32"></a>3.2. Constantes et nettoyage préalable
 
-TODO
+Vient ensuite le paramètrage du script par la création de plusieurs constantes.
+
+D'une part, on définit un chemin vers un dossier temporaire de travail.
+
+D'autre part, c'est à ce niveau que nous rensignons les différents clés et clés secretes obtenues lors de la création de l'application sur Twitter.
+A toi de choisir si tu souhaites les mettre directement dans le code ou bien les récupèrer avec un autre méthode...ces clés devant logiquement rester confidentielles.
+
+```powershell
+# constantes
+$dossierTemp = "$PSScriptRoot\Temp"
+
+$cleBotTwitter = '<API Key>' # API Key
+$cleSecreteBotTwitter = '<API Secret Key>' # API Secret Key
+$jetonBotTwitter = '<Access Token>' # Access Token
+$jetonSecretBotTwitter = '<Access Secret Token>' # Access Secret Token
+
+# nettoyage préalable
+Remove-Item -Path "$dossierTemp\*.*"
+```
+
+Au passage, on réalise un nettoyage préalable du dossier de travail.
 
 ### <a name="_33"></a>3.3. Préparation des données
 
