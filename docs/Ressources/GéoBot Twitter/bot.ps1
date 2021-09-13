@@ -1,5 +1,5 @@
 ﻿# import des fichiers nécessaires par Dot-Sourcing
-#$cheminAPISI3P0 = "$PSScriptRoot\..\..\..\API\PowerShell\"
+$cheminAPISI3P0 = "$PSScriptRoot\..\..\..\API\PowerShell\"
 
 #. ("$cheminAPISI3P0\fonctions_twitter.ps1")
 #. ("$cheminAPISI3P0\fonctions_chromium.ps1") # utilise constantes.ps1

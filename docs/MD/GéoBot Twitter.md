@@ -136,7 +136,21 @@ Le compte Twitter est actif et nous avons rapidement passé en revue les fonctio
 
 ### <a name="_31"></a>3.1. Dot-sourcing
 
-TODO
+Il est question ici d'importer les fichiers nécessaires à la création du Bot.
+
+```powershell
+# import des fichiers nécessaires par Dot-Sourcing
+$cheminAPISI3P0 = "$PSScriptRoot\..\..\..\API\PowerShell\"
+
+#. ("$cheminAPISI3P0\fonctions_twitter.ps1")
+#. ("$cheminAPISI3P0\fonctions_chromium.ps1") # utilise constantes.ps1
+. ("$cheminAPISI3P0\api_complète.ps1")
+```
+
+Ici, nous utilisons l'API complète mais tu peux te limiter au fichier [fonctions_twitter.ps1](https://github.com/CD30-Devil/SI3P0/blob/main/API/PowerShell/fonctions_twitter.ps1){:target="_blank"}.
+
+Le fichier [fonctions_chromium.ps1](https://github.com/CD30-Devil/SI3P0/blob/main/API/PowerShell/fonctions_chromium.ps1){:target="_blank"} est également facultatif. Il permet de faire des "captures d'écrans" de pages Web à l'aide d'un navigateur Chromium.
+Si tu inclus ce fichier, sache qu'il utilise [constantes.ps1](https://github.com/CD30-Devil/SI3P0/blob/main/API/PowerShell/constantes.ps1){:target="_blank"} pour connaitre le chemin vers l'exécutable du navigateur à utiliser.
 
 ### <a name="_32"></a>3.2. Constantes et nettoyage préalable
 
