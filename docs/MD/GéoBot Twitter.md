@@ -29,13 +29,19 @@ Ce fichier est indépendant des autres sources, MAIS, comme on aime bien la Géo
 
 [3. Donnons vie au bot !](#_3)
 
-&nbsp;&nbsp;&nbsp;&nbsp;[3.1. Création de l'objet d'identification](#_31)
+&nbsp;&nbsp;&nbsp;&nbsp;[3.1. Dot-Sourcing](#_31)
 
-&nbsp;&nbsp;&nbsp;&nbsp;[3.2. Préparation des données et médias](#_32)
+&nbsp;&nbsp;&nbsp;&nbsp;[3.2. Constantes et nettoyage préalable](#_32)
 
-&nbsp;&nbsp;&nbsp;&nbsp;[3.3. Téléversement des médias](#_33)
+&nbsp;&nbsp;&nbsp;&nbsp;[3.3. Préparation des données](#_33)
 
-&nbsp;&nbsp;&nbsp;&nbsp;[3.4. Publication des tweets](#_34)
+&nbsp;&nbsp;&nbsp;&nbsp;[3.4. Création de l'objet d'identification](#_34)
+
+&nbsp;&nbsp;&nbsp;&nbsp;[3.5. Publication du 1er tweet](#_35)
+
+&nbsp;&nbsp;&nbsp;&nbsp;[3.6. Publication du 2ème tweet](#_36)
+
+&nbsp;&nbsp;&nbsp;&nbsp;[3.7. Publication des tweets suivants](#_37)
 
 [4. Conclusion](#_4)
 
@@ -48,6 +54,9 @@ Avant de t'attaquer à la partie développement, tu dois :
 4. Ajouter une application au projet et noter ses identifiants (_API Key_, _API Key Secret_, _Bearer Token_ ; ce dernier est proposé automatiquement à la création de l'app mais n'est pas utile pour ce tuto).
 5. Modifier les permissions de l'application en _Read and Write_.
 6. Générer et conserver les _Access Token_ et _Access Secret Token_ pour l'application.
+
+Bien que facultatif, tu peux aussi activer l'option _Ajouter des informations de localisation à vos Tweets_.
+Tu pourras ainsi ajouter les coordonnées aux tweets publiés par ton Bot afin de les géolocaliser.
 
 Toute la documentation nécessaire est disponible en ligne que ce soit dans l'aide Twitter ou via différents tutos.
 
@@ -92,52 +101,64 @@ Si tu regardes le code des fonctions "mappées", tu pourras voir que chaque appe
 
 1. `Twitter-Preparer-Appel`
 
-Cette fonction construit un `pscustomobject` contenant l'ensemble des informations utiles à l'appel en préparation. On y trouve :
-* l'URL
-* la méthode (_GET_ / _POST_)
-* pour les appels en _POST_, le type MIME du corps de la requête (_application/x-www-form-urlencoded_, _multipart/form-data_)
-* les paramètres
+    Cette fonction construit un `pscustomobject` contenant l'ensemble des informations utiles à l'appel en préparation. On y trouve :
+    * l'URL
+    * la méthode (_GET_ / _POST_)
+    * pour les appels en _POST_, le type MIME du corps de la requête (_application/x-www-form-urlencoded_, _multipart/form-data_)
+    * les paramètres
 
-D'une part, l'objet retourné sert à calculer la signature d'appel grâce à la fonction `Twitter-Calculer-Signature`.
+    D'une part, l'objet retourné sert à calculer la signature d'appel grâce à la fonction `Twitter-Calculer-Signature`.
 
-Si t'as du temps à perdre, les détails sont ici : [https://developer.twitter.com/en/docs/authentication/oauth-1-0a/creating-a-signature](https://developer.twitter.com/en/docs/authentication/oauth-1-0a/creating-a-signature){:target="_blank"} mais en gros cette signature permet le calcul de l'entête _OAuth_ qui sert à authentifier l'appelant.
+    Si t'as du temps à perdre, les détails sont ici : [https://developer.twitter.com/en/docs/authentication/oauth-1-0a/creating-a-signature](https://developer.twitter.com/en/docs/authentication/oauth-1-0a/creating-a-signature){:target="_blank"} mais en gros cette signature permet le calcul de l'entête _OAuth_ qui sert à authentifier l'appelant.
 
-Si tu n'as pas assez perdu de temps avec le lien précédent, tu peux aussi regarder celui là : [https://developer.twitter.com/en/docs/authentication/oauth-1-0a/authorizing-a-request](https://developer.twitter.com/en/docs/authentication/oauth-1-0a/authorizing-a-request){:target="_blank"}.
+    Si tu n'as pas assez perdu de temps avec le lien précédent, tu peux aussi regarder celui là : [https://developer.twitter.com/en/docs/authentication/oauth-1-0a/authorizing-a-request](https://developer.twitter.com/en/docs/authentication/oauth-1-0a/authorizing-a-request){:target="_blank"}.
 
-Ensuite, ce même objet est passé à la fonction `Twitter-Appeler` pour invoquer l'API.
+    Ensuite, ce même objet est passé à la fonction `Twitter-Appeler` pour invoquer l'API.
 
 2. `Twitter-Calculer-Signature`
 
-Et bien tu sais déjà tout ou presque, la fonction calcule la signature et l'ajoute au `pscustomobject` reçu en entrée, histoire de refiler l'info à la fonction `Twitter-Appeler`.
+    Et bien tu sais déjà tout ou presque, la fonction calcule la signature et l'ajoute au `pscustomobject` reçu en entrée, histoire de refiler l'info à la fonction `Twitter-Appeler`.
 
 3. `Twitter-Appeler`
 
-La fonction `Twitter-Appeler` appelle Twitter. Surpris ?
+    La fonction `Twitter-Appeler` appelle Twitter. Surpris ?
 
-Le résultat de l'appel est désérialisé (merci [Invoke-RestMethod](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/invoke-restmethod?view=powershell-7.1){:target="_blank"}) et retourné.
+    Le résultat de l'appel est désérialisé (merci [Invoke-RestMethod](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/invoke-restmethod?view=powershell-7.1){:target="_blank"}) et retourné.
 
 
-Du coup, il devrait être assez simple d'appeler une fonction non "mappée"...enfin j'sais pas, enfin peut-être.
+    Du coup, il devrait être assez simple d'appeler une fonction non "mappée"...enfin j'sais pas, enfin peut-être.
 
-[![enfin j'sais pas, enfin peut-être](https://img.youtube.com/vi/UhjWQKr0b0g/0.jpg)](https://www.youtube.com/watch?v=UhjWQKr0b0g){:target="_blank"}
+    [![enfin j'sais pas, enfin peut-être](https://img.youtube.com/vi/UhjWQKr0b0g/0.jpg)](https://www.youtube.com/watch?v=UhjWQKr0b0g){:target="_blank"}
 
 ## <a name="_3"></a>3. Donnons vie au bot !
 
 Le compte Twitter est actif et nous avons rapidement passé en revue les fonctions ; il est désormais temps de donner vie au bot.
 
-### <a name="_31"></a>3.1. Création de l'objet d'identification
+### <a name="_31"></a>3.1. Dot-sourcing
 
 TODO
 
-### <a name="_32"></a>3.2. Préparation des données et médias
+### <a name="_32"></a>3.2. Constantes et nettoyage préalable
 
 TODO
 
-### <a name="_33"></a>3.3. Téléversement des médias
+### <a name="_33"></a>3.3. Préparation des données
 
 TODO
 
-### <a name="_34"></a>3.4. Publication des tweets
+### <a name="_34"></a>3.4. Création de l'objet d'identification
+
+TODO
+
+### <a name="_35"></a>3.5. Publication du 1er tweet
+
+TODO
+
+### <a name="_36"></a>3.6. Publication du 2ème tweet
+
+TODO
+
+### <a name="_37"></a>3.7. Publication des tweets suivants
 
 TODO
 
