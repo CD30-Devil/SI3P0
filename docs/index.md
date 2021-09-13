@@ -23,7 +23,7 @@ La base de données est scindée en 7 schémas :
 * v : schéma contenant des vues sur le modèle
 
 Pour interagir avec PostgreSQL/PostGIS et automatiser un certain nombre de tâches, la MSI a développé une bibliothèque de fonctions PowerShell disponible dans le dossier API du projet.
-Cette bibliothèque, et les possibilités de manipulation des données offertes par PostgreSQL/Postigs, permettent à la MSI de se passer d’ETL.
+Cette bibliothèque, et les possibilités de manipulation des données offertes par PostgreSQL/PostGIS, permettent à la MSI de se passer d’ETL.
 
 ## Les ressources
 * [Tutoriel : Prendre en main l’API PowerShell SI3P0](./MD/API - Prise en main.html).
