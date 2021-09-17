@@ -300,7 +300,7 @@ $idMessage = $retour.id
 
 Le résultat d'appel permet de récupérer l'identifiant du tweet via l'attribut `id`. Celui-ci sera utile pour le deuxième tweet.
 
-Ce premier message est quant à lui aussitôt visible sur Twitter. Je vous conseille de faire attention aux @mentions dans les messages, car Twitter à la suspension de compte rapide et pourrait considérer cela comme du spam.
+Ce premier message est quant à lui aussitôt visible sur Twitter. Je te conseille de faire attention aux @mentions dans les messages, car Twitter à la suspension de compte rapide et pourrait considérer cela comme du spam.
 
 ![1er tweet](../Ressources/GéoBot Twitter/Tweet 1.png)
 
