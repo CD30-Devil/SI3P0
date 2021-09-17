@@ -220,6 +220,7 @@ InfosCommune as (
         ST_X(ST_Transform(ST_Centroid(c.Geom), 4326)) as X,
         ST_Y(ST_Transform(ST_Centroid(c.Geom), 4326)) as Y,
         
+        '"https://www.geoportail.gouv.fr/carte?c=' || ST_X(ST_Transform(ST_Centroid(c.Geom), 4326)) || ',' || ST_Y(ST_Transform(ST_Centroid(c.Geom), 4326)) || '&z=13&l0=ORTHOIMAGERY.ORTHOPHOTOS::GEOPORTAIL:OGC:WMTS(1)&l1=LIMITES_ADMINISTRATIVES_EXPRESS.LATEST::GEOPORTAIL:OGC:WMTS(1)&permalink=yes"' as LienGeoportail,
         '"https://www.geoportail.gouv.fr/embed/visu.html?c=' || ST_X(ST_Transform(ST_Centroid(c.Geom), 4326)) || ',' || ST_Y(ST_Transform(ST_Centroid(c.Geom), 4326)) || '&z=13&l0=ORTHOIMAGERY.ORTHOPHOTOS::GEOPORTAIL:OGC:WMTS(1;g)&l1=LIMITES_ADMINISTRATIVES_EXPRESS.LATEST::GEOPORTAIL:OGC:WMTS(1)&permalink=yes"' as LienGeoportailLimiteAdm,
         '"https://www.geoportail.gouv.fr/embed/visu.html?c=' || ST_X(ST_Transform(ST_Centroid(c.Geom), 4326)) || ',' || ST_Y(ST_Transform(ST_Centroid(c.Geom), 4326)) || '&z=13&l0=ORTHOIMAGERY.ORTHOPHOTOS::GEOPORTAIL:OGC:WMTS(1;g)&l1=INSEE.FILOSOFI.POPULATION::GEOPORTAIL:OGC:WMTS(0.8)&l2=LIMITES_ADMINISTRATIVES_EXPRESS.LATEST::GEOPORTAIL:OGC:WMTS(1)&permalink=yes"' as LienGeoportailDensitePop,
         '"https://www.geoportail.gouv.fr/embed/visu.html?c=' || ST_X(ST_Transform(ST_Centroid(c.Geom), 4326)) || ',' || ST_Y(ST_Transform(ST_Centroid(c.Geom), 4326)) || '&z=13&l0=OCSGE.COUVERTURE::GEOPORTAIL:OGC:WMTS(0.6)&l1=LIMITES_ADMINISTRATIVES_EXPRESS.LATEST::GEOPORTAIL:OGC:WMTS(1)&permalink=yes"' as LienGeoportailODS,
@@ -291,7 +292,7 @@ $retour = Twitter-Modifier-Statut `
     -long $infosCommune.X `
     -idMedias $idMedia `
     -statut @"
-Bonjour, aujourd'hui je vais vous parler de $($infosCommune.NomCommune), l'une des $($infosCommune.NbCommunesRegion) communes de la région @Occitanie.
+Bonjour, aujourd'hui je vais vous parler de $($infosCommune.NomCommune), l'une des $($infosCommune.NbCommunesRegion) communes de la région #Occitanie.
 "@
 
 $idMessage = $retour.id
@@ -299,7 +300,7 @@ $idMessage = $retour.id
 
 Le résultat d'appel permet de récupérer l'identifiant du tweet via l'attribut `id`. Celui-ci sera utile pour le deuxième tweet.
 
-Ce premier message est quant à lui aussitôt visible sur Twitter.
+Ce premier message est quant à lui aussitôt visible sur Twitter. Je vous conseille de faire attention aux @mentions dans les messages, car Twitter à la suspension de compte rapide et pourrait considérer cela comme du spam.
 
 ![1er tweet](../Ressources/GéoBot Twitter/Tweet 1.png)
 
@@ -409,8 +410,21 @@ $retour = Twitter-Modifier-Statut `
     -enReponseA $idMessage `
     -idMedias $idMedia `
     -statut @"
-Vous trouverez plus d'informations sur l'annuaire de l'Association des Maires de France (AMF - @l_amf) grâce à ce lien :
+Vous trouverez plus d'informations sur l'annuaire de l'Association des Maires de France (#AMF) grâce à ce lien :
 $($infosCommune.LienAMF)
+"@
+
+$idMessage = $retour.id
+
+# Message 7 - GéoPortail
+$retour = Twitter-Modifier-Statut `
+    -identifiants $idsTwitter `
+    -lat $infosCommune.Y `
+    -long $infosCommune.X `
+    -enReponseA $idMessage `
+    -statut @"
+Et plusieurs ressources sur le #GéoPortail de l'#IGN :
+$($infosCommune.LienGeoPortail)
 "@
 ```
 

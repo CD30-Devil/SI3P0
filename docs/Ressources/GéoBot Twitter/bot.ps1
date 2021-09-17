@@ -50,6 +50,7 @@ InfosCommune as (
         ST_X(ST_Transform(ST_Centroid(c.Geom), 4326)) as X,
         ST_Y(ST_Transform(ST_Centroid(c.Geom), 4326)) as Y,
         
+        '"https://www.geoportail.gouv.fr/carte?c=' || ST_X(ST_Transform(ST_Centroid(c.Geom), 4326)) || ',' || ST_Y(ST_Transform(ST_Centroid(c.Geom), 4326)) || '&z=13&l0=ORTHOIMAGERY.ORTHOPHOTOS::GEOPORTAIL:OGC:WMTS(1)&l1=LIMITES_ADMINISTRATIVES_EXPRESS.LATEST::GEOPORTAIL:OGC:WMTS(1)&permalink=yes"' as LienGeoportail,
         '"https://www.geoportail.gouv.fr/embed/visu.html?c=' || ST_X(ST_Transform(ST_Centroid(c.Geom), 4326)) || ',' || ST_Y(ST_Transform(ST_Centroid(c.Geom), 4326)) || '&z=13&l0=ORTHOIMAGERY.ORTHOPHOTOS::GEOPORTAIL:OGC:WMTS(1;g)&l1=LIMITES_ADMINISTRATIVES_EXPRESS.LATEST::GEOPORTAIL:OGC:WMTS(1)&permalink=yes"' as LienGeoportailLimiteAdm,
         '"https://www.geoportail.gouv.fr/embed/visu.html?c=' || ST_X(ST_Transform(ST_Centroid(c.Geom), 4326)) || ',' || ST_Y(ST_Transform(ST_Centroid(c.Geom), 4326)) || '&z=13&l0=ORTHOIMAGERY.ORTHOPHOTOS::GEOPORTAIL:OGC:WMTS(1;g)&l1=INSEE.FILOSOFI.POPULATION::GEOPORTAIL:OGC:WMTS(0.8)&l2=LIMITES_ADMINISTRATIVES_EXPRESS.LATEST::GEOPORTAIL:OGC:WMTS(1)&permalink=yes"' as LienGeoportailDensitePop,
         '"https://www.geoportail.gouv.fr/embed/visu.html?c=' || ST_X(ST_Transform(ST_Centroid(c.Geom), 4326)) || ',' || ST_Y(ST_Transform(ST_Centroid(c.Geom), 4326)) || '&z=13&l0=OCSGE.COUVERTURE::GEOPORTAIL:OGC:WMTS(0.6)&l1=LIMITES_ADMINISTRATIVES_EXPRESS.LATEST::GEOPORTAIL:OGC:WMTS(1)&permalink=yes"' as LienGeoportailODS,
@@ -99,22 +100,36 @@ Son code postal est : $($infosCommune.CPCommune).
 $idMessage = $retour.id
 
 # Message 3 - Département
-$retour = Twitter-Modifier-Statut `    -identifiants $idsTwitter `
-    -lat $infosCommune.Y `    -long $infosCommune.X `    -enReponseA $idMessage `    -statut @"
+$retour = Twitter-Modifier-Statut `
+    -identifiants $idsTwitter `
+    -lat $infosCommune.Y `
+    -long $infosCommune.X `
+    -enReponseA $idMessage `
+    -statut @"
 Vous l'aurez peut-être devinez, le département de $($infosCommune.NomCommune) est : $($infosCommune.NomDepartement) ($($infosCommune.COGDepartement)).
 "@
 
 $idMessage = $retour.id
 
 # Message 4 - Population
-Chromium-Capturer-Page `    -url $infosCommune.LienGeoportailDensitePop `    -sortie "$dossierTemp\$($infosCommune.COGCommune)_densite_pop.png" `    -delai 30000
+Chromium-Capturer-Page `
+    -url $infosCommune.LienGeoportailDensitePop `
+    -sortie "$dossierRapports\$($infosCommune.COGCommune)_densite_pop.png" `
+    -delai 30000
 
-$retour = Twitter-Televerser-Media `    -identifiants $idsTwitter `
-    -cheminMedia "$dossierTemp\$($infosCommune.COGCommune)_densite_pop.png"
+$retour = Twitter-Televerser-Media `
+    -identifiants $idsTwitter `
+    -cheminMedia "$dossierRapports\$($infosCommune.COGCommune)_densite_pop.png"
 
 $idMedia = $retour.media_id
 
-$retour = Twitter-Modifier-Statut `    -identifiants $idsTwitter `    -lat $infosCommune.Y `    -long $infosCommune.X `    -enReponseA $idMessage `    -idMedias $idMedia `    -statut @"
+$retour = Twitter-Modifier-Statut `
+    -identifiants $idsTwitter `
+    -lat $infosCommune.Y `
+    -long $infosCommune.X `
+    -enReponseA $idMessage `
+    -idMedias $idMedia `
+    -statut @"
 Sa population est de $($infosCommune.PopulationCommune) hab. ce qui la place en numéro $($infosCommune.PositionPopulationDepartement)/$($infosCommune.NbCommunesDepartement) dans son département et en $($infosCommune.PositionPopulationRegion)/$($infosCommune.NbCommunesRegion) en #Occitanie.
 
 Cela représente $($infosCommune.PartPopulationDepartement) ‰ de la population du département et $($infosCommune.PartPopulationRegion) ‰ de la région.
@@ -123,13 +138,24 @@ Cela représente $($infosCommune.PartPopulationDepartement) ‰ de la population
 $idMessage = $retour.id
 
 # Message 5 - Superficie
-Chromium-Capturer-Page `    -url $infosCommune.LienGeoportailODS `    -sortie "$dossierTemp\$($infosCommune.COGCommune)_ods.png" `    -delai 30000
+Chromium-Capturer-Page `
+    -url $infosCommune.LienGeoportailODS `
+    -sortie "$dossierRapports\$($infosCommune.COGCommune)_ods.png" `
+    -delai 30000
 
-$retour = Twitter-Televerser-Media `    -identifiants $idsTwitter `    -cheminMedia "$dossierTemp\$($infosCommune.COGCommune)_ods.png"
+$retour = Twitter-Televerser-Media `
+    -identifiants $idsTwitter `
+    -cheminMedia "$dossierRapports\$($infosCommune.COGCommune)_ods.png"
 
 $idMedia = $retour.media_id
 
-$retour = Twitter-Modifier-Statut `    -identifiants $idsTwitter `    -lat $infosCommune.Y `    -long $infosCommune.X `    -enReponseA $idMessage `    -idMedias $idMedia `    -statut @"
+$retour = Twitter-Modifier-Statut `
+    -identifiants $idsTwitter `
+    -lat $infosCommune.Y `
+    -long $infosCommune.X `
+    -enReponseA $idMessage `
+    -idMedias $idMedia `
+    -statut @"
 Sa superficie est de $($infosCommune.HectaresCommune) hect. ce qui la place en numéro $($infosCommune.PositionSuperficieDepartement)/$($infosCommune.NbCommunesDepartement) dans son département et en $($infosCommune.PositionSuperficieRegion)/$($infosCommune.NbCommunesRegion) en #Occitanie.
 
 Cela représente $($infosCommune.PartSuperficieDepartement) ‰ de la superficie du département et $($infosCommune.PartSuperficieRegion) ‰ de la région.
@@ -138,13 +164,37 @@ Cela représente $($infosCommune.PartSuperficieDepartement) ‰ de la superficie
 $idMessage = $retour.id
 
 # Message 6 - AMF
-Chromium-Capturer-Page `    -url $infosCommune.LienAMF `    -sortie "$dossierTemp\$($infosCommune.COGCommune)_amf.png" `    -delai 30000
+Chromium-Capturer-Page `
+    -url $infosCommune.LienAMF `
+    -sortie "$dossierRapports\$($infosCommune.COGCommune)_amf.png" `
+    -delai 30000
 
-$retour = Twitter-Televerser-Media `    -identifiants $idsTwitter `    -cheminMedia "$dossierTemp\$($infosCommune.COGCommune)_amf.png"
+$retour = Twitter-Televerser-Media `
+    -identifiants $idsTwitter `
+    -cheminMedia "$dossierRapports\$($infosCommune.COGCommune)_amf.png"
 
 $idMedia = $retour.media_id
 
-$retour = Twitter-Modifier-Statut `    -identifiants $idsTwitter `    -lat $infosCommune.Y `    -long $infosCommune.X `    -enReponseA $idMessage `    -idMedias $idMedia `    -statut @"
-Vous trouverez plus d'informations sur l'annuaire de l'Association des Maires de France (AMF - @l_amf) grâce à ce lien :
+$retour = Twitter-Modifier-Statut `
+    -identifiants $idsTwitter `
+    -lat $infosCommune.Y `
+    -long $infosCommune.X `
+    -enReponseA $idMessage `
+    -idMedias $idMedia `
+    -statut @"
+Vous trouverez plus d'informations sur l'annuaire de l'Association des Maires de France (#AMF) grâce à ce lien :
 $($infosCommune.LienAMF)
+"@
+
+$idMessage = $retour.id
+
+# Message 7 - GéoPortail
+$retour = Twitter-Modifier-Statut `
+    -identifiants $idsTwitter `
+    -lat $infosCommune.Y `
+    -long $infosCommune.X `
+    -enReponseA $idMessage `
+    -statut @"
+Et plusieurs ressources sur le #GéoPortail de l'#IGN :
+$($infosCommune.LienGeoPortail)
 "@
