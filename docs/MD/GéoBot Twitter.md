@@ -6,8 +6,8 @@ Par exemple, et pour ne citer que les plus utiles, il y a :
 * [@whataweekhuh](https://twitter.com/whataweekhuh){:target="_blank"} - où Tintin nous rappelle chaque mercredi que c'est mercredi,
 * [@year_progress](https://twitter.com/year_progress){:target="_blank"} - qui nous aide à patienter jusqu'au réveillon du nouvel an grâce à une barre de progression de l'année en cours façon code ASCII.
 
-Ce tutoriel te propose de créer un Bot Twitter avec l'aide des sources qui nous mettons à ta disposition.
-Pour cela, tu vas utiliser les fonctions d'appel à l'API standard v1.1 de Twitter présentent dans le fichier [fonctions_twitter.ps1](https://github.com/CD30-Devil/SI3P0/blob/main/API/PowerShell/fonctions_twitter.ps1){:target="_blank"}.
+Ce tutoriel te propose de créer un Bot Twitter avec l'aide des sources que nous mettons à ta disposition.
+Pour cela, tu vas utiliser les fonctions d'appel à l'API standard v1.1 de Twitter présentes dans le fichier [fonctions_twitter.ps1](https://github.com/CD30-Devil/SI3P0/blob/main/API/PowerShell/fonctions_twitter.ps1){:target="_blank"}.
 
 Ce fichier est indépendant des autres sources, MAIS, comme on aime bien la Géo ici, on va créer un GéoBot et donc utiliser un peu plus largement les fonctions de la boîte à outils SI3P0 notamment pour l'accès au SIg. On va également exploiter les données de notre base géographique si bien que, si tu souhaites réaliser ton propre GéoBot, il te faudra adapter la partie extraction de données.
 
