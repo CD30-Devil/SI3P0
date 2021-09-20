@@ -55,7 +55,7 @@ Avant de t'attaquer à la partie développement, tu dois :
 5. Modifier les permissions de l'application en _Read and Write_.
 6. Générer et conserver les _Access Token_ et _Access Secret Token_ pour l'application.
 
-Bien que facultatif, tu peux aussi activer l'option _Ajouter des informations de localisation à vos Tweets_.
+Bien que facultative, tu peux aussi activer l'option _Ajouter des informations de localisation à vos Tweets_.
 Tu pourras ainsi ajouter les coordonnées aux tweets publiés par ton Bot afin de les géolocaliser.
 
 Toute la documentation nécessaire est disponible en ligne que ce soit dans l'aide Twitter ou via différents tutos.
@@ -264,7 +264,7 @@ $idsTwitter = Twitter-Creer-Identifiants `
 L'idée est de présenter chaque jour une commune aléatoirement choisie parmi celles de la région Occitanie.
 Le premier tweet va annoncer la commune retenue en associant au message un aperçu de ses limites administratives visibles sur le [Géoportail](https://www.geoportail.gouv.fr/){:target="_blank"}.
 
-Préalablement à l'envoie du message, on réalise une capture d'écran du site de l'IGN. On utilise pour cela l'URL du permalien calculée par la requête au moment de [la préparation des données](#_33) et la fonction `Chromium-Capturer-Page` présente dans [fonctions_chromium.ps1](https://github.com/CD30-Devil/SI3P0/blob/main/API/PowerShell/fonctions_chromium.ps1){:target="_blank"}.
+Préalablement à l'envoi du message, on réalise une capture d'écran du site de l'IGN. On utilise pour cela l'URL du permalien calculée par la requête au moment de [la préparation des données](#_33) et la fonction `Chromium-Capturer-Page` présente dans [fonctions_chromium.ps1](https://github.com/CD30-Devil/SI3P0/blob/main/API/PowerShell/fonctions_chromium.ps1){:target="_blank"}.
 
 ```powershell
 Chromium-Capturer-Page `
@@ -273,7 +273,7 @@ Chromium-Capturer-Page `
     -delai 30000
 ```
 
-Ensuite, l'image obtenue est téléversée vers Twitter. Le retour de l'API est stockée dans la variable `$retour` dont l'attribut `media_id` donne l'identifiant du média à référencer dans le tweet.
+Ensuite, l'image obtenue est téléversée vers Twitter. Le retour de l'API est stocké dans la variable `$retour` dont l'attribut `media_id` donne l'identifiant du média à référencer dans le tweet.
 
 ```powershell
 $retour = Twitter-Televerser-Media `
@@ -300,7 +300,7 @@ $idMessage = $retour.id
 
 Le résultat d'appel permet de récupérer l'identifiant du tweet via l'attribut `id`. Celui-ci sera utile pour le deuxième tweet.
 
-Ce premier message est quant à lui aussitôt visible sur Twitter. Je te conseille de faire attention aux @mentions dans les messages, car Twitter à la suspension de compte rapide et pourrait considérer cela comme du spam.
+Ce premier message est quant à lui aussitôt visible sur Twitter. Je te conseille de faire attention aux @mentions dans les messages, car Twitter a la suspension de compte rapide et pourrait considérer cela comme du spam.
 
 ![1er tweet](../Ressources/GéoBot Twitter/Tweet 1.png)
 
@@ -324,7 +324,7 @@ $idMessage = $retour.id
 
 ### <a name="_37"></a>3.7. Publication des tweets suivants
 
-La suite est une succession de messages envoyés en réponse à celui qui le précède.
+La suite est une succession de messages, chacun étant envoyé en réponse à celui qui le précède.
 
 ```powershell
 # Message 3 - Département
