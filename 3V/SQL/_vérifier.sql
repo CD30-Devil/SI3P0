@@ -141,14 +141,24 @@ and exists (select * from m.Troncon where IdIGN = sc.IdGeometrie limit 1);
 select 'Remarque : cette liste devrait être vide.';
 select '';
 
-select 'Liste des segments (IdSegmentCyclable | IdGeometrie | SensUnique | sens_de_circulation) présentant une incohérence de sens de circulation avec la BDTOPO :';
-select sc.IdSegmentCyclable, sc.IdGeometrie, sc.SensUnique, t.sens_de_circulation
+select 'Liste des segments (IdSegmentCyclable | IdGeometrie | Description) présentant une incohérence de sens de circulation avec la BDTOPO :';
+select
+    sc.IdSegmentCyclable,
+    sc.IdGeometrie,
+    case
+        when (sc.SensUnique and t.sens_de_circulation = 'Double sens') then 'Segment : sens unique - Tronçon : double sens'
+        when (not sc.SensUnique and t.sens_de_circulation in ('Sens direct', 'Sens inverse'))  then 'Segment : double sens - Tronçon : sens unique'
+        when (sc.SensUnique and t.sens_de_circulation = 'Sens direct' and not ST_OrderingEquals(sc.Geom, t.Geometrie)) then 'Incohérence de sens de circulation (direct)'
+        when (sc.SensUnique and t.sens_de_circulation = 'Sens inverse' and not ST_OrderingEquals(sc.Geom, ST_Reverse(t.Geometrie))) then 'Incohérence de sens de circulation (indirect)'
+    end as Description
 from m.SegmentCyclable sc
 inner join d.bdtopo_troncon_de_route t on sc.SourceGeometrie = 'bdtopo.troncon_de_route' and sc.IdGeometrie = t.cleabs
 where (sc.SensUnique and t.sens_de_circulation = 'Double sens')
-or (not(sc.SensUnique) and t.sens_de_circulation in ('Sens direct', 'Sens inverse'))
-order by t.sens_de_circulation, sc.IdGeometrie;
-select 'Remarque : cette liste devrait être vide.';
+or (not sc.SensUnique and t.sens_de_circulation in ('Sens direct', 'Sens inverse'))
+or (sc.SensUnique and t.sens_de_circulation = 'Sens direct' and not ST_OrderingEquals(sc.Geom, t.Geometrie))
+or (sc.SensUnique and t.sens_de_circulation = 'Sens inverse' and not ST_OrderingEquals(sc.Geom, ST_Reverse(t.Geometrie)))
+order by Description, sc.IdGeometrie;
+select 'Remarque : vérifier cette liste pour être sûr que les cyclistes ne sont pas invités à prendre des sens interdits.';
 select '';
 
 -- TODO voir s'il est utile d'activer cette requête de vérification qui recherche les couples de segments d'une même portion qui ont un même début ou une même fin

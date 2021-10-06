@@ -5,7 +5,7 @@ $dossierRapports = "$PSScriptRoot\..\Rapports\peupler"
 $dossierSQL = "$PSScriptRoot\..\SQL"
 
 $dateBDTopo = '2021-06-15'
-$dateComplement3V = '2021-07-30'
+$dateComplement3V = '2021-09-23'
 
 # nettoyage préalable
 Remove-Item "$dossierRapports\*.txt"

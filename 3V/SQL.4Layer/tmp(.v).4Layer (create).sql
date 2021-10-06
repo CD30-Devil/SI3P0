@@ -132,12 +132,10 @@ SegmentACompter as (
     select *
     from SegmentOuvertD30
     where CodeStatut3V <> 'RTE'
-    and (AnneeOuverture is null or AnneeOuverture < extract(year from current_date))
     union
     select *
     from SegmentOuvertD30
     where CodeStatut3V = 'RTE'
-    and (AnneeOuverture is null or AnneeOuverture < extract(year from current_date))
     and IdGeometrie not in (select IdIGN from m.Troncon)
 )
 select
