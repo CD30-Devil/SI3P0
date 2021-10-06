@@ -36,7 +36,7 @@ function Executer-SQLPLUS-Fichier {
 }
 
 # -----------------------------------------------------------------------------
-# Export d'un CSV.
+# Export du résultat d'une requête SQL sur une base Oracle vers un CSV.
 #
 # /!\ En fonction de la nature de l'assembly $OracleDataAccessLib
 # (variable définie dans constantes.ps1) il peut être nécessaire d'appeler

@@ -8,6 +8,7 @@
 . ("$PSScriptRoot\fonctions_twitter.ps1")
 . ("$PSScriptRoot\fonctions_géodonnées.ps1")
 
+. ("$PSScriptRoot\fonctions_oledb.ps1")
 . ("$PSScriptRoot\fonctions_excel.ps1")
 . ("$PSScriptRoot\fonctions_oracle.ps1")
 . ("$PSScriptRoot\fonctions_postgresql.ps1")

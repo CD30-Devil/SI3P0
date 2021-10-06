@@ -35,8 +35,8 @@ $ogr2ogr = "$racineOSGeo4W\bin\ogr2ogr.exe"
 $7z = "$env:ProgramFiles\7-Zip\7z.exe"
 
 # chemin vers un navigateur basé sur Chromium (Google Chrome, Microsoft Edge, ...)
-$chromium = "${env:ProgramFiles(x86)}\Google\Chrome\Application\chrome.exe"
-#$chromium = "${env:ProgramFiles(x86)}\Microsoft\Edge\Application\msedge.exe"
+#$chromium = "${env:ProgramFiles(x86)}\Google\Chrome\Application\chrome.exe"
+$chromium = "${env:ProgramFiles(x86)}\Microsoft\Edge\Application\msedge.exe"
 
 # serveur e-mail sortant
 $serveurSMTP = '<mon-serveur-smtp>'
