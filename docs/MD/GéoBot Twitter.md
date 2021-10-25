@@ -334,7 +334,7 @@ $retour = Twitter-Modifier-Statut `
     -long $infosCommune.X `
     -enReponseA $idMessage `
     -statut @"
-Vous l'aurez peut-être devinez, le département de $($infosCommune.NomCommune) est : $($infosCommune.NomDepartement) ($($infosCommune.COGDepartement)).
+Vous l'aurez peut-être deviné, le département de $($infosCommune.NomCommune) est : $($infosCommune.NomDepartement) ($($infosCommune.COGDepartement)).
 "@
 
 $idMessage = $retour.id
