@@ -1,3 +1,4 @@
 ﻿$dossierDonnees = "$PSScriptRoot\..\Données"
+$dossierCadastreDataGouv = "$dossierDonnees\cadastre.data.gouv.fr"
 
-Remove-Item "$dossierDonnees\cadastre-*.json.gz"
+Remove-Item "$dossierCadastreDataGouv\cadastre-*.json.gz"
