@@ -101,13 +101,11 @@ foreach ($fichier in (Get-ChildItem -Path "$dossierDataEconomieGouv\PM_*_NB_*.tx
 
 }
 
-# transfert d'une partie des données du schéma tmp au schéma m
+# transfert des données du schéma tmp au schéma m
 SIg-Executer-Fichier -fichier "$dossierSQL\_peupler.sql" -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - _peupler.txt"
 
 # nettoyage final
 Remove-Item "$dossierTravailTemp\cadastre_peupler\*"
-Remove-Item "$dossierRapports\*.txt"
-Remove-Item "$dossierRapports\*.err"
 
 foreach ($nature in $natures) {
     if ($nature.table.StartsWith('tmp.')) {
