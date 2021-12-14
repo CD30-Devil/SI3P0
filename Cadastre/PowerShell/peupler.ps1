@@ -97,7 +97,7 @@ foreach ($fichier in (Get-ChildItem -Path "$dossierDataEconomieGouv\PM_*_NB_*.tx
     $nomFichier = [IO.Path]::GetFileName($fichier)
     Copy-Item $fichier "$dossierTravailTemp\cadastre_peupler\$nomFichier"
     Changer-Encodage "$dossierTravailTemp\cadastre_peupler\$nomFichier" -encodageAvant 'iso-8859-1' -encodageApres 'utf-8'
-    SIg-Importer-CSV -csv "$dossierTravailTemp\cadastre_peupler\$nomFichier" -table 'tmp.ParcellePersonneMorale' -sortie "$dossierRapports\import $nomFichier.txt"
+    SIg-Importer-CSV -csv "$dossierTravailTemp\cadastre_peupler\$nomFichier" -table 'tmp.ParcellePersonneMorale' -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - import $nomFichier.txt"
 
 }
 
