@@ -11,7 +11,9 @@ Remove-Item "$dossierTravailTemp\cadastre_peupler\*"
 Remove-Item "$dossierRapports\*.txt"
 Remove-Item "$dossierRapports\*.err"
 
+# -----------------------------------------------------------------------------
 # traitements des données issues de cadastre.data.gouv.fr
+# -----------------------------------------------------------------------------
 
 $natures = @(
     @{ nom = 'lieux_dits'; table = 'tmp.Cadastre_LieuDit' }
@@ -84,10 +86,13 @@ foreach ($nature in $natures) {
 # exécution des jobs d'import dans les structures temporaires
 Executer-Jobs -parametresJobs $parametresJobs
 
+# -----------------------------------------------------------------------------
 # traitements des données issues de data.economie.gouv.fr
+# -----------------------------------------------------------------------------
 
 SIg-Effacer-Table -table 'tmp.ParcellePersonneMorale' -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - effacement tmp.ParcellePersonneMorale.txt"
 
+# création des structures temporaires
 SIg-Creer-Table-Temp `    -table 'tmp.ParcellePersonneMorale' `    -colonnes `        'code_departement', `        'code_direction', `        'code_commune', `
         'nom_commune', `        'prefixe', `        'section', `        'num_plan', `        'num_voirie', `        'repetition', `        'code_majic', `        'code_rivoli', `        'nature_voie', `        'nom_voie', `        'contenance', `        'suf', `        'nature_culture', `        'contenance_suf', `        'code_droit', `        'num_majic', `        'siren', `        'groupe_personne', `        'forme_juridique', `        'forme_juridique_abregee', `        'denomination' `
     -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - effacement tmp.ParcellePersonneMorale.txt"
