@@ -265,7 +265,13 @@ function Importer-CSV-PostgreSQL {
     $fichierTemp = "$dossierTravailTemp\Importer-CSV-PostgreSQL\$(New-Guid).csv"
     Copy-Item -LiteralPath $csv -Destination $fichierTemp -Force
 
-    $commande = "\copy $table from '$fichierTemp' with (format csv, delimiter '$delimiteur', header true, encoding 'utf8')"
+    if ($delimiteur -eq '`t') {
+        $commande = "\copy $table from '$fichierTemp' with (format csv, delimiter E'\t', header true, encoding 'utf8')"
+    }
+    else {
+        $commande = "\copy $table from '$fichierTemp' with (format csv, delimiter '$delimiteur', header true, encoding 'utf8')"
+    }
+
     Executer-PSQL-Commande -serveur $serveur -port $port -bdd $bdd -utilisateur $utilisateur -commande $commande -sortie $sortie -erreur $erreur
 
     Remove-Item $fichierTemp

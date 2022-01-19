@@ -42,13 +42,25 @@ function SI3P0-Generer-Page-Portail {
 #
 # Itère sur les dossiers présents dans Thématiques pour déterminer les tuiles
 # à afficher.
+#
+# $exclure : Le thématiques à exclure de la génération.
 # -----------------------------------------------------------------------------
 function SI3P0-Generer-Accueil-Portail {
+    param (
+        [string[]] $exclure = $null
+    )
 
     $contenu = [Text.StringBuilder]::new()
 
     # génération d'une tuile par thématique
-    foreach ($dossierThematique in Get-ChildItem $si3p0ThematiquesPortailWeb -Directory) {
+    if ($exclure) {
+        $dossiersThematiques = (Get-ChildItem $si3p0ThematiquesPortailWeb -Directory -Exclude $exclure).Name
+    }
+    else {
+        $dossiersThematiques = (Get-ChildItem $si3p0ThematiquesPortailWeb -Directory).Name
+    }
+
+    foreach ($dossierThematique in $dossiersThematiques) {
 
         [void]$contenu.AppendLine("<div class=`"cadre_thematique`">")
         [void]$contenu.AppendLine("<a href=`"/Thématiques/$dossierThematique/`">")
@@ -147,9 +159,9 @@ function SI3P0-Generer-Tableau-Portail {
         [string] $titre = [IO.Path]::GetFileNameWithoutExtension($csv),
         [string] $delimiteur = (Get-Culture).TextInfo.ListSeparator
     )
-
-    $contenuCSV = Import-Csv $csv -Delimiter $delimiteur
-
+    
+    $contenuCSV = @(Import-Csv $csv -Delimiter $delimiteur)
+    
     if ($contenuCSV.Count -ge 0) {
 
         $contenu = [Text.StringBuilder]::new()

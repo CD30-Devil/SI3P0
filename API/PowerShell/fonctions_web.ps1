@@ -6,18 +6,27 @@
 #
 # $url : L'adresse url du fichier à télécharger.
 # $enregistrerSous : L'emplacement de sauvegarde.
+# $entetes : Les entêtes à ajouter lors de l'appel.
 # -----------------------------------------------------------------------------
 function Telecharger {
     param (
         [parameter(Mandatory=$true)] [string] $url,
-        [parameter(Mandatory=$true)] [string] $enregistrerSous
+        [parameter(Mandatory=$true)] [string] $enregistrerSous,
+        [hashtable] $entetes = $null
     )
     
     Afficher-Message-Date -message "Téléchargement de $url vers $enregistrerSous."
     New-Item -ItemType Directory -Force -Path (Split-Path -Path $enregistrerSous)
 
     [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls11 -bor [System.Net.SecurityProtocolType]::Tls12 -bor [System.Net.SecurityProtocolType]::Tls13 -bor [System.Net.SecurityProtocolType]::Ssl3
-    $client = New-Object System.Net.WebClient
+    $client = [Net.WebClient]::new()
+
+    if ($entetes) {
+        foreach ($cle in $entetes.Keys) {
+            $client.Headers.Add($cle, $entetes[$cle])
+        }
+    }
+
     $client.DownloadFile($url, $enregistrerSous)
 }
 
