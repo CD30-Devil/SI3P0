@@ -4,7 +4,7 @@ $dossierDonnees = "$PSScriptRoot\..\Données"
 $dossierRapports = "$PSScriptRoot\..\Rapports\peupler"
 $dossierSQL = "$PSScriptRoot\..\SQL"
 
-$archiveBDTopo = "$dossierDonnees\BDTOPO_3-0_TOUSTHEMES_SQL_LAMB93_FXX_2021-06-15.7z.001"
+$archiveBDTopo = "$dossierDonnees\BDTOPO_3-0_TOUSTHEMES_SQL_LAMB93_FXX_2021-12-15.7z.001"
 
 # -----------------------------------------------------------------------------
 # Job d'import d'un thème de la BDTopo dans le schéma d.
@@ -129,12 +129,13 @@ Remove-Item "$dossierTravailTemp\bdtopo_peupler\*.sql"
 $parametresJobs = New-Object System.Collections.ArrayList
 
 # occupation du sol
-[void]$parametresJobs.Add(@{ script = $Job_Importer_BDTopo; racineAPI = "$PSScriptRoot\..\..\API\PowerShell"; archiveBDTopo = $archiveBDTopo; bdd = $bdd; theme = 'zone_de_vegetation'; typeGeometrie = 'MULTIPOLYGON'; dossierRapports = $dossierRapports })
+#[void]$parametresJobs.Add(@{ script = $Job_Importer_BDTopo; racineAPI = "$PSScriptRoot\..\..\API\PowerShell"; archiveBDTopo = $archiveBDTopo; bdd = $bdd; theme = 'zone_de_vegetation'; typeGeometrie = 'MULTIPOLYGON'; dossierRapports = $dossierRapports })
 
 # bati
 [void]$parametresJobs.Add(@{ script = $Job_Importer_BDTopo; racineAPI = "$PSScriptRoot\..\..\API\PowerShell"; archiveBDTopo = $archiveBDTopo; bdd = $bdd; theme = 'batiment'; typeGeometrie = 'MULTIPOLYGON'; dossierRapports = $dossierRapports })
 
 # transport
+[void]$parametresJobs.Add(@{ script = $Job_Importer_BDTopo; racineAPI = "$PSScriptRoot\..\..\API\PowerShell"; archiveBDTopo = $archiveBDTopo; bdd = $bdd; theme = 'point_de_repere'; typeGeometrie = 'POINT'; dossierRapports = $dossierRapports })
 [void]$parametresJobs.Add(@{ script = $Job_Importer_BDTopo; racineAPI = "$PSScriptRoot\..\..\API\PowerShell"; archiveBDTopo = $archiveBDTopo; bdd = $bdd; theme = 'troncon_de_route'; typeGeometrie = 'LINESTRING'; dossierRapports = $dossierRapports })
 [void]$parametresJobs.Add(@{ script = $Job_Importer_BDTopo; racineAPI = "$PSScriptRoot\..\..\API\PowerShell"; archiveBDTopo = $archiveBDTopo; bdd = $bdd; theme = 'troncon_de_voie_ferree'; typeGeometrie = 'LINESTRING'; dossierRapports = $dossierRapports })
 [void]$parametresJobs.Add(@{ script = $Job_Importer_BDTopo; racineAPI = "$PSScriptRoot\..\..\API\PowerShell"; archiveBDTopo = $archiveBDTopo; bdd = $bdd; theme = 'route_numerotee_ou_nommee'; typeGeometrie = 'MULTILINESTRING'; dossierRapports = $dossierRapports })
@@ -145,6 +146,9 @@ $parametresJobs = New-Object System.Collections.ArrayList
 [void]$parametresJobs.Add(@{ script = $Job_Importer_BDTopo; racineAPI = "$PSScriptRoot\..\..\API\PowerShell"; archiveBDTopo = $archiveBDTopo; bdd = $bdd; theme = 'surface_hydrographique'; typeGeometrie = 'MULTIPOLYGON'; dossierRapports = $dossierRapports })
 [void]$parametresJobs.Add(@{ script = $Job_Importer_BDTopo; racineAPI = "$PSScriptRoot\..\..\API\PowerShell"; archiveBDTopo = $archiveBDTopo; bdd = $bdd; theme = 'cours_d_eau'; typeGeometrie = 'MULTILINESTRING'; dossierRapports = $dossierRapports })
 [void]$parametresJobs.Add(@{ script = $Job_Importer_BDTopo; racineAPI = "$PSScriptRoot\..\..\API\PowerShell"; archiveBDTopo = $archiveBDTopo; bdd = $bdd; theme = 'plan_d_eau'; typeGeometrie = 'MULTIPOLYGON'; dossierRapports = $dossierRapports })
+
+# services et activités
+[void]$parametresJobs.Add(@{ script = $Job_Importer_BDTopo; racineAPI = "$PSScriptRoot\..\..\API\PowerShell"; archiveBDTopo = $archiveBDTopo; bdd = $bdd; theme = 'ligne_electrique'; typeGeometrie = 'LINESTRING'; dossierRapports = $dossierRapports })
 
 # administratif
 [void]$parametresJobs.Add(@{ script = $Job_Importer_BDTopo; racineAPI = "$PSScriptRoot\..\..\API\PowerShell"; archiveBDTopo = $archiveBDTopo; bdd = $bdd; theme = 'commune'; typeGeometrie = 'MULTIPOLYGON'; dossierRapports = $dossierRapports })
