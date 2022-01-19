@@ -18,6 +18,9 @@ SIg-Executer-Fichier -fichier "$dossierSQL4Layer\tmp(.v).4Layer (create).sql" -s
 SIg-Executer-Fichier -fichier "$dossierSQL4Sheet\tmp(.v).4Sheet (create).sql" -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - tmp(.v).4Sheet (create).txt"
 SIg-Executer-Fichier -fichier "$dossierSQLPart\tmp(.v).4Part (create).sql" -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - tmp(.v).4Part (create).txt"
 
+# recherche de la liste des itinéraires
+SIg-Exporter-CSV -requete "select NumeroItineraireCyclable, NomOfficiel from m.itinerairecyclable" -csv "$dossierRapports\itinéraires.csv"
+
 # paramétrage des jobs d'export
 $parametresJobs = New-Object System.Collections.ArrayList
 
@@ -27,6 +30,11 @@ $parametresJobs = New-Object System.Collections.ArrayList
 [void]$parametresJobs.Add((Parametrer-Job-SIg-Exporter-GeoJSON -requete 'select * from tmp.VVVInventaireD30_4Layer' -geoJSON "$si3p0DossierExportGeoJSON\3V\D30_Inventaire.geojson" -sridCible 4326 -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - Export D30_Inventaire.geojson.txt"))
 [void]$parametresJobs.Add((Parametrer-Job-SIg-Exporter-GeoJSON -requete 'select * from tmp.VVVPortionUniforme_4Layer' -geoJSON "$si3p0DossierExportGeoJSON\3V\D30_Portion uniforme.geojson" -sridCible 4326 -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - Export D30_Portion uniforme.geojson.txt"))
 [void]$parametresJobs.Add((Parametrer-Job-SIg-Exporter-GeoJSON -requete 'select * from tmp.VVVEtiquetageItineraire_4Layer' -geoJSON "$si3p0DossierExportGeoJSON\3V\D30_Etiquetage itinéraire.geojson" -sridCible 4326 -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - Export D30_Etiquetage itinéraire.geojson.txt"))
+
+foreach ($itineraire in Import-Csv -Delimiter (Get-Culture).TextInfo.ListSeparator -Path "$dossierRapports\itinéraires.csv") {
+    [void]$parametresJobs.Add((Parametrer-Job-SIg-Exporter-GeoJSON -requete "select * from tmp.VVVAvecDoublons_4Layer where `"`"NumeroItineraire`"`" = '$($itineraire.NumeroItineraireCyclable)'" -geoJSON "$si3p0DossierExportGeoJSON\3V\Itinéraires\$($itineraire.NumeroItineraireCyclable) - $($itineraire.NomOfficiel).geojson" -sridCible 4326 -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - Export $($itineraire.NumeroItineraireCyclable) - $($itineraire.NomOfficiel).geojson.txt"))
+}
+[void]$parametresJobs.Add((Parametrer-Job-SIg-Exporter-GeoJSON -requete "select * from tmp.VVVAvecDoublons_4Layer where `"`"NumeroItineraire`"`" is null" -geoJSON "$si3p0DossierExportGeoJSON\3V\Itinéraires\Hors itinéraires.geojson" -sridCible 4326 -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - Export Hors itinéraires.geojson.txt"))
 
 # shp
 [void]$parametresJobs.Add((Parametrer-Job-SIg-Exporter-SHP -requete 'select * from tmp.VVVAvecDoublons_4SHP' -shp "$si3p0DossierExportSHP\3V\D30_3V avec doublons.shp" -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - Export D30_3V avec doublons.shp.txt"))

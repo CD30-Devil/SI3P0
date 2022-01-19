@@ -120,7 +120,6 @@ inner join tmp.SegmentCyclable tsc on sc.SourceGeometrie = tsc.SourceGeometrie a
 inner join m.PortionCyclable pc on pc.Nom = tsc.PortionCyclable;
 
 -- ajustement du sens de numérisation des segments au sens de la portion
--- TODO requête à valider notamment pour les tronçons qui changent à chaque exécution
 with SegmentOrdonneParPortion as (
     select distinct sc.IdSegmentCyclable, pc.IdPortionCyclable, tsc.Ordre::integer, sc.Geom
     from m.SegmentCyclable sc

@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* Nom de SGBD :  PostgreSQL SI3P0                              */
-/* Date de création :  21/07/2021 22:26:29                      */
+/* Date de création :  13/12/2021 21:51:06                      */
 /*==============================================================*/
 
 
@@ -411,7 +411,7 @@ alter table segmentcyclable
       on delete restrict on update restrict;
 
 alter table segmentcyclable_gestionnaire
-   add constraint fk_gestionnaire_segment foreign key (idsegmentcyclable)
+   add constraint fk_gestionnaire_segmentcyclable foreign key (idsegmentcyclable)
       references segmentcyclable (idsegmentcyclable)
       on delete restrict on update restrict;
 
@@ -426,7 +426,7 @@ alter table segmentcyclable_portioncyclable
       on delete restrict on update restrict;
 
 alter table segmentcyclable_proprietaire
-   add constraint fk_proprietaire_segment foreign key (idsegmentcyclable)
+   add constraint fk_proprietaire_segmentcyclable foreign key (idsegmentcyclable)
       references segmentcyclable (idsegmentcyclable)
       on delete restrict on update restrict;
 

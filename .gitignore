@@ -18,5 +18,9 @@ SQL.4Qlik/
 # 3V
 !/3V/Données/
 
+# Référentiel routier
+/Référentiel routier/PowerShell/générer graflex.ps1
+/Référentiel routier/PowerShell/préparer construction qualif.ps1
+
 # Waze
 /Waze/Ressources/Icones
