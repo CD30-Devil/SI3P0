@@ -12,7 +12,7 @@ Remove-Item "$dossierTravailTemp\qpv_peupler\*"
 
 SIg-Effacer-Table -table 'tmp.QPV' -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - effacement tmp.QPV.txt"
 
-# import des données
+# import des données dans les structures temporaires
 Executer-7Z -commande 'e' -archive "$dossierDonnees\qp-politiquedelaville-shp.zip" -autresParams "-o`"$dossierTravailTemp\qpv_peupler`"", "-i!QP_METROPOLE_LB93.*"
 SIg-Importer-SHP -shp "$dossierTravailTemp\qpv_peupler\QP_METROPOLE_LB93.shp" -table 'tmp.QPV' -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - import QP_METROPOLE_LB93.shp.txt"
 
