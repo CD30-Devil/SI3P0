@@ -35,10 +35,10 @@ function Exporter-CSV-Excel {
 
     $chaineConnexion = "Provider=$fournisseur; Data Source=$excel; Extended Properties=`"$proprietesEtendues`";"
     
-    $connexion = New-Object System.Data.OleDb.OleDbConnection($chaineConnexion)
-    $commande = New-Object System.Data.OleDb.OleDbCommand($requete, $connexion)
-    $adapteur = New-Object System.Data.OleDb.OleDbDataAdapter($commande)
-    $resultat = New-Object System.Data.DataTable
+    $connexion = [Data.OleDb.OleDbConnection]::new($chaineConnexion)
+    $commande = [Data.OleDb.OleDbCommand]::new($requete, $connexion)
+    $adapteur = [Data.OleDb.OleDbDataAdapter]::new($commande)
+    $resultat = [Data.DataTable]::new()
     
     $adapteur.Fill($resultat)
     

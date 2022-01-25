@@ -13,7 +13,7 @@ SIg-Executer-Fichier -fichier "$dossierSQL4Layer\tmp(.v).4Layer (drop).sql" -sor
 SIg-Executer-Fichier -fichier "$dossierSQL4Layer\tmp(.v).4Layer (create).sql" -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - tmp(.v).4Layer (create).txt"
 
 # paramétrage des jobs d'export
-$parametresJobs = New-Object System.Collections.ArrayList
+$parametresJobs = [Collections.ArrayList]::new()
 
 # geojson (WGS84)
 [void]$parametresJobs.Add((Parametrer-Job-SIg-Exporter-GeoJSON -requete "select * from tmp.Autoroute_4Layer" -geoJSON "$si3p0DossierExportGeoJSON\Autoroutes et RN\FR_Autoroute.geojson" -sridCible 4326 -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - Export FR_Autoroute.geojson.txt"))

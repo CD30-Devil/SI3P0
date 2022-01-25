@@ -129,7 +129,8 @@ Function Executer-7Z {
         [bool] $erreur = $true
     )
 
-    $parametres = New-Object System.Collections.ArrayList
+    $parametres = [Collections.ArrayList]::new()
+    
     [void]$parametres.Add($commande)
     [void]$parametres.Add("`"$archive`"")
 

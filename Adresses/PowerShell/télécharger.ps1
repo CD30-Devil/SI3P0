@@ -24,7 +24,7 @@ $departements = @(
 )
 
 # paramétrage des jobs de téléchargement
-$parametresJobs = New-Object System.Collections.ArrayList($departements.Count * 2)
+$parametresJobs = [Collections.ArrayList]::new($departements.Count * 2)
 
 foreach ($departement in $departements) {
     [void]$parametresJobs.Add((Parametrer-Job-Telecharger -url "https://adresse.data.gouv.fr/data/ban/adresses/latest/csv/adresses-$departement.csv.gz" -enregistrerSous "$dossierDonnees\$departement-etalab.csv.gz"))

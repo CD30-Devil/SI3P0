@@ -46,7 +46,7 @@ SIg-Creer-Table-Temp -table 'tmp.Adresse_Etalab' -colonnes 'id', 'id_fantoir', '
 SIg-Creer-Table-Temp -table 'tmp.Adresse_DGFIP' -colonnes 'cle_interop', 'uid_adresse', 'numero', 'suffixe', 'pseudo_numero', 'voie_nom', 'voie_code', 'code_postal', 'libelle_acheminement', 'destination_principale', 'commune_code', 'commune_nom', 'source', 'long', 'lat', 'x', 'y', 'position', 'date_der_maj' -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - création tmp.Adresse_DGFIP.txt"
 
 # paramétrage des jobs d'import des données dans les structures temporaires
-$parametresJobs = New-Object System.Collections.ArrayList
+$parametresJobs = [Collections.ArrayList]::new()
 
 foreach ($archive in Get-ChildItem -Path "$dossierDonnees\*-etalab.csv.gz") {
     [void]$parametresJobs.Add(@{

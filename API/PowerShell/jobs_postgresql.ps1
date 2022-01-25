@@ -208,9 +208,9 @@ function Paralleliser-Fichier-PSQL-Transactions {
         [bool] $afficherSortieJobs = $true
     )
     
-    $parametresJobs = New-Object System.Collections.ArrayList
+    $parametresJobs = [Collections.ArrayList]::new()
 
-    $commande = New-Object System.Text.StringBuilder
+    $commande = [Text.StringBuilder]::new()
     $numeroCommande = 0;
 
     # itération sur les lignes du fichier pour identifier les transactions
@@ -242,7 +242,7 @@ function Paralleliser-Fichier-PSQL-Transactions {
 
             [void]$parametresJobs.Add($parametreJob)
 
-            $commande = New-Object System.Text.StringBuilder
+            $commande = [Text.StringBuilder]::new()
         }
     }
 

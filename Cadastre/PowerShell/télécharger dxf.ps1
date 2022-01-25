@@ -40,7 +40,7 @@ Remove-Item "$dossierDonnees\dep30.zip"
 # paramétrage de 32 jobs d'extraction des .tar.bz2
 $listeArchiveTarBz2 = Get-ChildItem $dossierDonnees -Include "*.tar.bz2" -Recurse
 $fragmentsListeArchiveTarBz2 = Fragmenter-Liste -liste $listeArchiveTarBz2 -nombreFragments 32
-$parametresJobs = New-Object System.Collections.ArrayList
+$parametresJobs = [Collections.ArrayList]::new()
 
 foreach ($fragmentListeArchiveTarBz2 in $fragmentsListeArchiveTarBz2) {
     [void]$parametresJobs.Add(@{

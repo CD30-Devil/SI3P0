@@ -126,7 +126,7 @@ Remove-Item "$dossierDonnees\*.sql"
 Remove-Item "$dossierTravailTemp\bdtopo_peupler\*.sql"
 
 # paramétrage des jobs d'import des données
-$parametresJobs = New-Object System.Collections.ArrayList
+$parametresJobs = [Collections.ArrayList]::new()
 
 # occupation du sol
 #[void]$parametresJobs.Add(@{ script = $Job_Importer_BDTopo; racineAPI = "$PSScriptRoot\..\..\API\PowerShell"; archiveBDTopo = $archiveBDTopo; bdd = $bdd; theme = 'zone_de_vegetation'; typeGeometrie = 'MULTIPOLYGON'; dossierRapports = $dossierRapports })

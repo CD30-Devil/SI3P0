@@ -61,7 +61,7 @@ function Executer-PSQL-Fichier {
     
     Afficher-Message-Date -message "Exécution de $fichier sur $serveur\$bdd."
     
-    $parametres = New-Object System.Collections.ArrayList
+    $parametres = [Collections.ArrayList]::new()
     [void]$parametres.Add("--host=$serveur")
     [void]$parametres.Add("--port=$port")
     [void]$parametres.Add("--dbname=$bdd")
@@ -125,7 +125,7 @@ function Executer-PSQL-Commande {
     New-Item -ItemType Directory -Force -Path "$dossierTravailTemp\Executer-PSQL-Commande\"
     $fichierTemp = "$dossierTravailTemp\Executer-PSQL-Commande\$(New-Guid).sql"
 
-    [System.IO.File]::WriteAllText($fichierTemp, $commande, (New-Object System.Text.UTF8Encoding $false))
+    [System.IO.File]::WriteAllText($fichierTemp, $commande, ([Text.UTF8Encoding]::new($false)))
     Executer-PSQL-Fichier -serveur $serveur -port $port -bdd $bdd -utilisateur $utilisateur -fichier $fichierTemp -autresParams $autresParams -sortie $sortie -erreur $erreur
 
     Remove-Item $fichierTemp
@@ -336,7 +336,7 @@ function Exporter-Dump-PostgreSQL {
 
     Afficher-Message-Date "Export dump de $tables depuis $serveur\$bdd vers $dump."
     
-    $parametres = New-Object System.Collections.ArrayList
+    $parametres = [Collections.ArrayList]::new()
     [void]$parametres.Add("-h $serveur")
     [void]$parametres.Add("-p $port")
     [void]$parametres.Add("-U $utilisateur")

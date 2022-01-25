@@ -22,7 +22,7 @@ SIg-Executer-Fichier -fichier "$dossierSQLPart\tmp(.v).4Part (create).sql" -sort
 SIg-Exporter-CSV -requete "select NumeroItineraireCyclable, NomOfficiel from m.itinerairecyclable" -csv "$dossierRapports\itinéraires.csv"
 
 # paramétrage des jobs d'export
-$parametresJobs = New-Object System.Collections.ArrayList
+$parametresJobs = [Collections.ArrayList]::new()
 
 # geojson (WGS84)
 [void]$parametresJobs.Add((Parametrer-Job-SIg-Exporter-GeoJSON -requete 'select * from tmp.VVVAvecDoublons_4Layer' -geoJSON "$si3p0DossierExportGeoJSON\3V\D30_3V avec doublons.geojson" -sridCible 4326 -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - Export D30_3V avec doublons.geojson.txt"))

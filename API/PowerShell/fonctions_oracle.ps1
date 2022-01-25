@@ -22,7 +22,7 @@ function Executer-SQLPLUS-Fichier {
 
     Afficher-Message-Date -message "Exécution de $fichier sur $tnsname."
 
-    $parametres = New-Object System.Collections.ArrayList
+    $parametres = [Collections.ArrayList]::new()
     [void]$parametres.Add("-L $utilisateur/$mdp@$tnsname")
     [void]$parametres.Add("`"@$fichier`"")
     
@@ -61,14 +61,14 @@ function Exporter-CSV-Oracle {
 
     Afficher-Message-Date -message "Exécution de $requete sur $tnsname."
 
-    $ecriture = New-Object System.IO.StreamWriter($csv)
+    $ecriture = [IO.StreamWriter]::new($csv)
 
     [Reflection.Assembly]::LoadFile($OracleDataAccessLib)
 
-    $connexion = New-Object Oracle.DataAccess.Client.OracleConnection("User Id=$utilisateur;Password=$mdp;Data Source=$tnsname")
+    $connexion = [Oracle.DataAccess.Client.OracleConnection]::new("User Id=$utilisateur;Password=$mdp;Data Source=$tnsname")
     $connexion.Open()
 
-    $commande = New-Object Oracle.DataAccess.Client.OracleCommand($requete, $connexion)
+    $commande = [Oracle.DataAccess.Client.OracleCommand]::new($requete, $connexion)
 
     $lecteur = $commande.ExecuteReader()
 

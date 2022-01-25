@@ -26,7 +26,7 @@ function Executer-Jobs {
 
     Afficher-Message-Date -message "Execution de $($parametresJobs.Count) jobs en $nombreJobs lancements parrallèles."
 
-    $jobsEnCours = New-Object System.Collections.ArrayList($nombreJobs)
+    $jobsEnCours = [Collections.ArrayList]::new($nombreJobs)
 
     foreach ($parametresJob in $parametresJobs) {
         
@@ -73,7 +73,7 @@ function Fragmenter-Liste {
         [parameter(Mandatory=$true)] [int] $nombreFragments
     )
 
-    $fragments = New-Object System.Collections.ArrayList
+    $fragments = [Collections.ArrayList]::new()
     $numeroElement = -1
 
     foreach ($element in $liste) {
@@ -83,7 +83,7 @@ function Fragmenter-Liste {
 
         # si besoin, ajout d'un fragment
         if ($modulo + 1 -gt $fragments.Count) {
-            [void]$fragments.Add((New-Object System.Collections.ArrayList))
+            [void]$fragments.Add(([Collections.ArrayList]::new()))
         }
 
         # ajout de l'élément de la liste au fragment

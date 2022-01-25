@@ -30,12 +30,12 @@ function Executer-Ogr2Ogr {
     $sourceSansMDP = $source -replace 'password=\w*', 'password=****'
     $destinationSansMDP = $destination -replace 'password=\w*', 'password=****'
 
-    $parametres = New-Object System.Collections.ArrayList
+    $parametres = [Collections.ArrayList]::new()
     [void]$parametres.Add("-f `"$formatDestination`"")
     [void]$parametres.Add("`"$destination`"")
     [void]$parametres.Add("`"$source`"")
 
-    $parametresSansMDP = New-Object System.Collections.ArrayList
+    $parametresSansMDP = [Collections.ArrayList]::new()
     [void]$parametresSansMDP.Add("-f `"$formatDestination`"")
     [void]$parametresSansMDP.Add("`"$destinationSansMDP`"")
     [void]$parametresSansMDP.Add("`"$sourceSansMDP`"")
@@ -90,7 +90,7 @@ function Executer-Shp2Pgsql {
         [System.Diagnostics.ProcessPriorityClass] $priorite = [System.Diagnostics.ProcessPriorityClass]::Normal
     )
 
-    $parametres = New-Object System.Collections.ArrayList
+    $parametres = [Collections.ArrayList]::new()
 
     if ($autresParams) {
         [void]$parametres.AddRange($autresParams)
@@ -132,7 +132,7 @@ function Executer-Raster2Pgsql {
         [System.Diagnostics.ProcessPriorityClass] $priorite = [System.Diagnostics.ProcessPriorityClass]::Normal
     )
 
-    $parametres = New-Object System.Collections.ArrayList
+    $parametres = [Collections.ArrayList]::new()
 
     if ($autresParams) {
         [void]$parametres.AddRange($autresParams)

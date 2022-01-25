@@ -51,7 +51,7 @@ function Importer-GeoJSON-Postgis {
         $mdp = Rechercher-MDP-PGPass -serveur $serveur -port $port -bdd $bdd -utilisateur $utilisateur
     }
     
-    $parametres = New-Object System.Collections.ArrayList
+    $parametres = [Collections.ArrayList]::new()
     [void]$parametres.Add("-nln $table")
     [void]$parametres.Add("-s_srs EPSG:$sridSource")
     [void]$parametres.Add("-t_srs EPSG:$sridCible")
@@ -121,7 +121,7 @@ function Importer-SHP-Postgis {
         $mdp = Rechercher-MDP-PGPass -serveur $serveur -port $port -bdd $bdd -utilisateur $utilisateur
     }
     
-    $parametres = New-Object System.Collections.ArrayList
+    $parametres = [Collections.ArrayList]::new()
     [void]$parametres.Add("-nln $table")
     [void]$parametres.Add("-s_srs EPSG:$sridSource")
     [void]$parametres.Add("-t_srs EPSG:$sridCible")
@@ -188,7 +188,7 @@ function Exporter-GeoJSON-Postgis {
         $mdp = Rechercher-MDP-PGPass -serveur $serveur -port $port -bdd $bdd -utilisateur $utilisateur
     }
     
-    $parametres = New-Object System.Collections.ArrayList
+    $parametres = [Collections.ArrayList]::new()
     [void]$parametres.Add("-s_srs EPSG:$sridSource")
     [void]$parametres.Add("-t_srs EPSG:$sridCible")
     [void]$parametres.Add("-sql `"$requete`"")
@@ -260,7 +260,7 @@ function Exporter-SHP-Postgis {
         $mdp = Rechercher-MDP-PGPass -serveur $serveur -port $port -bdd $bdd -utilisateur $utilisateur
     }
     
-    $parametres = New-Object System.Collections.ArrayList
+    $parametres = [Collections.ArrayList]::new()
     [void]$parametres.Add("-s_srs EPSG:$sridSource")
     [void]$parametres.Add("-t_srs EPSG:$sridCible")
     [void]$parametres.Add("-sql `"$requete`"")
@@ -349,7 +349,7 @@ function Exporter-GPX-Postgis {
         $mdp = Rechercher-MDP-PGPass -serveur $serveur -port $port -bdd $bdd -utilisateur $utilisateur
     }
     
-    $parametres = New-Object System.Collections.ArrayList
+    $parametres = [Collections.ArrayList]::new()
     [void]$parametres.Add("-s_srs EPSG:$sridSource")
     [void]$parametres.Add('-t_srs EPSG:4326')
     [void]$parametres.Add("-sql `"$requete`"")
@@ -418,7 +418,7 @@ function Exporter-DXF-Postgis {
         $mdp = Rechercher-MDP-PGPass -serveur $serveur -port $port -bdd $bdd -utilisateur $utilisateur
     }
     
-    $parametres = New-Object System.Collections.ArrayList
+    $parametres = [Collections.ArrayList]::new()
     [void]$parametres.Add("-s_srs EPSG:$sridSource")
     [void]$parametres.Add("-t_srs EPSG:$sridCible")
     [void]$parametres.Add("-sql `"$requete`"")
