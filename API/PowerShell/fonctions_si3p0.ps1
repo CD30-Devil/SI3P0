@@ -246,6 +246,7 @@ function SI3P0-Generer-Tableaux-Portail {
 
 # -----------------------------------------------------------------------------
 # Ajout un texte d'information utilisable dans les cartes HTML.
+# Le texte d'information est encodé avant l'ajout.
 #
 # $identifiant : L'identifiant unique du texte d'information.
 # $texte : Le texte d'information.
@@ -259,6 +260,25 @@ function SI3P0-Ajouter-Information-Carte {
     SIg-Executer-Commande -commande @"
 delete from m.infos_carte where id = '$identifiant';
 insert into m.infos_carte (id, texte_info) values ('$identifiant', '$([System.Web.HttpUtility]::HtmlEncode($texte).Replace([System.Environment]::NewLine, '<br>'))');
+"@
+}
+
+# -----------------------------------------------------------------------------
+# Ajout un texte d'information utilisable dans les cartes HTML.
+# Le texte d'information doit être encodé avant l'appel.
+#
+# $identifiant : L'identifiant unique du texte d'information.
+# $texte : Le texte d'information.
+# -----------------------------------------------------------------------------
+function SI3P0-Ajouter-Information-Encodee-Carte {
+    param (
+        [parameter(Mandatory=$true)] [string] $identifiant,
+        [parameter(Mandatory=$true)] [string] $texte
+    )
+
+    SIg-Executer-Commande -commande @"
+delete from m.infos_carte where id = '$identifiant';
+insert into m.infos_carte (id, texte_info) values ('$identifiant', '$($texte.Replace([System.Environment]::NewLine, ''))');
 "@
 }
 
