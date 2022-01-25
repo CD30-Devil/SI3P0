@@ -4,8 +4,8 @@ $dossierDonnees = "$PSScriptRoot\..\Données"
 $dossierRapports = "$PSScriptRoot\..\Rapports\peupler"
 $dossierSQL = "$PSScriptRoot\..\SQL"
 
-$dateBDTopo = '2021-09-15'
-$dateComplement3V = '2021-11-23'
+$dateBDTopo = '2021-12-15'
+$dateComplement3V = '2021-01-25'
 
 # nettoyage préalable
 Remove-Item "$dossierRapports\*.txt"
@@ -29,7 +29,7 @@ Exporter-CSV-Excel -excel "$dossierDonnees\Référentiel 3V.xlsx" -requete 'sele
 Exporter-CSV-Excel -excel "$dossierDonnees\Référentiel 3V.xlsx" -requete 'select * from [SegmentCyclable$]' -csv "$dossierTravailTemp\3v_peupler\SegmentCyclable.csv"
 
 # paramètrage des jobs d'import des données dans les structures temporaires
-$parametresJobs = New-Object System.Collections.ArrayList
+$parametresJobs = [Collections.ArrayList]::new()
 
 [void]$parametresJobs.Add((Parametrer-Job-SIg-Importer-CSV -csv "$dossierTravailTemp\3v_peupler\ItineraireCyclable.csv" -table 'tmp.ItineraireCyclable' -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - import ItineraireCyclable.csv.txt"))
 [void]$parametresJobs.Add((Parametrer-Job-SIg-Importer-CSV -csv "$dossierTravailTemp\3v_peupler\PortionCyclable.csv" -table 'tmp.PortionCyclable' -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - import PortionCyclable.csv.txt"))
