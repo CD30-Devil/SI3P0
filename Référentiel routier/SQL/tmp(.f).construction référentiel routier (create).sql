@@ -218,8 +218,14 @@ create or replace function AjouterPremierTronconLineaire(_NumeroRoute character 
     insert into Troncon (NumeroRoute, CodeInseeGauche, CodeInseeDroite, CumulDistD, CumulDistF, IdIGN, Etat, Niveau, ItineraireVert, Fictif, Nature, SensCirculation, NbVoies, Largeur, PositionSol, AccesVL, ReserveBus, BandeCyclable, AccesPieton, Prive, Urbain, VitesseMoyenneVL, PrecisionPlani, PrecisionAlti, Geom)
     select
         t.NumeroRoute,
-        t.CodeInseeGauche,
-        t.CodeInseeDroite,
+        case -- la géométrie est mise dans le sens croissant des PR aussi, si nécessaire, inverse CodeInseeGauche et CodeInseeDroit
+            when ST_Equals(pr.Geom, ST_StartPoint(t.Geom)) then CodeInseeGauche
+            else CodeInseeDroite
+        end,
+        case
+            when ST_Equals(pr.Geom, ST_StartPoint(t.Geom)) then CodeInseeDroite
+            else CodeInseeGauche
+        end,
         0,
         case t.Fictif -- la taille du tronçon n'est prise en compte que s'il n'est pas fictif
             when true then 0
@@ -352,8 +358,14 @@ begin
         insert into Troncon (NumeroRoute, CodeInseeGauche, CodeInseeDroite, CumulDistD, CumulDistF, IdIGN, IdIGNPrec, Etat, Niveau, ItineraireVert, Fictif, Nature, SensCirculation, NbVoies, Largeur, PositionSol, AccesVL, ReserveBus, BandeCyclable, AccesPieton, Prive, Urbain, VitesseMoyenneVL, PrecisionPlani, PrecisionAlti, Geom)
         select
             NumeroRoute,
-            CodeInseeGauche,
-            CodeInseeDroite,
+            case -- la géométrie est mise dans le sens croissant des PR aussi, si nécessaire, inverse CodeInseeGauche et CodeInseeDroit
+                when ST_Equals(ST_Force2D(ST_EndPoint(GeomPrec)), ST_Force2D(ST_StartPoint(Geom))) then CodeInseeGauche
+                else CodeInseeDroite
+            end,
+            case
+                when ST_Equals(ST_Force2D(ST_EndPoint(GeomPrec)), ST_Force2D(ST_StartPoint(Geom))) then CodeInseeDroite
+                else CodeInseeGauche
+            end,
             CumulDistFPrec,
             case Fictif -- la taille du tronçon n'est prise en compte que s'il n'est pas fictif
                 when true then CumulDistFPrec -- pour ceux qui le souhaitent, ajouter ici une taille "virtuelle" au tronçon fictif, par exemple 1 mètre
