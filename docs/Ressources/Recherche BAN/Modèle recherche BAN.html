@@ -1,0 +1,172 @@
+﻿<html>
+    <head>
+
+        <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+        <meta http-equiv="Pragma" content="no-cache" />
+        <meta http-equiv="Expires" content="0" />
+
+        <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
+		
+        <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+		<script type="text/javascript" src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
+        
+		<script type="text/javascript">
+			
+            // throttle
+            function retarderAppel(delai, fonction) {
+				
+                if (!delai || typeof delai !== "number" || delai < 0) {
+                    return fonction;
+                }
+                
+                var timer = 0;
+                
+                return function() {
+                    var args = arguments;
+                    
+                    clearTimeout(timer);
+                    
+                    timer = setTimeout(() => {
+                        fonction.apply(null, args);
+                    }, delai);
+                }
+            }
+            
+            // pattern de l'URL d'appel à l'API BAN
+            const patternUrlApi = 'https://api-adresse.data.gouv.fr/search/?lat=43.993&lon=4.180&q=<q>';
+
+            // tableau des adresses retournées par le géocodage
+            var adresses = [];
+
+            // Géocodage par appel à l'API adresse.
+            // Paramètres
+            // - requete : l'adresse recherchée
+            // Résultat
+            // - remplit le tableau global adresses
+            function geocoderAdresse(requete) {
+                return $.getJSON(patternUrlApi.replace('<q>', requete))
+                
+                .done(resultat => {
+                    adresses = [];
+                    
+                    resultat.features.forEach(feature => {
+                        adresses.push({
+                            id: feature.properties.id,
+                            type: feature.properties.type,
+                            score: feature.properties.score,
+                            numero: feature.properties.housenumber,
+                            rue: feature.properties.street,
+                            nom: feature.properties.name,
+                            codePostalCommune: feature.properties.postcode,
+                            cogCommune: feature.properties.citycode,
+                            nomCommune: feature.properties.city,
+                            arrondissement: feature.properties.district,
+                            ancienCogCommune: feature.properties.oldcitycode,
+                            ancienNomCommune: feature.properties.oldcity,
+                            contexte: feature.properties.context,
+                            libelle: feature.properties.label,
+                            x: feature.properties.x,
+                            y: feature.properties.y,
+                            x_wgs84: feature.geometry.coordinates[0],
+                            y_wgs84: feature.geometry.coordinates[1]
+                        });
+                    });
+                })
+                
+                .fail(() => {
+                    adresses = [];
+                })
+            }
+
+            // Conversion d'une adresse en item pour l'AutoComplete.
+            // Paramètres
+            // - adresse : l'adresse à convertir
+            // Résultat
+            // - un item d'AutoComplete
+            function convertirAdresseEnItem(adresse) {
+				return {
+					value: adresse.libelle, // champ value obligatoire à adapter au besoin
+					label: (adresse.type === "municipality") ? adresse.libelle + " - " + adresse.contexte : adresse.libelle,
+					url: "https://www.geoportail.gouv.fr/carte?c=" + adresse.x_wgs84 + "," + adresse.y_wgs84 + "&z=17&l0=ORTHOIMAGERY.ORTHOPHOTOS::GEOPORTAIL:OGC:WMTS(1)&permalink=yes"
+				}
+			}
+
+            // Conversion des adresses en source pour l'AutoComplete.
+            // Paramètres
+            // - utilise le tableau global adresses
+            // Résultat
+            // - un tableau pouvant servir de source pour l'AutoComplete
+            function convertirAdressesEnSource(adresses, convertirAdresseEnItem) {
+                let source = [];
+                
+                adresses.forEach(adresse => {
+                    source.push(convertirAdresseEnItem(adresse));
+                });
+                
+                return source;
+            }
+
+            // Réalisation de l'action suite au choix d'un item de l'AutoComplete
+            // Paramètres
+            // - item : l'item de l'AutoComplete choisi par l'utilisateur
+            function realiserAction(item) {
+                window.open(item.url)
+            }
+
+            // mise en place de l'AutoComplete
+            $(document).ready(() => {
+                            
+                // onfocus et onclick : remise à zéro de la zone de texte
+                $('#requete_ban').on('click focus', () => {
+                    $('#requete_ban').val('');
+                });
+                
+                // oninput : gestion de l'affichage et du comportement de l'AutoComplete
+                $('#requete_ban').on('input', retarderAppel(300, () => {
+                    
+                    if ($('#requete_ban').val() === '') {
+                        
+                        $('#requete_ban').autocomplete({
+                            source: []
+                        });
+                        
+                        $('#requete_ban').autocomplete('close');
+                        
+                    }
+                    else {
+                        $.when(geocoderAdresse($('#requete_ban').val())).done(() => {
+                            $('#requete_ban').autocomplete({
+                                source: convertirAdressesEnSource(adresses, convertirAdresseEnItem),
+                                
+                                delay: 0,
+                                
+                                minLength: 0,
+                                
+                                select: (event, ui) => {
+                                    $('#requete_ban').val(ui.item.value);
+                                    $('#requete_ban').autocomplete('close');
+                                    realiserAction(ui.item);
+                                },
+                                
+                                focus: (event, ui) => {
+                                    return false;
+                                }
+                                
+                            });
+                            
+                            $('#requete_ban').autocomplete('search', '');
+                        })
+                    }
+                }));
+            });
+            
+		</script>
+
+        <title>Recherche BAN</title>
+
+    </head>
+
+    <body>
+        <input id="requete_ban" type="text" placeholder="Rechercher une adresse..." style="width:50%" />
+    </body>
+</html>
