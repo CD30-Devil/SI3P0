@@ -53,10 +53,16 @@ $Job_Importer_Cadastre = {
         $nomGeoJSON = [System.IO.Path]::GetFileNameWithoutExtension($archives[$i])
 
         if ($i -eq 0) {
-            SIg-Importer-GeoJSON `                -geoJSON "$dossierTravailTemp\cadastre_peupler\$nomGeoJSON" `                -table "$($parametres.table)" `                -sridSource '4326' `                -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - import $nomGeoJSON.txt"
+            SIg-Importer-GeoJSON `
+                -geoJSON "$dossierTravailTemp\cadastre_peupler\$nomGeoJSON" `
+                -table "$($parametres.table)" `
+                -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - import $nomGeoJSON.txt"
         }
         else {
-            SIg-Importer-GeoJSON `                -geoJSON "$dossierTravailTemp\cadastre_peupler\$nomGeoJSON" `                -table "$($parametres.table)" `                -sridSource '4326' `                -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - import $nomGeoJSON.txt" `
+            SIg-Importer-GeoJSON `
+                -geoJSON "$dossierTravailTemp\cadastre_peupler\$nomGeoJSON" `
+                -table "$($parametres.table)" `
+                -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - import $nomGeoJSON.txt" `
                 -autresParams @('-append')
         }
 
@@ -93,8 +99,33 @@ Executer-Jobs -parametresJobs $parametresJobs
 SIg-Effacer-Table -table 'tmp.ParcellePersonneMorale' -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - effacement tmp.ParcellePersonneMorale.txt"
 
 # création des structures temporaires
-SIg-Creer-Table-Temp `    -table 'tmp.ParcellePersonneMorale' `    -colonnes `        'code_departement', `        'code_direction', `        'code_commune', `
-        'nom_commune', `        'prefixe', `        'section', `        'num_plan', `        'num_voirie', `        'repetition', `        'code_majic', `        'code_rivoli', `        'nature_voie', `        'nom_voie', `        'contenance', `        'suf', `        'nature_culture', `        'contenance_suf', `        'code_droit', `        'num_majic', `        'siren', `        'groupe_personne', `        'forme_juridique', `        'forme_juridique_abregee', `        'denomination' `
+SIg-Creer-Table-Temp `
+    -table 'tmp.ParcellePersonneMorale' `
+    -colonnes `
+        'code_departement', `
+        'code_direction', `
+        'code_commune', `
+        'nom_commune', `
+        'prefixe', `
+        'section', `
+        'num_plan', `
+        'num_voirie', `
+        'repetition', `
+        'code_majic', `
+        'code_rivoli', `
+        'nature_voie', `
+        'nom_voie', `
+        'contenance', `
+        'suf', `
+        'nature_culture', `
+        'contenance_suf', `
+        'code_droit', `
+        'num_majic', `
+        'siren', `
+        'groupe_personne', `
+        'forme_juridique', `
+        'forme_juridique_abregee', `
+        'denomination' `
     -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - effacement tmp.ParcellePersonneMorale.txt"
 
 foreach ($fichier in (Get-ChildItem -Path "$dossierDataEconomieGouv\PM_*_NB_*.txt")) {
