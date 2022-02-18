@@ -38,11 +38,11 @@ select
     st.Description                                                          as "Sous-type            ",
     a.Fiabilite                                                             as "Fiabilité             ",
     case
-        when a.Recente and a.ProcheRD and a.IdSousTypeAlerteWaze <> '' then 'http://si3p0/Ressources/Images/Waze/70x70/couleur/' || a.IdSousTypeAlerteWaze || '.png'::varchar
-        when a.Recente and a.ProcheRD and a.IdSousTypeAlerteWaze = '' then 'http://si3p0/Ressources/Images/Waze/70x70/couleur/' || a.IdTypeAlerteWaze || '.png'::varchar
-        when not(a.Recente and a.ProcheRD) and a.IdSousTypeAlerteWaze <> '' then 'http://si3p0/Ressources/Images/Waze/70x70/gris/' || a.IdSousTypeAlerteWaze || '.png'::varchar
-        when not(a.Recente and a.ProcheRD) and a.IdSousTypeAlerteWaze = '' then 'http://si3p0/Ressources/Images/Waze/70x70/gris/' || a.IdTypeAlerteWaze || '.png'::varchar
-        else 'http://si3p0/Ressources/Images/Waze/70x70/couleur/MISC.png'::varchar
+        when a.Recente and a.ProcheRD and a.IdSousTypeAlerteWaze <> '' then '/Ressources/Images/Waze/70x70/couleur/' || a.IdSousTypeAlerteWaze || '.png'::varchar
+        when a.Recente and a.ProcheRD and a.IdSousTypeAlerteWaze = '' then '/Ressources/Images/Waze/70x70/couleur/' || a.IdTypeAlerteWaze || '.png'::varchar
+        when not(a.Recente and a.ProcheRD) and a.IdSousTypeAlerteWaze <> '' then '/Ressources/Images/Waze/70x70/gris/' || a.IdSousTypeAlerteWaze || '.png'::varchar
+        when not(a.Recente and a.ProcheRD) and a.IdSousTypeAlerteWaze = '' then '/Ressources/Images/Waze/70x70/gris/' || a.IdTypeAlerteWaze || '.png'::varchar
+        else '/Ressources/Images/Waze/70x70/couleur/MISC.png'::varchar
     end as Icone,
     case
         when a.IdSousTypeAlerteWaze <> '' then st.Description
@@ -122,7 +122,7 @@ select
     PRAEnTexte(_PRA)                            as "PR+Abs             ",
     'Accident sans classification'              as "Type                ",
     Fiabilite                                   as "Fiabilité            ",
-    'http://si3p0/Ressources/Images/Waze/70x70/couleur/ACCIDENT.png'::varchar as Icone,
+    '/Ressources/Images/Waze/70x70/couleur/ACCIDENT.png'::varchar as Icone,
     'Accident sans classification' as NomCouche,
     'Accident sans classification' as Legende,
     h.Geom
@@ -143,7 +143,7 @@ select
     'https://www.midilibre.fr/articles/' || to_char(DateCreation + interval '1 day', 'YYYY/MM/DD/') as "Lien MidiLibre.fr Jour J+1 ",
     'https://www.objectifgard.com/' || to_char(DateCreation, 'YYYY/MM/DD/')                         as "Lien ObjectifGard.fr Jour J ",
     'https://www.objectifgard.com/' || to_char(DateCreation + interval '1 day', 'YYYY/MM/DD/')      as "Lien ObjectifGard.fr Jour J+1 ",
-    'http://si3p0/Ressources/Images/Waze/70x70/couleur/ACCIDENT_MAJOR.png'::varchar as Icone,
+    '/Ressources/Images/Waze/70x70/couleur/ACCIDENT_MAJOR.png'::varchar as Icone,
     'Accidents graves' as NomCouche,
     'Accidents graves' as Legende,
     h.Geom
@@ -164,8 +164,8 @@ select
     end                                         as "Type                ",
     Fiabilite                                   as "Fiabilité            ",
     case
-        when IdSousTypeAlerteWaze = 'ACCIDENT_MINOR' then 'http://si3p0/Ressources/Images/Waze/70x70/couleur/ACCIDENT_MINOR.png'::varchar
-        else 'http://si3p0/Ressources/Images/Waze/70x70/couleur/ACCIDENT.png'::varchar
+        when IdSousTypeAlerteWaze = 'ACCIDENT_MINOR' then '/Ressources/Images/Waze/70x70/couleur/ACCIDENT_MINOR.png'::varchar
+        else '/Ressources/Images/Waze/70x70/couleur/ACCIDENT.png'::varchar
     end as Icone,
     'Autres accidents' as NomCouche,
     case
@@ -187,7 +187,7 @@ select
     _NumeroRoute                                as "RD                ",
     PRAEnTexte(_PRA)                            as "PR+Abs             ",
     Fiabilite                                   as "Fiabilité           ",
-    'http://si3p0/Ressources/Images/Waze/70x70/couleur/HAZARD_ON_ROAD_POT_HOLE.png'::varchar as Icone,
+    '/Ressources/Images/Waze/70x70/couleur/HAZARD_ON_ROAD_POT_HOLE.png'::varchar as Icone,
     Age(current_date, h.DateCreation::date) as Age,
     h.Geom
 from m.HistoAlerteWaze h
