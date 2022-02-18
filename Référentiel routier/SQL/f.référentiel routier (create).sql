@@ -370,7 +370,7 @@ begin
     if (_CumulDistD >= _CumulDistF) then
         return null;
     -- cas 2 : le tronçon est exclu de l'intervalle
-    elsif (_CumulDistD >= _Troncon.CumulDistF or _CumulDistF <= _Troncon.CumulDistD) then
+    elsif (_CumulDistD > _Troncon.CumulDistF or _CumulDistF < _Troncon.CumulDistD) then
         return null;
     -- cas 3 : le tronçon est inclus dans l'intervalle
     elsif (_CumulDistD <= _Troncon.CumulDistD and _CumulDistF >= _Troncon.CumulDistF) then

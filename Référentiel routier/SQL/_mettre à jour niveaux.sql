@@ -42,7 +42,7 @@ and IdIGN in (
 );
 
 update Troncon
-set Niveau = 1
+set Niveau = 2
 where NumeroRoute = 'D1'
 and IdIGN in (
     select _IdIGN
