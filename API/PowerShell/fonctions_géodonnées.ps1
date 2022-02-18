@@ -27,8 +27,8 @@ function Executer-Ogr2Ogr {
         [System.Diagnostics.ProcessPriorityClass] $priorite = [System.Diagnostics.ProcessPriorityClass]::Normal
     )
 
-    $sourceSansMDP = $source -replace 'password=\w*', 'password=****'
-    $destinationSansMDP = $destination -replace 'password=\w*', 'password=****'
+    $sourceSansMDP = $source -replace 'password=\S*', 'password=****'
+    $destinationSansMDP = $destination -replace 'password=\S*', 'password=****'
 
     $parametres = [Collections.ArrayList]::new()
     [void]$parametres.Add("-f `"$formatDestination`"")

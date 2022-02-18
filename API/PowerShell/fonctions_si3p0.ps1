@@ -132,12 +132,23 @@ function SI3P0-Generer-Thematique-Portail {
 # -----------------------------------------------------------------------------
 # Génération de la page d'index des thématiques du portail.
 #
-# Itère sur les dossiers présents dans Thématiques pour déterminer les pages
-# à générer.
+# Itère sur les dossiers présents dans Thématiques et en génère les pages.
+#
+# $exclure : Le thématiques à exclure de la génération.
 # -----------------------------------------------------------------------------
 function SI3P0-Generer-Thematiques-Portail {
+    param (
+        [string[]] $exclure = $null
+    )
 
-    foreach ($dossierThematique in Get-ChildItem $si3p0ThematiquesPortailWeb -Directory) {
+    if ($exclure) {
+        $dossiersThematiques = Get-ChildItem $si3p0ThematiquesPortailWeb -Directory -Exclude $exclure
+    }
+    else {
+        $dossiersThematiques = Get-ChildItem $si3p0ThematiquesPortailWeb -Directory
+    }
+
+    foreach ($dossierThematique in $dossiersThematiques) {
         SI3P0-Generer-Thematique-Portail -dossierThematique $dossierThematique.FullName -sortie "$($dossierThematique.FullName)/index.html"
     }
 }
@@ -335,7 +346,8 @@ function SI3P0-Generer-Carte {
         $nbCouchesActives = $sources.Count
     }
 
-    $commande = `@"
+    $commande = `
+@"
         select vershtml_n(
             $tableauSources,
             '$([System.Web.HttpUtility]::HtmlEncode($titre))',
