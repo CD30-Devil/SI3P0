@@ -2,15 +2,15 @@
 <html lang="fr">
     <head>
         <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
-		
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-		<script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
         
-		<script>
-			
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
+        
+        <script>
+            
             // throttle
             function retarderAppel(delai, fonction) {
-				
+                
                 if (!delai || typeof delai !== "number" || delai < 0) {
                     return fonction;
                 }
@@ -80,12 +80,12 @@
             // Résultat
             // - un item d'AutoComplete
             function convertirAdresseEnItem(adresse) {
-				return {
-					value: adresse.libelle, // champ value obligatoire à adapter au besoin
-					label: (adresse.type === "municipality") ? adresse.libelle + " - " + adresse.contexte : adresse.libelle,
-					url: "https://www.geoportail.gouv.fr/carte?c=" + adresse.x_wgs84 + "," + adresse.y_wgs84 + "&z=17&l0=ORTHOIMAGERY.ORTHOPHOTOS::GEOPORTAIL:OGC:WMTS(1)&permalink=yes"
-				}
-			}
+                return {
+                    value: adresse.libelle, // champ value obligatoire à adapter au besoin
+                    label: (adresse.type === "municipality") ? adresse.libelle + " - " + adresse.contexte : adresse.libelle,
+                    url: "https://www.geoportail.gouv.fr/carte?c=" + adresse.x_wgs84 + "," + adresse.y_wgs84 + "&z=17&l0=ORTHOIMAGERY.ORTHOPHOTOS::GEOPORTAIL:OGC:WMTS(1)&permalink=yes"
+                }
+            }
 
             // Conversion des adresses en source pour l'AutoComplete.
             // Paramètres
@@ -156,7 +156,7 @@
                 }));
             });
             
-		</script>
+        </script>
 
         <title>Recherche BAN</title>
 
