@@ -1,0 +1,1 @@
+﻿drop view if exists tmp.PerinfoTroncon_4Layer;
