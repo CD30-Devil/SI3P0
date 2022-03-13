@@ -1,6 +1,7 @@
 # Tutoriel : Décorer son intérieur avec une carte.
 
 Tu as peut-être déjà vu, sur Internet ou en magasin, ces cartes décoratives de communes et tu penses qu'elles trouveraient bonne place dans ton bureau.
+
 Mais bon, à 30€ le morçeau de papier tu hésites un peu et en plus c'est TA ville que tu voudrais avoir.
 
 ![Aperçu Aigues-Mortes](../Ressources/Cartes décoratives/Aperçu.png)
@@ -54,11 +55,13 @@ Plusieurs méthodes sont possibles pour intégrer les données mais, ici, nous a
 Certains fichiers y sont trés volumineux dont notamment les classes `batiment` et `troncon_de_route` qui pèsent chacune plusieurs Go une fois décompréssées.
 
 Pas de panique, tu peux à la place utiliser les versions découpées par EPCI, Département et Région que nous mettons à ta disposition ici :
+
 [https://gardfr-my.sharepoint.com/:f:/g/personal/michael_galien_gard_fr/Eqoe4M0WjcZCpUUmNq7HXGwBSA6QeTjDlRKE4O7mAeMYXA](https://gardfr-my.sharepoint.com/:f:/g/personal/michael_galien_gard_fr/Eqoe4M0WjcZCpUUmNq7HXGwBSA6QeTjDlRKE4O7mAeMYXA)
 
 Ces découpages proposent une zone tampon de 5 km autour de l'emprise ce qui devrait permettre de produire une carte sans trou même si la commune souhaitée est en limite.
 
 L'exécution d'un fichier SQL, et donc la création des structures et l'import des données, se fait à l'aide de l'outil **psql**.
+
 Une commande d'appel a le format suivant :
 ```
 psql
@@ -80,6 +83,7 @@ psql
 ```
 
 L'outil psql ne prend pas en paramètre le mot de passe utilisateur.
+
 PostgreSQL propose différents modes d'authentification et il existe plusieurs techiniques pour renseigner le mot de passe que ce soit par la [variable d'environnement PGPASSWORD](https://www.postgresql.org/docs/current/libpq-envars.html) ou en utilisant un [fichier de mots de passe](https://www.postgresql.org/docs/current/libpq-pgpass.html).
 A défaut, psql affichera un prompt de saisie du mot de passe immédiatement après son lancement.
 
