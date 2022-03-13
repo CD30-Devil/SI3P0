@@ -22,5 +22,8 @@ SQL.4Qlik/
 /Référentiel routier/PowerShell/générer graflex.ps1
 /Référentiel routier/PowerShell/préparer construction qualif.ps1
 
+# Cartes décoratives
+/Cartes décoratives/Données/
+
 # Waze
 /Waze/Ressources/Icones
