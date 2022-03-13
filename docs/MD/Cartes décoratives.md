@@ -82,7 +82,7 @@ psql
 
 L'outil psql ne prend pas en paramètre le mot de passe utilisateur.
 
-PostgreSQL propose différents modes d'authentification et il existe plusieurs techiniques pour renseigner le mot de passe que ce soit par la [variable d'environnement PGPASSWORD](https://www.postgresql.org/docs/current/libpq-envars.html) ou en utilisant un [fichier de mots de passe](https://www.postgresql.org/docs/current/libpq-pgpass.html).
+PostgreSQL propose différents modes d'authentification et il existe plusieurs techniques pour renseigner le mot de passe que ce soit par la [variable d'environnement PGPASSWORD](https://www.postgresql.org/docs/current/libpq-envars.html) ou en utilisant un [fichier de mots de passe](https://www.postgresql.org/docs/current/libpq-pgpass.html).
 A défaut, psql affichera un prompt de saisie du mot de passe immédiatement après son lancement.
 
 Dans le projet, nous avons mis pour exemple les fichiers SQL correspondants à la [communauté de communes Terre de Camargue](http://www.terredecamargue.fr/).
