@@ -23,7 +23,7 @@ SQL.4Qlik/
 /Référentiel routier/PowerShell/préparer construction qualif.ps1
 
 # Cartes décoratives
-/Cartes décoratives/Données/
+/Cartes décoratives/Données/*.sql
 
 # Waze
 /Waze/Ressources/Icones
