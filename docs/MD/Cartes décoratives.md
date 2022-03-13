@@ -3,6 +3,8 @@
 Tu as peut-être déjà vu, sur Internet ou en magasin, ces cartes décoratives de communes et tu penses qu'elles trouveraient bonne place dans ton bureau.
 Mais bon, à 30€ le morçeau de papier tu hésites un peu et en plus c'est TA ville que tu voudrais avoir.
 
+![Aperçu Aigues-Mortes](../Ressources/Cartes décoratives/Aperçu.png)
+
 Dans ce tutoriel on te montre comment, avec les données de l'[IGN](https://geoservices.ign.fr/bdtopo), une base [PostgreSQL](https://www.postgresql.org/)/[PostGIS](https://postgis.net/) et [QGis](https://qgis.org/fr/site/), tu peux faire ta propre carte.
 Tu utiliseras pour cela les styles et modèles d'impression que nous mettons à ta disposition.
 
