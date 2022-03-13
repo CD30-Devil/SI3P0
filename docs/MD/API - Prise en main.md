@@ -1,6 +1,6 @@
 # Tutoriel : Prendre en main l’API PowerShell SI3P0.
 
-Ce tutoriel montre comment l’API PowerShell SI3P0 peut permettre l’automatisation de traitement de données en lien avec un SIg construit sur PostgreSQL/Postgis.
+Ce tutoriel montre comment l’API PowerShell SI3P0 peut permettre l’automatisation de traitement de données en lien avec un SIg construit sur PostgreSQL/PostGIS.
 
 Il est illustré par un cas pratique de téléchargement, d’import et d’exploitation des données de la Base Adresse Nationale.
 
@@ -9,10 +9,10 @@ _NDLR : Le terme API est peut-être mal choisi, le mot "toolkox" serait probable
 **Pré-requis :**
 
 * Se dire que PowerShell, c’est comme tout, ça s’apprend.
-* Avoir un SIg basé sur le couple PostgreSQL/Postgis.
+* Avoir un SIg basé sur le couple PostgreSQL/PostGIS.
 * Avoir un client Windows qui :
     * permet la création et l’exécution de scripts PowerShell,
-    * dispose des outils clients PostgreSQL/Postgis (dont principalement psql.exe),
+    * dispose des outils clients PostgreSQL/PostGIS (dont principalement psql.exe),
     * dispose de ogr2ogr.exe.
 
 **Table des matières**
@@ -106,13 +106,13 @@ Classiquement, un SIg se construit autour de 3 briques :
 
 ![SIg avec ETL](../Ressources/API - Prise en main/SIg avec ETL.png)
 
-Lorsque les moyens financiers manquent, difficile de faire l’impasse sur le SGBDg et les outils de visualisation. Mais PostgreSQL/Postgis et QGis font très bien le job.
+Lorsque les moyens financiers manquent, difficile de faire l’impasse sur le SGBDg et les outils de visualisation. Mais PostgreSQL/PostGIS et QGis font très bien le job.
 
 L’ETL est quant à lui remplacé par une brique moins onéreuse ; classiquement appelée le "Shadok".
 Le "Shadok" c’est quoi ? Et bien le "Shadok" c’est toi ;
 * Toi qui télécharges tous les mois la dernière mise à jour des données avec ton navigateur favori.
 * Toi qui fais "clic-droit > extraire vers" pour décompresser une à une les 42 archives fraîchement téléchargées.
-* Toi qui enfin importes les données dans la base avec des outils graphiques type "Postgis Shapefile Import/Export Manager".
+* Toi qui enfin importes les données dans la base avec des outils graphiques type "PostGIS Shapefile Import/Export Manager".
 
 ![SIg avec Shadok](../Ressources/API - Prise en main/SIg avec Shadok.png)
 
@@ -205,7 +205,7 @@ create database tutosi3p0 owner r2d2;
 -- connexion à la base tutosi3p0
 \c tutosi3p0
 
--- installation des extensions PostGis
+-- installation des extensions PostGIS
 create extension if not exists postgis;
 create extension if not exists postgis_topology;
 
@@ -353,7 +353,7 @@ Tout ce qui est inclassable.
 
 **fonctions_postgis.ps1**
 
-Pratique pour l’import/export de GeoJSON et SHP vers/depuis une base PostgreSQL/Postgis. Les fonctions utilisent ogr2ogr.
+Pratique pour l’import/export de GeoJSON et SHP vers/depuis une base PostgreSQL/PostGIS. Les fonctions utilisent ogr2ogr.
 
 **fonctions_postgresql.ps1**
 
@@ -385,7 +385,7 @@ Il faut vraiment que je la fasse une troisième fois ?
 
 **sig_défaut.ps1**
 
-Ce fichier agrège les fonctions et jobs PostgreSQL/Postgis pour les reproposer en ciblant par défaut la base paramétrée à l’étape 3.1.6.
+Ce fichier agrège les fonctions et jobs PostgreSQL/PostGIS pour les reproposer en ciblant par défaut la base paramétrée à l’étape 3.1.6.
 
 ### <a name="_33"></a>3.3. Etape 3 - Phase Extract : Télécharger les données de la BAN
 
@@ -612,7 +612,7 @@ SIg-Effacer-Table -table 'tmp.AdresseDGFIP' -sortie "$dossierRapports\$(Get-Date
 
 #### <a name="_354"></a>3.5.4. Exécution du script
 
-Et voilà, tu n’avais rien et tu es désormais l’heureux SIgiste propriétaire d’une table géographique des adresses. Tu peux facilement l’afficher sous QGis en configurant une nouvelle connexion PostgreSQL/Postgis sur la base de tests.
+Et voilà, tu n’avais rien et tu es désormais l’heureux SIgiste propriétaire d’une table géographique des adresses. Tu peux facilement l’afficher sous QGis en configurant une nouvelle connexion PostgreSQL/PostGIS sur la base de tests.
 
 ![BAN QGis](../Ressources/API - Prise en main/BAN QGis.png)
 
