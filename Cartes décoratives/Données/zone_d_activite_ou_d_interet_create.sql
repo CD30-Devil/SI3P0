@@ -1,0 +1,20 @@
+﻿CREATE TABLE "zone_d_activite_ou_d_interet"();
+SELECT AddGeometryColumn('zone_d_activite_ou_d_interet','geometrie',2154,'GEOMETRY',2);
+CREATE INDEX "zone_d_activite_ou_d_interet_geometrie_geom_idx" ON "zone_d_activite_ou_d_interet" USING GIST ("geometrie");
+ALTER TABLE "zone_d_activite_ou_d_interet" ADD COLUMN "cleabs" VARCHAR(24);
+ALTER TABLE "zone_d_activite_ou_d_interet" ADD COLUMN "categorie" VARCHAR;
+ALTER TABLE "zone_d_activite_ou_d_interet" ADD COLUMN "nature" VARCHAR;
+ALTER TABLE "zone_d_activite_ou_d_interet" ADD COLUMN "nature_detaillee" VARCHAR;
+ALTER TABLE "zone_d_activite_ou_d_interet" ADD COLUMN "toponyme" VARCHAR;
+ALTER TABLE "zone_d_activite_ou_d_interet" ADD COLUMN "statut_du_toponyme" VARCHAR;
+ALTER TABLE "zone_d_activite_ou_d_interet" ADD COLUMN "importance" VARCHAR;
+ALTER TABLE "zone_d_activite_ou_d_interet" ADD COLUMN "fictif" BOOLEAN;
+ALTER TABLE "zone_d_activite_ou_d_interet" ADD COLUMN "etat_de_l_objet" VARCHAR;
+ALTER TABLE "zone_d_activite_ou_d_interet" ADD COLUMN "date_creation" timestamp with time zone;
+ALTER TABLE "zone_d_activite_ou_d_interet" ADD COLUMN "date_modification" timestamp with time zone;
+ALTER TABLE "zone_d_activite_ou_d_interet" ADD COLUMN "date_d_apparition" date;
+ALTER TABLE "zone_d_activite_ou_d_interet" ADD COLUMN "date_de_confirmation" date;
+ALTER TABLE "zone_d_activite_ou_d_interet" ADD COLUMN "sources" VARCHAR;
+ALTER TABLE "zone_d_activite_ou_d_interet" ADD COLUMN "identifiants_sources" VARCHAR;
+ALTER TABLE "zone_d_activite_ou_d_interet" ADD COLUMN "precision_planimetrique" NUMERIC(5,1);
+
