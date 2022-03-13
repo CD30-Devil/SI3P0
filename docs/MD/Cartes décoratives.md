@@ -90,7 +90,7 @@ Nous mettons également à ta disposition un [modèle PowerShell de séquencemen
 
 Deux couches, déduites des données IGN, sont nécessaires pour la construction des cartes.
 
-### <a name="_21"></a>2.1. La couche des bâtiments notables
+### <a name="_21"></a>2.1. Couche des bâtiments notables
 
 Le nombre de bâtiments dans les données de l'IGN peut-être réellement conséquent.
 
@@ -118,7 +118,7 @@ where nature in (
 
 Il est disponible dans le fichier [Bâtiments notables.sql](https://github.com/CD30-Devil/SI3P0/blob/main/Cartes%20d%C3%A9coratives/Vues/B%C3%A2timents%20notables.sql).
 
-### <a name="_22"></a>2.2. La couche d'atlas
+### <a name="_22"></a>2.2. Couche d'atlas
 
 
 
