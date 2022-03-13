@@ -2,7 +2,7 @@
 $psql = '<chemin_psql>'
 
 $serveur = '<mon_serveur>'
-$port = '5432'
+$port = '<mon_port>'
 $bdd = '<ma_bdd>'
 $utilisateur = '<mon_utilisateur>'
 
