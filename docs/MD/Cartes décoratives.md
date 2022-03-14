@@ -157,7 +157,18 @@ Il est désormais question de créer le projet QGis.
 
 ### <a name="_31"></a>3.1. Ajouter les couches
 
+Pour pouvoir créer la carte, tu dois préalablement paramétrer dans QGis la connexion à la base PostgreSQL/PostGIS porteuse des données grâce au [panneau Explorateur](https://docs.qgis.org/3.22/fr/docs/user_manual/managing_data_source/opening_data.html#the-browser-panel).
 
+Ensuite, il faut créer un nouveau projet et y ajouter les 5 couches suivantes ainsi ordonnées :
+* cartodeco_atlas (dont l'affichage est à désactiver)
+* cartodeco_batimentnotable
+* troncon_de_route
+* surface_hydrographique
+* commune
+
+Ces étapes doivent aboutir à un résultat proche de l'aperçu ci-dessous (la symbologie appliquer par défaut à l'ajout des couches pouvant varier).
+
+![Ajout des couches](../Ressources/Cartes décoratives/Couches.png)
 
 ### <a name="_32"></a>3.2. Appliquer les styles
 
