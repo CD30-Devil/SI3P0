@@ -123,7 +123,33 @@ Il est disponible dans le fichier [Bâtiments notables.sql](https://github.com/C
 
 ### <a name="_22"></a>2.2. Couche d'atlas
 
+L'[outil Atlas de QGis] permet de produire de façon automatique plusieurs cartes d'un même format.
+Cette production se fait à l'appui d'une couche dont la géographie et les attributs sont utilisés pour "piloter" l'impression.
 
+Sur le plan géographique, la couche d'atlas que nous calculons ici vise à privilégier l'affichage des zones agglomérées.
+Pour cela, l'idée est de centrer les cartes sur les mairies celles-ci étant souvent au coeur des communes.
+
+Les attributs, quant à eux, sont utiles pour renseigner les étiquettes des modèles d'impression.
+
+Cette vue est calculée grâce à l'ordre suivant :
+```sql
+create materialized view cartodeco_atlas as
+select
+    row_number() over () as id,
+    c.code_insee,
+    c.nom_officiel,
+    row_number() over (partition by c.code_insee) as num_mairie,
+    ST_AsLatLonText(ST_Transform(ST_Centroid(zai.geometrie), 4326), 'D° M'' S.SSS" C') as coordonnees,
+    c.population,
+    ST_Centroid(zai.geometrie) as geometrie
+from zone_d_activite_ou_d_interet zai
+inner join commune c on ST_Intersects(c.geometrie, zai.geometrie)
+where nature = 'Mairie'
+and (nature_detaillee is null or nature_detaillee = 'Hôtel de ville')
+order by 1;
+```
+
+Il est disponible dans le fichier [Atlas.sql](https://github.com/CD30-Devil/SI3P0/blob/main/Cartes%20d%C3%A9coratives/Vues/Atlas.sql).
 
 ## <a name="_3"></a>3. Créer le projet QGis
 
