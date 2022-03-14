@@ -166,7 +166,7 @@ Ensuite, il faut créer un nouveau projet et y ajouter les 5 couches suivantes a
 * surface_hydrographique
 * commune
 
-Ces étapes doivent aboutir à un résultat proche de l'aperçu ci-dessous (la symbologie appliquer par défaut à l'ajout des couches pouvant varier).
+Ces étapes doivent aboutir à un résultat proche de l'aperçu ci-dessous.
 
 ![Ajout des couches](../Ressources/Cartes décoratives/Couches.png)
 
