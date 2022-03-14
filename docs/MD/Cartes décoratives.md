@@ -14,9 +14,9 @@ On pourra alors stocker et re-partager sur ce projet ta réalisation.
 
 **Pré-requis :**
 
-* Une base PostgreSQL/PostGIS.
-* QGis.
-* Les données de la BDTopo IGN sur l'emprise souhaitée.
+* Une base [PostgreSQL](https://www.postgresql.org/)/[PostGIS](https://postgis.net/).
+* [QGis](https://qgis.org/fr/site/).
+* Les données de la [BDTopo IGN](https://geoservices.ign.fr/bdtopo) sur l'emprise souhaitée.
 
 **Table des matières**
 
@@ -60,7 +60,7 @@ Ces découpages proposent une zone tampon de 5 km autour de l'emprise ce qui dev
 
 L'exécution d'un fichier SQL, et donc la création des structures et l'import des données, se fait à l'aide de l'outil [psql](https://www.postgresql.org/docs/current/app-psql.html).
 
-Une commande d'appel a le format suivant :
+L'appel à psql se fait grâce à une commande du type :
 ```
 psql
     --host=<serveur>
@@ -86,7 +86,7 @@ A défaut, psql affichera un prompt de saisie du mot de passe immédiatement apr
 
 Il faut par ailleurs bien définir l'encodage utilisé par le client (éventuellement via la variable d'environnement `PGCLIENTENCODING`) sachant que les fichiers de découpage sont mis à disposition en UTF8.
 
-Dans le projet, nous avons mis pour exemple les fichiers SQL correspondants à la [communauté de communes Terre de Camargue](http://www.terredecamargue.fr/).
+Dans le projet, nous avons mis pour exemple [les fichiers SQL](https://github.com/CD30-Devil/SI3P0/tree/main/Cartes%20d%C3%A9coratives/Donn%C3%A9es) correspondants à la [communauté de communes Terre de Camargue](http://www.terredecamargue.fr/).
 Nous mettons également à ta disposition un [modèle PowerShell de séquencement des appels dans le dossier PSQL](https://github.com/CD30-Devil/SI3P0/blob/main/Cartes%20d%C3%A9coratives/PSQL/lancement%20psql.ps1).
 
 ## <a name="_2"></a>2. Produire la couche des bâtiments notables et celle pour l'atlas QGis
@@ -97,7 +97,7 @@ Deux couches, déduites des données IGN, sont nécessaires pour la construction
 
 Le nombre de bâtiments dans les données de l'IGN peut-être réellement conséquent.
 
-Plutôt que d'utiliser un critère de filtre sous QGis, qui pourrait ralentir le travail de cartographie, on précalcule les bâtiments notables à afficher.
+Plutôt que d'utiliser un filtre sous QGis, qui pourrait ralentir le travail de cartographie, on précalcule les bâtiments notables à afficher.
 On utilise pour cela une [vue materialisée](https://www.postgresql.org/docs/current/rules-materializedviews.html) qui va extraire des bâtiments ceux à représenter.
 
 L'ordre de création de cette vue est le suivant :
