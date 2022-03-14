@@ -123,7 +123,7 @@ Il est disponible dans le fichier [Bâtiments notables.sql](https://github.com/C
 
 ### <a name="_22"></a>2.2. Couche d'atlas
 
-L'[outil Atlas de QGis] permet de produire de façon automatique plusieurs cartes d'un même format.
+L'[outil Atlas de QGis](https://docs.qgis.org/3.22/fr/docs/training_manual/forestry/forest_maps.html) permet de produire de façon automatique plusieurs cartes d'un même format.
 Cette production se fait à l'appui d'une couche dont la géographie et les attributs sont utilisés pour "piloter" l'impression.
 
 Sur le plan géographique, la couche d'atlas que nous calculons ici vise à privilégier l'affichage des zones agglomérées.
@@ -153,7 +153,8 @@ Il est disponible dans le fichier [Atlas.sql](https://github.com/CD30-Devil/SI3P
 
 ## <a name="_3"></a>3. Créer le projet QGis
 
-
+A ce stade, toutes les données sont disponibles pour produire les cartes.
+Il est désormais question de créer le projet QGis.
 
 ### <a name="_31"></a>3.1. Ajouter les couches
 
