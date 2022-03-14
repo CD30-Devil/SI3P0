@@ -10,5 +10,4 @@ select
 from zone_d_activite_ou_d_interet zai
 inner join commune c on ST_Intersects(c.geometrie, zai.geometrie)
 where nature = 'Mairie'
-and (nature_detaillee is null or nature_detaillee = 'Hôtel de ville')
-order by 1;
+and (nature_detaillee is null or nature_detaillee = 'Hôtel de ville');
