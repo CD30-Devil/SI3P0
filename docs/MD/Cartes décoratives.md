@@ -213,9 +213,18 @@ L'objet carte principal est quant à lui contrôlé par l'atlas.
 
 ### <a name="_34"></a>3.4. Exporter une ou plusieurs cartes
 
+Tout est prêt ! Les cartes peuvent être exportées.
 
+Plusieurs options s'offrent à toi. Tu peux par exemple lancer la génération de l'atlas grâce aux menus "Atlas > Exporter l'atlas en ...".
+
+Si tu ne souhaites pas générer l'ensemble des cartes, tu peux aussi appliquer un filtre dans les paramètres de l'atlas.
+
+![Filtre de l'atlas](../Ressources/Cartes décoratives/Filtre atlas.png)
+
+Enfin, tu peux également activer l'aperçu, choisir une des communes et en générer unitairement la carte via l'un des menus "Mise en page > Exporter au format ...".
 
 ## <a name="_4"></a>4. Conclusion
+
 
 Pour la MSI,
 
