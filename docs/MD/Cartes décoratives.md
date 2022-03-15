@@ -6,7 +6,7 @@ Mais bon, à 30€ le morçeau de papier tu hésites un peu et en plus c'est TA 
 
 ![Aperçu Aigues-Mortes](../Ressources/Cartes décoratives/Aperçu.png)
 
-Dans ce tutoriel on te montre comment, avec les données de l'[IGN](https://geoservices.ign.fr/bdtopo), une base [PostgreSQL](https://www.postgresql.org/)/[PostGIS](https://postgis.net/) et [QGis](https://qgis.org/fr/site/), tu peux faire ta propre carte.
+Dans ce tutoriel on te montre comment, avec les données de l'[IGN](https://geoservices.ign.fr/bdtopo){:target="_blank"}, une base [PostgreSQL](https://www.postgresql.org/){:target="_blank"}/[PostGIS](https://postgis.net/){:target="_blank"} et [QGis](https://qgis.org/fr/site/){:target="_blank"}, tu peux faire ta propre carte.
 Tu utiliseras pour cela les styles et modèles d'impression que nous mettons à ta disposition.
 
 Charge à toi, si le coeur t'en dit, de faire tes propres présentations et pourquoi pas de nous les proposer.
@@ -14,13 +14,13 @@ On pourra alors stocker et re-partager sur ce projet ta réalisation.
 
 **Pré-requis :**
 
-* Une base [PostgreSQL](https://www.postgresql.org/)/[PostGIS](https://postgis.net/).
-* [QGis](https://qgis.org/fr/site/).
-* Les données de la [BDTopo IGN](https://geoservices.ign.fr/bdtopo) sur l'emprise souhaitée.
+* Une base [PostgreSQL](https://www.postgresql.org/){:target="_blank"}/[PostGIS](https://postgis.net/){:target="_blank"}.
+* [QGis](https://qgis.org/fr/site/){:target="_blank"}.
+* Les données de la [BDTopo IGN](https://geoservices.ign.fr/bdtopo){:target="_blank"} sur l'emprise souhaitée.
 
 **Ressources**
 
-[https://github.com/CD30-Devil/SI3P0/tree/main/Cartes%20d%C3%A9coratives](https://github.com/CD30-Devil/SI3P0/tree/main/Cartes%20d%C3%A9coratives)
+[https://github.com/CD30-Devil/SI3P0/tree/main/Cartes%20d%C3%A9coratives](https://github.com/CD30-Devil/SI3P0/tree/main/Cartes%20d%C3%A9coratives){:target="_blank"}
 
 **Table des matières**
 
@@ -58,11 +58,11 @@ Tu as besoin des cinq données suivantes :
 Plusieurs méthodes sont possibles pour intégrer les données mais, ici, nous avons pour habitude de travailler avec la version SQL de la France métropolitaine.
 Certains fichiers y sont trés volumineux dont notamment les classes `batiment` et `troncon_de_route` qui pèsent chacune plusieurs Go une fois décompréssées.
 
-Pas de panique, tu peux à la place utiliser les versions découpées par EPCI, Département et Région que nous mettons à ta disposition sur [cet espace OneDrive](https://gardfr-my.sharepoint.com/:f:/g/personal/michael_galien_gard_fr/Eqoe4M0WjcZCpUUmNq7HXGwBSA6QeTjDlRKE4O7mAeMYXA)
+Pas de panique, tu peux à la place utiliser les versions découpées par EPCI, Département et Région que nous mettons à ta disposition sur [cet espace OneDrive](https://gardfr-my.sharepoint.com/:f:/g/personal/michael_galien_gard_fr/Eqoe4M0WjcZCpUUmNq7HXGwBSA6QeTjDlRKE4O7mAeMYXA){:target="_blank"}.
 
 Ces découpages proposent une zone tampon de 5 km autour de l'emprise ce qui devrait permettre de produire une carte sans trou même si la commune souhaitée est en limite.
 
-L'exécution d'un fichier SQL, et donc la création des structures et l'import des données, se fait à l'aide de l'outil [psql](https://www.postgresql.org/docs/current/app-psql.html).
+L'exécution d'un fichier SQL, et donc la création des structures et l'import des données, se fait à l'aide de l'outil [psql](https://www.postgresql.org/docs/current/app-psql.html){:target="_blank"}.
 
 L'appel à psql se fait grâce à une commande du type :
 ```
@@ -85,13 +85,13 @@ psql
 ```
 
 Tu as peut-être noté que l'outil psql ne prend pas en paramètre le mot de passe utilisateur.
-PostgreSQL propose différents modes d'authentification et il existe plusieurs techniques pour renseigner le mot de passe que ce soit par la [variable d'environnement `PGPASSWORD`](https://www.postgresql.org/docs/current/libpq-envars.html) ou en utilisant un [fichier de mots de passe](https://www.postgresql.org/docs/current/libpq-pgpass.html).
+PostgreSQL propose différents modes d'authentification et il existe plusieurs techniques pour renseigner le mot de passe que ce soit par la [variable d'environnement `PGPASSWORD`](https://www.postgresql.org/docs/current/libpq-envars.html){:target="_blank"} ou en utilisant un [fichier de mots de passe](https://www.postgresql.org/docs/current/libpq-pgpass.html){:target="_blank"}.
 A défaut, psql affichera un prompt de saisie du mot de passe immédiatement après son lancement.
 
 Il faut par ailleurs bien définir l'encodage utilisé par le client (éventuellement via la variable d'environnement `PGCLIENTENCODING`) sachant que les fichiers de découpage sont mis à disposition en UTF8.
 
-Dans le projet, nous avons mis pour exemple [les fichiers SQL](https://github.com/CD30-Devil/SI3P0/tree/main/Cartes%20d%C3%A9coratives/Donn%C3%A9es) correspondants à la [communauté de communes Terre de Camargue](http://www.terredecamargue.fr/).
-Nous mettons également à ta disposition un [modèle PowerShell de séquencement des appels dans le dossier PSQL](https://github.com/CD30-Devil/SI3P0/blob/main/Cartes%20d%C3%A9coratives/PSQL/lancement%20psql.ps1).
+Dans le projet, nous avons mis pour exemple [les fichiers SQL](https://github.com/CD30-Devil/SI3P0/tree/main/Cartes%20d%C3%A9coratives/Donn%C3%A9es){:target="_blank"} correspondants à la [communauté de communes Terre de Camargue](http://www.terredecamargue.fr/){:target="_blank"}.
+Nous mettons également à ta disposition un [modèle PowerShell de séquencement des appels dans le dossier PSQL](https://github.com/CD30-Devil/SI3P0/blob/main/Cartes%20d%C3%A9coratives/PSQL/lancement%20psql.ps1){:target="_blank"}.
 
 ## <a name="_2"></a>2. Produire la couche des bâtiments notables et celle pour l'atlas QGis
 
@@ -102,7 +102,7 @@ Deux couches, déduites des données IGN, sont nécessaires pour la construction
 Le nombre de bâtiments dans les données de l'IGN peut-être réellement conséquent.
 
 Plutôt que d'utiliser un filtre sous QGis, qui pourrait ralentir le travail de cartographie, on précalcule les bâtiments notables à afficher.
-On utilise pour cela une [vue materialisée](https://www.postgresql.org/docs/current/rules-materializedviews.html) qui va extraire des bâtiments ceux à représenter.
+On utilise pour cela une [vue materialisée](https://www.postgresql.org/docs/current/rules-materializedviews.html){:target="_blank"} qui va extraire des bâtiments ceux à représenter.
 
 L'ordre de création de cette vue est le suivant :
 ```sql
@@ -123,11 +123,11 @@ where nature in (
 );
 ```
 
-Il est disponible dans le fichier [Bâtiments notables.sql](https://github.com/CD30-Devil/SI3P0/blob/main/Cartes%20d%C3%A9coratives/Vues/B%C3%A2timents%20notables.sql).
+Il est disponible dans le fichier [Bâtiments notables.sql](https://github.com/CD30-Devil/SI3P0/blob/main/Cartes%20d%C3%A9coratives/Vues/B%C3%A2timents%20notables.sql){:target="_blank"}.
 
 ### <a name="_22"></a>2.2. Couche d'atlas
 
-L'[outil Atlas de QGis](https://docs.qgis.org/3.22/fr/docs/training_manual/forestry/forest_maps.html) permet de produire de façon automatique plusieurs cartes d'un même format.
+L'[outil Atlas de QGis](https://docs.qgis.org/3.22/fr/docs/training_manual/forestry/forest_maps.html){:target="_blank"} permet de produire de façon automatique plusieurs cartes d'un même format.
 Cette production se fait à l'appui d'une couche dont la géographie et les attributs sont utilisés pour "piloter" l'impression.
 
 Sur le plan géographique, la couche d'atlas que nous calculons ici vise à privilégier l'affichage des zones agglomérées.
@@ -152,7 +152,7 @@ where nature = 'Mairie'
 and (nature_detaillee is null or nature_detaillee = 'Hôtel de ville');
 ```
 
-Il est disponible dans le fichier [Atlas.sql](https://github.com/CD30-Devil/SI3P0/blob/main/Cartes%20d%C3%A9coratives/Vues/Atlas.sql).
+Il est disponible dans le fichier [Atlas.sql](https://github.com/CD30-Devil/SI3P0/blob/main/Cartes%20d%C3%A9coratives/Vues/Atlas.sql){:target="_blank"}.
 
 ## <a name="_3"></a>3. Créer le projet QGis
 
@@ -161,7 +161,7 @@ Il est désormais question de créer le projet QGis.
 
 ### <a name="_31"></a>3.1. Ajouter les couches
 
-Pour pouvoir créer la carte, tu dois préalablement paramétrer dans QGis la connexion à la base PostgreSQL/PostGIS porteuse des données grâce au [panneau Explorateur](https://docs.qgis.org/3.22/fr/docs/user_manual/managing_data_source/opening_data.html#the-browser-panel).
+Pour pouvoir créer la carte, tu dois préalablement paramétrer dans QGis la connexion à la base PostgreSQL/PostGIS porteuse des données grâce au [panneau Explorateur](https://docs.qgis.org/3.22/fr/docs/user_manual/managing_data_source/opening_data.html#the-browser-panel){:target="_blank"}.
 
 Ensuite, il faut créer un nouveau projet et y ajouter les 5 couches suivantes ainsi ordonnées :
 * cartodeco_atlas (dont l'affichage est à désactiver)
@@ -178,7 +178,7 @@ Ces étapes doivent aboutir à un résultat proche de l'aperçu ci-dessous.
 
 QGis applique de façon aléatoire un style aux couches lorsque celles-ci sont ajoutées au projet.
 
-A cette étape, il te faut modifier les styles des couches visibles en rechargeant pour chacune le fichier QML correspondant disponible [à cet emplacement](https://github.com/CD30-Devil/SI3P0/tree/main/Cartes%20d%C3%A9coratives/Repr%C3%A9sentations/Epur%C3%A9%20clair%20par%20Tetranos/QML).
+A cette étape, il te faut modifier les styles des couches visibles en rechargeant pour chacune le fichier QML correspondant disponible [à cet emplacement](https://github.com/CD30-Devil/SI3P0/tree/main/Cartes%20d%C3%A9coratives/Repr%C3%A9sentations/Epur%C3%A9%20clair%20par%20Tetranos/QML){:target="_blank"}.
 Le chargement se fait, depuis la fenêtre de propriétés de la couche, grâce au menu "Style > Charger le style...".
 
 ![Style > Charger le style...](../Ressources/Cartes décoratives/Charger style.png)
@@ -190,7 +190,7 @@ Après avoir appliqué les quatres fichiers QML, ton projet devrait ressembler �
 Tu te demandes peut-être pourquoi les communes sont blanches et donc a priori invisibles.
 Cette astuce permet de fixer un fond bleu à la carte dans le modèle d'impression et ainsi faire apparaître les côtes pour les communes en bordure de mer et d'océan.
 
-### <a name="_33"></a>3.3. Importer les modèles de conception
+### <a name="_33"></a>3.3. Importer les modèles d'impression
 
 
 
