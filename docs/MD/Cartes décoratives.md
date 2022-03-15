@@ -183,7 +183,7 @@ Le chargement se fait, depuis la fenêtre de propriétés de la couche, grâce a
 
 ![Style > Charger le style...](../Ressources/Cartes décoratives/Charger style.png)
 
-Après avoir appliqué les quatres fichiers QML, ton projet devrait ressembler à l'image qui suit.
+Après avoir appliqué les quatre fichiers QML, ton projet devrait ressembler à l'image qui suit.
 
 ![Chargement des styles](../Ressources/Cartes décoratives/Styles.png)
 
