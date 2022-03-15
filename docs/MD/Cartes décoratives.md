@@ -18,6 +18,10 @@ On pourra alors stocker et re-partager sur ce projet ta réalisation.
 * [QGis](https://qgis.org/fr/site/).
 * Les données de la [BDTopo IGN](https://geoservices.ign.fr/bdtopo) sur l'emprise souhaitée.
 
+** Ressources **
+
+[https://github.com/CD30-Devil/SI3P0/tree/main/Cartes%20d%C3%A9coratives](https://github.com/CD30-Devil/SI3P0/tree/main/Cartes%20d%C3%A9coratives)
+
 **Table des matières**
 
 [1. Importer les données IGN](#_1)
@@ -172,7 +176,19 @@ Ces étapes doivent aboutir à un résultat proche de l'aperçu ci-dessous.
 
 ### <a name="_32"></a>3.2. Appliquer les styles
 
+QGis applique de façon aléatoire un style aux couches lorsque celles-ci sont ajoutées au projet.
 
+A cette étape, il te faut modifier les styles des couches visibles en rechargeant pour chacune le fichier QML correspondant disponible [à cet emplacement](https://github.com/CD30-Devil/SI3P0/tree/main/Cartes%20d%C3%A9coratives/Repr%C3%A9sentations/Epur%C3%A9%20clair%20par%20Tetranos/QML).
+Le chargement se fait, depuis la fenêtre de propriétés de la couche, grâce au menu "Style > Charger le style...".
+
+![Style > Charger le style...](../Ressources/Cartes décoratives/Charger style.png)
+
+Après avoir appliqué les quatres fichiers QML, ton projet devrait ressembler à l'image qui suit.
+
+![Chargement des styles](../Ressources/Cartes décoratives/Styles.png)
+
+Tu te demandes peut-être pourquoi les communes sont blanches et donc a priori invisibles.
+Cette astuce permet de fixer un fond bleu à la carte dans le modèle d'impression et ainsi faire apparaître les côtes pour les communes en bordure de mer et d'océan.
 
 ### <a name="_33"></a>3.3. Importer les modèles de conception
 
