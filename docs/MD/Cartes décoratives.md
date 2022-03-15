@@ -9,9 +9,6 @@ Mais bon, à 30€ le morçeau de papier tu hésites un peu et en plus c'est TA 
 Dans ce tutoriel on te montre comment, avec les données de l'[IGN](https://geoservices.ign.fr/bdtopo){:target="_blank"}, une base [PostgreSQL](https://www.postgresql.org/){:target="_blank"}/[PostGIS](https://postgis.net/){:target="_blank"} et [QGis](https://qgis.org/fr/site/){:target="_blank"}, tu peux faire ta propre carte.
 Tu utiliseras pour cela les styles et modèles d'impression que nous mettons à ta disposition.
 
-Charge à toi, si le coeur t'en dit, de faire tes propres présentations et pourquoi pas de nous les proposer.
-On pourra alors stocker et re-partager sur ce projet ta réalisation.
-
 **Pré-requis :**
 
 * Une base [PostgreSQL](https://www.postgresql.org/){:target="_blank"}/[PostGIS](https://postgis.net/){:target="_blank"}.
@@ -225,6 +222,11 @@ Enfin, tu peux également activer l'aperçu, choisir une des communes et en gén
 
 ## <a name="_4"></a>4. Conclusion
 
+Te voilà désormais l'heureux détenteur d'un projet QGis de génération de cartes décoratives.
+Enfin "décoratives" ?!? Il parait que les goûts et les couleurs, ça ne se discutent pas.
+
+Charge à toi, si le coeur t'en dit, de revoir les styles et d'adapter les modèles d'impression pour aboutir à TA carte idéale.
+N'hésite pas à nous repartager tes résultats, voire même tes fichiers QML et QPT que nous pourrons re-diffuser sur ce projet Git.
 
 Pour la MSI,
 
