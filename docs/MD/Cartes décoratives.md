@@ -127,8 +127,8 @@ Il est disponible dans le fichier [Bâtiments notables.sql](https://github.com/C
 
 ### <a name="_22"></a>2.2. Couche d'atlas
 
-L'[outil Atlas de QGis](https://docs.qgis.org/3.22/fr/docs/training_manual/forestry/forest_maps.html){:target="_blank"} permet de produire de façon automatique plusieurs cartes d'un même format.
-Cette production se fait à l'appui d'une couche dont la géographie et les attributs sont utilisés pour "piloter" l'impression.
+L'[outil atlas de QGis](https://docs.qgis.org/3.22/fr/docs/training_manual/forestry/forest_maps.html){:target="_blank"} permet de produire de façon automatique plusieurs cartes d'un même format.
+Cette production se fait à l'appui d'une couche dont la géographie et les attributs sont utilisés pour "contrôler" l'impression.
 
 Sur le plan géographique, la couche d'atlas que nous calculons ici vise à privilégier l'affichage des zones agglomérées.
 Pour cela, l'idée est de centrer les cartes sur les mairies celles-ci étant souvent au coeur des communes.
@@ -192,7 +192,24 @@ Cette astuce permet de fixer un fond bleu à la carte dans le modèle d'impressi
 
 ### <a name="_33"></a>3.3. Importer les modèles d'impression
 
+Quatres modèles d'impression QPT sont disponibles [dans ce dossier](https://github.com/CD30-Devil/SI3P0/tree/main/Cartes%20d%C3%A9coratives/Repr%C3%A9sentations/Epur%C3%A9%20clair%20par%20Tetranos/QPT){:target="_blank"} :
+* un format 18x24 Portrait,
+* un format A3 Portrait,
+* un format A3 Paysage,
+* un format A3 Quiz où le nom de la commune est masqué et remplacé par une question-indice.
 
+Depuis le gestionnaire de mises en page, choisis l'option "Spécifique" et indique le chemin vers le modèle à importer. Clique ensuite sur "Créer..." et renseigne un nom avant de valider.
+
+![Gestionnaire de mises en page](../Ressources/Cartes décoratives/Gestionnaire de mises en page.png)
+
+Le composeur d'impression s'ouvre et présente la mise en page telle que définie par le modèle QPT.
+Dans celle-ci, l'atlas est normalement pré-paramétré [avec la couche créée à l'étape 2.2](#_22).
+
+![Paramétrage de l'atlas](../Ressources/Cartes décoratives/Paramétrage atlas.png)
+
+L'objet carte principal est quant à lui contrôlé par l'atlas.
+
+![Paramétrage de l'atlas](../Ressources/Cartes décoratives/Contrôle atlas.png)
 
 ### <a name="_34"></a>3.4. Exporter une ou plusieurs cartes
 
