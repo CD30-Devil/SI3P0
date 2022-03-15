@@ -18,7 +18,7 @@ On pourra alors stocker et re-partager sur ce projet ta réalisation.
 * [QGis](https://qgis.org/fr/site/).
 * Les données de la [BDTopo IGN](https://geoservices.ign.fr/bdtopo) sur l'emprise souhaitée.
 
-** Ressources **
+**Ressources**
 
 [https://github.com/CD30-Devil/SI3P0/tree/main/Cartes%20d%C3%A9coratives](https://github.com/CD30-Devil/SI3P0/tree/main/Cartes%20d%C3%A9coratives)
 
