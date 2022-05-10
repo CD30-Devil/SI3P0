@@ -23,10 +23,15 @@ SIg-Creer-Table-Temp -table 'tmp.ItineraireCyclable' -colonnes 'NumeroItineraire
 SIg-Creer-Table-Temp -table 'tmp.PortionCyclable' -colonnes 'Nom', 'Type', 'Description', 'NumeroItineraireCyclable', 'Ordre' -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - création tmp.PortionCyclable.txt"
 SIg-Creer-Table-Temp -table 'tmp.SegmentCyclable' -colonnes 'EtatAvancement', 'Revetement', 'Statut', 'AnneeOuverture', 'SensUnique', 'SourceGeometrie', 'IdGeometrie', 'Fictif', 'PortionCyclable', 'Ordre', 'Proprietaires', 'Gestionnaires', 'Commentaires' -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - création tmp.SegmentCyclable.txt"
 
-# conversion des feuilles du fichier Excel descripteur en CSV
-Exporter-CSV-Excel -excel "$dossierDonnees\Référentiel 3V.xlsx" -requete 'select * from [ItineraireCyclable$]' -csv "$dossierTravailTemp\3v_peupler\ItineraireCyclable.csv"
-Exporter-CSV-Excel -excel "$dossierDonnees\Référentiel 3V.xlsx" -requete 'select * from [PortionCyclable$]' -csv "$dossierTravailTemp\3v_peupler\PortionCyclable.csv"
-Exporter-CSV-Excel -excel "$dossierDonnees\Référentiel 3V.xlsx" -requete 'select * from [SegmentCyclable$]' -csv "$dossierTravailTemp\3v_peupler\SegmentCyclable.csv"
+# paramètrage des jobs de conversion des feuilles du fichier Excel descripteur en CSV
+$parametresJobs = [Collections.ArrayList]::new()
+
+[void]$parametresJobs.Add((Parametrer-Job-Exporter-CSV-Excel -excel "$dossierDonnees\Référentiel 3V.xlsx" -requete 'select * from [ItineraireCyclable$]' -csv "$dossierTravailTemp\3v_peupler\ItineraireCyclable.csv"))
+[void]$parametresJobs.Add((Parametrer-Job-Exporter-CSV-Excel -excel "$dossierDonnees\Référentiel 3V.xlsx" -requete 'select * from [PortionCyclable$]' -csv "$dossierTravailTemp\3v_peupler\PortionCyclable.csv"))
+[void]$parametresJobs.Add((Parametrer-Job-Exporter-CSV-Excel -excel "$dossierDonnees\Référentiel 3V.xlsx" -requete 'select * from [SegmentCyclable$]' -csv "$dossierTravailTemp\3v_peupler\SegmentCyclable.csv"))
+
+# exécution des jobs de conversion des feuilles du fichier Excel descripteur en CSV
+Executer-Jobs -parametresJobs $parametresJobs
 
 # paramètrage des jobs d'import des données dans les structures temporaires
 $parametresJobs = [Collections.ArrayList]::new()

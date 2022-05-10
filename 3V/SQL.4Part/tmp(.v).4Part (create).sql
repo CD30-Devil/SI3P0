@@ -1,4 +1,4 @@
-﻿create view tmp.VetTSegment_4Layer as
+﻿create view tmp.VetT_Segment_4Layer as
 select
     distinct
     sc.IdSegmentCyclable as "ID_LOCAL",
@@ -37,7 +37,7 @@ where pi.NumeroItineraireCyclable not like 'B%'
 group by sc.IdSegmentCyclable
 order by "ID_LOCAL";
 
-create view tmp.VetTRTronconSegment_4Sheet as
+create view tmp.VetT_RTronconSegment_4Sheet as
 select
     distinct
     sc.IdSegmentCyclable as "ID_LOCAL",
@@ -50,7 +50,7 @@ left join m.PortionCyclable_ItineraireCyclable pi on pi.IdPortionCyclable = pc.I
 where pi.NumeroItineraireCyclable not like 'B%'
 order by "ID_LOCAL";
 
-create view tmp.VetTPortion_4Layer as
+create view tmp.VetT_Portion_4Layer as
 select
     pc.IdPortionCyclable as "ID_LOCAL",
     null::varchar as "ID_ON3V",
@@ -76,14 +76,14 @@ where pi.NumeroItineraireCyclable not like 'B%'
 group by pc.IdPortionCyclable, pi.NumeroItineraireCyclable, pi.Ordre
 order by "ID_ITI", "ORDRE_ETAP";
 
-create view tmp.VetTRElementPortion_4Sheet as
+create view tmp.VetT_RElementPortion_4Sheet as
 select sp.IdPortionCyclable as "ID_PORTION", sp.IdSegmentCyclable as "ID_ELEMENT"
 from m.SegmentCyclable_PortionCyclable sp
 left join m.PortionCyclable_ItineraireCyclable pi on pi.IdPortionCyclable = sp.IdPortionCyclable
 where pi.NumeroItineraireCyclable not like 'B%'
 order by "ID_PORTION", "ID_ELEMENT";
 
-create view tmp.VetTItineraire_4Sheet as
+create view tmp.VetT_Itineraire_4Sheet as
 select
     NumeroItineraireCyclable as "ID_ITI",
     NumeroItineraireCyclable as "NUMERO",
@@ -104,7 +104,7 @@ where NumeroItineraireCyclable not like 'B%'
 and NumeroItineraireCyclable not in ('EV17a', 'EV17b')
 order by "ID_ITI";
 
-create view tmp.VetTBoucleCyclo_4Layer as
+create view tmp.VetT_BoucleCyclo_4Layer as
 with ItineraireCyclableCommune as (
     select distinct ic.NumeroItineraireCyclable, c.Nom
     from m.ItineraireCyclable ic
