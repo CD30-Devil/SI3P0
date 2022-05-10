@@ -4,13 +4,15 @@ constantes_privées.ps1
 cartographier.ps1
 créer vues 4Qlik.ps1
 
-régulier.ps1
-quotidien.ps1
-hebdomadaire.ps1
+D_4h.ps1
+LàD_0hà0h_F10min_NonStop.ps1
+LàD_0hà0h_F10min_Stop.ps1
+LàS_4h.ps1
 lancement manuel.ps1
 
 Documents/
 Données/
+QGis/
 Rapports/
 SQL.4Test/
 SQL.4Qlik/
