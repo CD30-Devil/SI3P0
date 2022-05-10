@@ -24,7 +24,7 @@ if (($alertes | Measure-Object).Count -gt 0) {
     $idsTwitter = Twitter-Creer-Identifiants -cle $cleTwitterSI3P0Bot_Waze -cleSecrete $cleSecreteTwitterSI3P0Bot_Waze -jeton $jetonTwitterSI3P0Bot_Waze -jetonSecret $jetonSecretTwitterSI3P0Bot_Waze
 
     foreach ($alerte in $alertes) {
-        Chromium-Capturer-Page -url $alerte.LienWazeEmbed -sortie "$dossierTravailTemp\waze_notifier\Aperçu Waze - $($alerte.NumeroRoute)_$($alerte.PRA).png"
+        Chromium-Capturer-Page -url $alerte.LienWazeEmbed -sortie "$dossierTravailTemp\waze_notifier\Aperçu Waze - $($alerte.NumeroRoute)_$($alerte.PRA).png" -delaiMaxProcess 45
         
         $statut = [Text.StringBuilder]::new()
 

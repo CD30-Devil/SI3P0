@@ -14,8 +14,7 @@ select
         when 5 then '#000000'::character varying
     end as Couleur,
     r.Geom
-from m.RalentissementWaze r
-inner join v.Gard g on ST_Intersects(g.Geom, r.Geom);
+from m.RalentissementWaze r;
 
 create view tmp.AlerteWaze_4Map as
 with Alerte as (
