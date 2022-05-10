@@ -16,11 +16,11 @@ SIg-Executer-Fichier -fichier "$dossierSQL4Layer\tmp(.v).4Layer (create).sql" -s
 $parametresJobs = [Collections.ArrayList]::new()
 
 # geojson (WGS84)
-[void]$parametresJobs.Add((Parametrer-Job-SIg-Exporter-GeoJSON -requete "select * from tmp.Autoroute_4Layer" -geoJSON "$si3p0DossierExportGeoJSON\Autres réseaux\FR_Autoroute.geojson" -sridCible 4326 -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - Export FR_Autoroute.geojson.txt"))
-[void]$parametresJobs.Add((Parametrer-Job-SIg-Exporter-GeoJSON -requete "select * from tmp.D30Autoroute_4Layer" -geoJSON "$si3p0DossierExportGeoJSON\Autres réseaux\D30_Autoroute.geojson" -sridCible 4326 -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - Export D30_Autoroute.geojson.txt"))
-[void]$parametresJobs.Add((Parametrer-Job-SIg-Exporter-GeoJSON -requete "select * from tmp.RN_4Layer" -geoJSON "$si3p0DossierExportGeoJSON\Autres réseaux\FR_RN.geojson" -sridCible 4326 -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - Export FR_RN.geojson.txt"))
-[void]$parametresJobs.Add((Parametrer-Job-SIg-Exporter-GeoJSON -requete "select * from tmp.D30RN_4Layer" -geoJSON "$si3p0DossierExportGeoJSON\Autres réseaux\D30_RN.geojson" -sridCible 4326 -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - Export D30_RN.geojson.txt"))
-[void]$parametresJobs.Add((Parametrer-Job-SIg-Exporter-GeoJSON -requete "select * from tmp.D30VoieFerreeAgregee_4Layer" -geoJSON "$si3p0DossierExportGeoJSON\Autres réseaux\D30_Voie ferrée agrégée.geojson" -sridCible 4326 -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - Export D30_Voie ferrée agrégée.geojson.txt"))
+[void]$parametresJobs.Add((Parametrer-Job-SIg-Exporter-GeoJSON -requete "select * from tmp.Autoroute_4Layer" -geoJSON "$si3p0DossierExportGeoJSON\Autres réseaux\FR_Autoroute.geojson" -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - Export FR_Autoroute.geojson.txt"))
+[void]$parametresJobs.Add((Parametrer-Job-SIg-Exporter-GeoJSON -requete "select * from tmp.D30Autoroute_4Layer" -geoJSON "$si3p0DossierExportGeoJSON\Autres réseaux\D30_Autoroute.geojson" -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - Export D30_Autoroute.geojson.txt"))
+[void]$parametresJobs.Add((Parametrer-Job-SIg-Exporter-GeoJSON -requete "select * from tmp.RN_4Layer" -geoJSON "$si3p0DossierExportGeoJSON\Autres réseaux\FR_RN.geojson" -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - Export FR_RN.geojson.txt"))
+[void]$parametresJobs.Add((Parametrer-Job-SIg-Exporter-GeoJSON -requete "select * from tmp.D30RN_4Layer" -geoJSON "$si3p0DossierExportGeoJSON\Autres réseaux\D30_RN.geojson" -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - Export D30_RN.geojson.txt"))
+[void]$parametresJobs.Add((Parametrer-Job-SIg-Exporter-GeoJSON -requete "select * from tmp.D30VoieFerreeAgregee_4Layer" -geoJSON "$si3p0DossierExportGeoJSON\Autres réseaux\D30_Voie ferrée agrégée.geojson" -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - Export D30_Voie ferrée agrégée.geojson.txt"))
 
 # exécution des jobs d'export
 Executer-Jobs -parametresJobs $parametresJobs

@@ -70,7 +70,7 @@ $idsTwitter = Twitter-Creer-Identifiants `
 
 # Message 1 - Introduction
 Chromium-Capturer-Page `    -url $infosCommune.LienGeoportailLimiteAdm `
-    -sortie "$dossierRapports\$($infosCommune.COGCommune)_limite_adm.png" `    -delai 30000
+    -sortie "$dossierRapports\$($infosCommune.COGCommune)_limite_adm.png" `    -delaiMaxProcess 120 `    -delaiChargement 30
 
 $retour = Twitter-Televerser-Media `    -identifiants $idsTwitter `    -cheminMedia "$dossierRapports\$($infosCommune.COGCommune)_limite_adm.png"
 
@@ -99,7 +99,7 @@ Vous l'aurez peut-être deviné, le département de $($infosCommune.NomCommune) 
 $idMessage = $retour.id
 
 # Message 4 - Population
-Chromium-Capturer-Page `    -url $infosCommune.LienGeoportailDensitePop `    -sortie "$dossierRapports\$($infosCommune.COGCommune)_densite_pop.png" `    -delai 30000
+Chromium-Capturer-Page `    -url $infosCommune.LienGeoportailDensitePop `    -sortie "$dossierRapports\$($infosCommune.COGCommune)_densite_pop.png" `    -delaiMaxProcess 120 `    -delaiChargement 30
 
 $retour = Twitter-Televerser-Media `    -identifiants $idsTwitter `
     -cheminMedia "$dossierRapports\$($infosCommune.COGCommune)_densite_pop.png"
@@ -115,7 +115,7 @@ Cela représente $($infosCommune.PartPopulationDepartement) ‰ de la population
 $idMessage = $retour.id
 
 # Message 5 - Superficie
-Chromium-Capturer-Page `    -url $infosCommune.LienGeoportailODS `    -sortie "$dossierRapports\$($infosCommune.COGCommune)_ods.png" `    -delai 30000
+Chromium-Capturer-Page `    -url $infosCommune.LienGeoportailODS `    -sortie "$dossierRapports\$($infosCommune.COGCommune)_ods.png" `    -delaiMaxProcess 120 `    -delaiChargement 30
 
 $retour = Twitter-Televerser-Media `    -identifiants $idsTwitter `    -cheminMedia "$dossierRapports\$($infosCommune.COGCommune)_ods.png"
 
@@ -130,7 +130,7 @@ Cela représente $($infosCommune.PartSuperficieDepartement) ‰ de la superficie
 $idMessage = $retour.id
 
 # Message 6 - AMF
-Chromium-Capturer-Page `    -url $infosCommune.LienAMF `    -sortie "$dossierRapports\$($infosCommune.COGCommune)_amf.png" `    -delai 30000
+Chromium-Capturer-Page `    -url $infosCommune.LienAMF `    -sortie "$dossierRapports\$($infosCommune.COGCommune)_amf.png" `    -delaiMaxProcess 120 `    -delaiChargement 30
 
 $retour = Twitter-Televerser-Media `    -identifiants $idsTwitter `    -cheminMedia "$dossierRapports\$($infosCommune.COGCommune)_amf.png"
 
