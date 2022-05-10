@@ -14,6 +14,7 @@
 # .carte : Le chemin de sauvegarde de la carte.
 # .titre : Le titre de la carte.
 # .daterTitre : Pour demander l'ajout de la date de génération dans le titre.
+# .couchesActives : Les noms des couches à activer par défaut.
 # .nbCouchesActives : Nombre de couches actives par défaut.
 # .fondDePlan : Le fond de plan à afficher par défaut.
 # .idInfo : L'identifiant du texte d'information à afficher sur le bouton
@@ -41,6 +42,7 @@ $Job_SI3P0_Generer_Carte = {
         -daterTitre $parametres.daterTitre `
         -fondDePlan $parametres.fondDePlan `
         -idInfo $parametres.idInfo `
+        -couchesActives $parametres.couchesActives `
         -nbCouchesActives $parametres.nbCouchesActives `
         -activerInfosBulles $parametres.activerInfosBulles `
         -replierBoiteControle $parametres.replierBoiteControle `
@@ -65,6 +67,7 @@ $Job_SI3P0_Generer_Carte = {
 # $fondDePlan : Le fond de plan à afficher par défaut.
 # $idInfo : L'identifiant du texte d'information à afficher sur le bouton
 #           d'aide.
+# $couchesActives : Les noms des couches à activer par défaut.
 # $nbCouchesActives : Nombre de couches actives par défaut.
 # $activerInfosBulles : Pour activer l'affichage des informations au survol.
 # $replierBoiteControle : Pour replier la boîte de contrôle en haut à droite.
@@ -91,6 +94,7 @@ function Parametrer-Job-SI3P0-Generer-Carte {
         [bool] $daterTitre = $false,
         [string] $fondDePlan = 'cartoDB',
         [string] $idInfo = 'vue_defaut',
+        [string[]] $couchesActives = $null,
         [int] $nbCouchesActives = $null,
         [bool] $activerInfosBulles = $true,
         [bool] $replierBoiteControle = $false,
@@ -111,6 +115,7 @@ function Parametrer-Job-SI3P0-Generer-Carte {
         daterTitre = $daterTitre
         fondDePlan = $fondDePlan
         idInfo = $idInfo
+        couchesActives = $couchesActives
         nbCouchesActives = $nbCouchesActives
         activerInfosBulles = $activerInfosBulles
         replierBoiteControle = $replierBoiteControle

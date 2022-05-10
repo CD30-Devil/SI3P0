@@ -15,6 +15,15 @@ function Changer-Encodage {
     )
     
     Afficher-Message-Date -message "Changement de l'encodage de $fichier de $encodageAvant à $encodageApres."
+
     $contenu = [System.IO.File]::ReadAllText($fichier, [System.Text.Encoding]::GetEncoding($encodageAvant))
-    [System.IO.File]::WriteAllText($fichier, $contenu, [System.Text.Encoding]::GetEncoding($encodageApres))
+    
+    try {
+        [System.IO.File]::WriteAllText($fichier, $contenu, [System.Text.Encoding]::GetEncoding($encodageApres))
+    }
+    catch {
+        Start-Sleep -Milliseconds 1337
+        # nouvelle tentative en cas d'échec, verrou sur le fichier ?
+        [System.IO.File]::WriteAllText($fichier, $contenu, [System.Text.Encoding]::GetEncoding($encodageApres))
+    }
 }

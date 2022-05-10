@@ -50,7 +50,8 @@ function SIg-Executer-Fichier {
         -utilisateur $utilisateur `
         -fichier $fichier `
         -autresParams $autresParams `
-        -sortie $sortie `        -erreur $erreur
+        -sortie $sortie `
+        -erreur $erreur
 }
 
 # -----------------------------------------------------------------------------
@@ -89,7 +90,8 @@ function SIg-Executer-Commande {
         -utilisateur $utilisateur `
         -commande $commande `
         -autresParams $autresParams `
-        -sortie $sortie `        -erreur $erreur
+        -sortie $sortie `
+        -erreur $erreur
 }
 
 # -----------------------------------------------------------------------------
@@ -128,7 +130,8 @@ function SIg-Creer-Table-Temp {
         -utilisateur $utilisateur `
         -table $table `
         -colonnes $colonnes `
-        -sortie $sortie `        -erreur $erreur
+        -sortie $sortie `
+        -erreur $erreur
 }
 
 # -----------------------------------------------------------------------------
@@ -164,7 +167,8 @@ function SIg-Effacer-Table {
         -bdd $bdd `
         -utilisateur $utilisateur `
         -table $table `
-        -sortie $sortie `        -erreur $erreur
+        -sortie $sortie `
+        -erreur $erreur
 }
 
 # -----------------------------------------------------------------------------
@@ -200,7 +204,8 @@ function SIg-Effacer-Vue {
         -bdd $bdd `
         -utilisateur $utilisateur `
         -vue $vue `
-        -sortie $sortie `        -erreur $erreur
+        -sortie $sortie `
+        -erreur $erreur
 }
 
 # -----------------------------------------------------------------------------
@@ -243,7 +248,8 @@ function SIg-Importer-CSV {
         -utilisateur $utilisateur `
         -table $table `
         -delimiteur $delimiteur `
-        -sortie $sortie `        -erreur $erreur
+        -sortie $sortie `
+        -erreur $erreur
 }
 
 # -----------------------------------------------------------------------------
@@ -279,7 +285,7 @@ function SIg-Importer-GeoJSON {
         [string] $utilisateur = $sigUtilisateur,
         [string] $mdp = $sigMDP,
         [parameter(Mandatory=$true)] [string] $table,
-        [string] $sridSource = $sridDefaut,
+        [string] $sridSource = '4326',
         [string] $sridCible = $sridDefaut,
         [bool] $multiGeom = $true,
         [string[]] $autresParams = @('-lco SPATIAL_INDEX=GIST', '-lco GEOMETRY_NAME=geom'),
@@ -432,7 +438,7 @@ function SIg-Exporter-GeoJSON {
         [parameter(Mandatory=$true)] [string] $requete,
         [parameter(Mandatory=$true)] [string] $geoJSON,
         [string] $sridSource = $sridDefaut,
-        [string] $sridCible = $sridDefaut,
+        [string] $sridCible = '4326',
         [string[]] $autresParams = @('-lco WRITE_NAME=NO'),
         [string] $sortie = $null,
         [bool] $erreur = $true,
@@ -700,7 +706,8 @@ function Parametrer-Job-SIg-Executer-Fichier {
         -utilisateur $utilisateur `
         -fichier $fichier `
         -autresParams $autresParams `
-        -sortie $sortie `        -erreur $erreur
+        -sortie $sortie `
+        -erreur $erreur
 }
 
 # -----------------------------------------------------------------------------
@@ -742,7 +749,8 @@ function Parametrer-Job-SIg-Executer-Commande {
         -utilisateur $utilisateur `
         -commande $commande `
         -autresParams $autresParams `
-        -sortie $sortie `        -erreur $erreur
+        -sortie $sortie `
+        -erreur $erreur
 }
 
 # -----------------------------------------------------------------------------
@@ -827,7 +835,7 @@ function SIg-Paralleliser-Fichier-Transactions {
 #           porte le même nom que celui de la sortie standard avec ajout de
 #           l'extension .err.
 # -----------------------------------------------------------------------------
-function Parametrer-Job-SIg-Importer-CSV {
+function Parametrer-Job-SIG-Importer-CSV {
     param (
         [string] $racineAPI = $PSScriptRoot,
         [parameter(Mandatory=$true)] [string] $csv,
@@ -889,7 +897,7 @@ function Parametrer-Job-SIg-Importer-GeoJSON {
         [string] $utilisateur = $sigUtilisateur,
         [string] $mdp = $sigMDP,
         [parameter(Mandatory=$true)] [string] $table,
-        [string] $sridSource = $sridDefaut,
+        [string] $sridSource = '4326',
         [string] $sridCible = $sridDefaut,
         [bool] $multiGeom = $true,
         [string[]] $autresParams = @('-lco SPATIAL_INDEX=GIST', '-lco GEOMETRY_NAME=geom'),
@@ -1088,7 +1096,7 @@ function Parametrer-Job-SIg-Exporter-GeoJSON {
         [parameter(Mandatory=$true)] [string] $requete,
         [parameter(Mandatory=$true)] [string] $geoJSON,
         [string] $sridSource = $sridDefaut,
-        [string] $sridCible = $sridDefaut,
+        [string] $sridCible = '4326',
         [string[]] $autresParams = @('-lco WRITE_NAME=NO'),
         [string] $sortie = $null,
         [bool] $erreur = $true,
@@ -1158,7 +1166,8 @@ function Parametrer-Job-SIg-Exporter-SHP {
         [System.Diagnostics.ProcessPriorityClass] $priorite = [System.Diagnostics.ProcessPriorityClass]::Normal
     )
 
-    Parametrer-Job-Exporter-SHP-Postgis `        -racineAPI $racineAPI `
+    Parametrer-Job-Exporter-SHP-Postgis `
+        -racineAPI $racineAPI `
         -serveur $serveur `
         -port $port `
         -bdd $bdd `
@@ -1275,7 +1284,8 @@ function Parametrer-Job-SIg-Exporter-DXF {
         [System.Diagnostics.ProcessPriorityClass] $priorite = [System.Diagnostics.ProcessPriorityClass]::Normal
     )
 
-    Parametrer-Job-Exporter-DXF-Postgis `        -racineAPI $racineAPI `
+    Parametrer-Job-Exporter-DXF-Postgis `
+        -racineAPI $racineAPI `
         -serveur $serveur `
         -port $port `
         -bdd $bdd `

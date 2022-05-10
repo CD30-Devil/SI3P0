@@ -38,6 +38,32 @@ function SI3P0-Generer-Page-Portail {
 }
 
 # -----------------------------------------------------------------------------
+# Génération d'une page HTML avec recherche via la BAN.
+# Utilise le modèle présent dans les ressources de l'API.
+#
+# $url : L'url de l'iframe à piloter par la recherche BAN.
+# $sortie : Le chemin de sauvegarde de la page.
+# $activerBoutonAccueil : Pour demander l'affichage du bouton de retour à
+#                         l'accueil du portail.
+# -----------------------------------------------------------------------------
+function SI3P0-Generer-Page-BAN-Portail {
+    param (
+        [parameter(Mandatory=$true)] [string] $url,
+        [parameter(Mandatory=$true)] [string] $sortie,
+        [bool] $activerBoutonAccueil = $true
+    )
+
+    $html = Get-Content "$PSScriptRoot\..\Ressources\modèle_page_ban.html"
+    $html = $html.replace("<!-- insérer url iframe ici -->", $url)
+
+    if ($activerBoutonAccueil) {
+        $html = [RegEx]::Replace($html, '<!-- retirer commentaire pour activer bouton accueil (.*)-->', '<$1>')
+    }
+
+    $html | Out-File $sortie -Force -Encoding utf8
+}
+
+# -----------------------------------------------------------------------------
 # Génération de la page d'accueil du portail.
 #
 # Itère sur les dossiers présents dans Thématiques pour déterminer les tuiles
@@ -303,6 +329,7 @@ insert into m.infos_carte (id, texte_info) values ('$identifiant', '$($texte.Rep
 # $fondDePlan : Le fond de plan à afficher par défaut.
 # $idInfo : L'identifiant du texte d'information à afficher sur le bouton
 #           d'aide.
+# $couchesActives : Les noms des couches à activer par défaut.
 # $nbCouchesActives : Nombre de couches actives par défaut.
 # $activerInfosBulles : Pour activer l'affichage des informations au survol.
 # $replierBoiteControle : Pour replier la boîte de contrôle en haut à droite.
@@ -328,6 +355,7 @@ function SI3P0-Generer-Carte {
         [bool] $daterTitre = $false,
         [string] $fondDePlan = 'cartoDB',
         [string] $idInfo = 'vue_defaut',
+        [string[]] $couchesActives = $null,
         [int] $nbCouchesActives = $null,
         [bool] $activerInfosBulles = $true,
         [bool] $replierBoiteControle = $false,
@@ -341,6 +369,7 @@ function SI3P0-Generer-Carte {
     Afficher-Message-Date "Génération de la carte HTML issue de ($sources) vers $carte."
 
     $tableauSources = "array[$([string]::Join(', ', ($sources | foreach {"'$($_.ToLower())'"})))]"
+    $tableauCouchesActives = "'$([string]::Join(',', ($sources | foreach { if ($couchesActives -ne $null -and $couchesActives.Contains($_)) { 1 } else { 0 }})))'"
 
     if (!$nbCouchesActives) {
         $nbCouchesActives = $sources.Count
@@ -363,11 +392,29 @@ function SI3P0-Generer-Carte {
             $nbCouchesActives)
 "@
 
+$commandelegende = `
+@"
+        select vershtml_legende(
+            $tableauSources,
+            $tableauCouchesActives,
+            '$([System.Web.HttpUtility]::HtmlEncode($titre))',
+            '$fondDePlan',
+            $activerInfosBulles,
+            $daterTitre,
+            $replierBoiteControle,
+            $activerZoomClic,
+            $activerPermaliens,
+            '$idInfo',
+            $actualisationAuto,
+            $activerPegman)
+"@
+
     # passe par un fichier temporaire pour que la carte reste disponible à l'utilisateur le temps de la génération
     New-Item -ItemType Directory -Force -Path "$dossierTravailTemp\SI3P0-Generer-Carte\"
     $carteTemp = "$dossierTravailTemp\SI3P0-Generer-Carte\$(New-Guid).html"
 
     SIg-Executer-Commande -commande $commande -utilisateur $utilisateur -autresParams '--tuples-only', '--no-align' -sortie $carteTemp -erreur $false
+    #SIg-Executer-Commande -commande $commandelegende -utilisateur $utilisateur -autresParams '--tuples-only', '--no-align' -sortie "\\intra.cg30.fr\DGAML\Dossiers\MSI\Production\qualif-si3p0\Site\Cartes\TestVersHTMLLegende\\$([IO.Path]::GetFileName($carte)) " -erreur $false
 
     New-Item -ItemType Directory -Force -Path (Split-Path -Path $carte)
     Move-Item $carteTemp $carte -Force

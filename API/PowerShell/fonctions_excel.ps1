@@ -1,4 +1,5 @@
-﻿. ("$PSScriptRoot\fonctions_outils.ps1")
+﻿. ("$PSScriptRoot\constantes.ps1")
+. ("$PSScriptRoot\fonctions_outils.ps1")
 
 # -----------------------------------------------------------------------------
 # Export d'un CSV.
@@ -23,9 +24,16 @@ function Exporter-CSV-Excel {
 
     Afficher-Message-Date -message "Export de $requete depuis $excel vers $csv."
 
+    $extension = [IO.Path]::GetExtension($excel).ToLower()
+
+    # copie locale du fichier pour éviter les problèmes de verrous et permettre le multi-processing
+    New-Item -ItemType Directory -Force -Path "$dossierTravailTemp\Exporter-CSV-Excel\"
+    $fichierTemp = "$dossierTravailTemp\Exporter-CSV-Excel\$(New-Guid)$extension"
+    Copy-Item $excel $fichierTemp
+
     if ($proprietesEtendues.Equals('')) {
         
-        if ($excel.ToLower().EndsWith('.xls')) {
+        if ($extension -eq '.xls') {
             $proprietesEtendues = 'Excel 8.0; HDR=Yes; IMEX=1; Mode=Read'
         }
         else {
@@ -33,24 +41,32 @@ function Exporter-CSV-Excel {
         }
     }
 
-    $chaineConnexion = "Provider=$fournisseur; Data Source=$excel; Extended Properties=`"$proprietesEtendues`";"
+    $chaineConnexion = "Provider=$fournisseur; Data Source=$fichierTemp; Extended Properties=`"$proprietesEtendues`";"
     
-    $connexion = [Data.OleDb.OleDbConnection]::new($chaineConnexion)
-    $commande = [Data.OleDb.OleDbCommand]::new($requete, $connexion)
-    $adapteur = [Data.OleDb.OleDbDataAdapter]::new($commande)
-    $resultat = [Data.DataTable]::new()
-    
-    $adapteur.Fill($resultat)
-    
-    if (Test-Path $csv) { Remove-Item -LiteralPath $csv }
-    New-Item -ItemType Directory -Force -Path (Split-Path -Path $csv)
-    $resultat | Export-Csv -Path $csv -Encoding UTF8 -Delimiter $delimiteur -NoTypeInformation
-    
-    $resultat.Dispose()
-    $commande.Dispose()
-    $connexion.Close()
-    $connexion.Dispose()
-    [GC]::Collect()
+    try {
+        $connexion = [Data.OleDb.OleDbConnection]::new($chaineConnexion)
+        $commande = [Data.OleDb.OleDbCommand]::new($requete, $connexion)
+        $adapteur = [Data.OleDb.OleDbDataAdapter]::new($commande)
+        $resultat = [Data.DataTable]::new()
+        
+        $adapteur.Fill($resultat)
+        
+        if (Test-Path $csv) { Remove-Item -LiteralPath $csv }
+        New-Item -ItemType Directory -Force -Path (Split-Path -Path $csv)
+        $resultat | Export-Csv -Path $csv -Encoding UTF8 -Delimiter $delimiteur -NoTypeInformation
+        
+        $resultat.Dispose()
+        $commande.Dispose()
+        $connexion.Close()
+        $connexion.Dispose()
+        [GC]::Collect()
+    }
+    catch {
+        Afficher-Message-Date -message "Erreur lors de l'export de $requete depuis $excel vers $csv." -couleur red
+        Afficher-Message-Date -message $_ -couleur red
+    }
+
+    Remove-Item $fichierTemp
 }
 
 # -----------------------------------------------------------------------------
@@ -63,7 +79,12 @@ function Exporter-CSV-Excel {
 #            feuille active.
 # $format : Le format d'enregistrement.
 # -----------------------------------------------------------------------------
-Add-Type -AssemblyName Microsoft.Office.Interop.Excel
+try {
+    Add-Type -AssemblyName Microsoft.Office.Interop.Excel
+}
+catch {
+    Afficher-Message-Date -message "Microsoft.Office.Interop.Excel indisponible, la fonction Enregistrer-Feuille-Excel ne pourra pas être appelée dans cette session." -couleur yellow
+}
 function Enregistrer-Feuille-Excel {
     param (
         [parameter(Mandatory=$true)] [string] $excel,
