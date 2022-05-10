@@ -7,10 +7,27 @@
 
         <link rel="stylesheet" type="text/css" href="/Ressources/Styles/si3p0.css" />
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
-        
+        <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
+		
         <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
 
+		<script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+		<script type="text/javascript" src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
         <script type="text/javascript" src="/Ressources/Scripts/si3p0.js"></script>
+		<script type="text/javascript" src="/Ressources/Scripts/si3p0_ban.js"></script>
+		
+		<script type="text/javascript">
+			
+			function convertirAdresseEnItem(adresse) {
+				return {
+					value: adresse.libelle,
+					label: (adresse.type === "municipality") ? adresse.libelle + " - " + adresse.contexte : adresse.libelle,
+                    type: adresse.type,
+					url: "<!-- insérer url iframe ici -->#" + adresse.y_wgs84 + "," + adresse.x_wgs84
+				}
+			}
+			
+		</script>
 
         <title>si3p0</title>
 
@@ -19,15 +36,13 @@
     <body onload="mettreFondAleatoire(this.document);">
         <div id="haut_de_page">
             <!-- retirer commentaire pour activer bouton accueil a href="/" title="Accueil si3p0"><div class="fa fa-home" style="font-size: 30px; color: #FFFFFF; padding: 10px;"></div></a-->
-            <div id="titre_page"><h1><!-- inserer titre ici --></h1></div>
+            <div id="titre_page"><input id="requete_ban" type="text" placeholder="Rechercher une adresse..." style="width:50%" /></div>
         </div>
-        <div id="contenu">
-            <!-- inserer contenu ici -->
+        <div id="contenu_large">
+			<iframe id="carte_ban" src="<!-- insérer url iframe ici -->" width="99%" height="99%"></iframe>
         </div>
-        <div id="bas_de_page">
+        <div id="bas_de_page_etroit">
             <div id="mention_msi">Portail réalisé par le <a href="https://intranet.intra.cg30.fr/fr/organigramme/organigramme-presidente-fr/organigramme-direction-generale-des-services-fr/organigramme-dgs-direction-fr/organigramme-dga-mobilites-et-logistique-fr/organigramme-dgaml-direction-d-appui-fr/organigramme-dgaml-dapp-pole-systemes-d-information-fr.html" title="DGaML - DAppui - PSI" target="_blank">Pôle des Systèmes d'Information</a> (DGaML - DAppui).</div>
-            <a href="/" title="Accueil si3p0"><img id="c3po" alt="si3p0" src="/Ressources/c3po_gr.png" /></a>
-            <a href="https://www.gard.fr" title="Le Gard" target="_blank"><img id="le_gard" alt="Le Gard" src="/Ressources/legard.jpg" /></a>
         </div>
     </body>
 </html>
