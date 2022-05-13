@@ -20,12 +20,15 @@ SQL.4Qlik/
 # 3V
 !/3V/Données/
 
+# Cartes décoratives
+!/Cartes décoratives/Données/
+
 # Référentiel routier
 /Référentiel routier/PowerShell/générer graflex.ps1
 /Référentiel routier/PowerShell/préparer construction qualif.ps1
 
-# Cartes décoratives
-!/Cartes décoratives/Données/
+# Vaisala
+!/Vaisala/Données/
 
 # Waze
 /Waze/Ressources/Icones
