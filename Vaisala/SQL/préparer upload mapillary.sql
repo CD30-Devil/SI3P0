@@ -17,7 +17,7 @@ select
         Abs::numeric as CumulDist,
         Direction::varchar,
         URLImage::varchar,
-		FabriquerPointWGS84(Longitude::numeric, Latitude::numeric) as Geom
+        FabriquerPointWGS84(Longitude::numeric, Latitude::numeric) as Geom
     from tmp.RapportVideoVaisala
 )
 select
