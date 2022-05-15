@@ -1,7 +1,7 @@
 ﻿. ("$PSScriptRoot\..\..\API\PowerShell\api_complète.ps1")
 
 $dossierDonnees = "$PSScriptRoot\..\Données"
-$dossierRapports = "$PSScriptRoot\..\Rapports\préparer upload mapillary"
+$dossierRapports = "$PSScriptRoot\..\Rapports\préparer téléversement mapillary"
 $dossierSQL = "$PSScriptRoot\..\SQL"
 
 $dossierRapportsVaisala = "$dossierDonnees\Rapports Vaisala"
@@ -33,7 +33,7 @@ foreach ($csv in (Get-ChildItem "$dossierRapportsVaisala\*.csv")) {
 
 # exécution du script de préparation qui crée notamment la table tmp.SequencesVaisala
 SIg-Executer-Fichier `
-    -fichier "$dossierSQL\préparer upload mapillary.sql" `    -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') -  préparer upload mapillary.txt"
+    -fichier "$dossierSQL\préparer téléversement mapillary.sql" `    -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') -  préparer téléversement mapillary.txt"
 
 # export de la liste des séquences d'au moins 10 images en CSV
 SIg-Exporter-CSV -requete 'select "IdSequence" from tmp.SequencesVaisala where "IdImage" = 10' -csv "$dossierRapports\séquences.csv"
