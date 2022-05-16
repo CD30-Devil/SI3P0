@@ -4,12 +4,7 @@ $dossierDonnnes = "$PSScriptRoot\..\Données"
 $dossierRapports = "$PSScriptRoot\..\Rapports\peupler"
 
 if (!(Test-Path "$dossierDonnnes\alertes*.json")) {
-    # s'il n'y a aucun fichier d'alertes, mise en pause d'une minute dans l'attente de la fin d'un téléchargement
-    sleep -Seconds 60
-}
-
-if (!(Test-Path "$dossierDonnnes\alertes*.json")) {
-    # s'il n'y a toujours aucun fichier d'alertes, sortie
+    # s'il n'y a aucun fichier d'alertes, sortie
     exit
 }
 

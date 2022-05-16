@@ -79,6 +79,8 @@ select
     "Fiabilité             ",
     'Alertes anciennes et proches RD' as NomCouche,
     Icone,
+    Legende,
+    false as AfficherLegOuverture,
     Geom
 from tmp.AlerteWaze_4Map
 where not(Recente) and ProcheRD;
@@ -110,7 +112,7 @@ select
     _NumeroRoute     as "RD ",
     PRAEnTexte(_PRA) as "PR+Abs ",
     'Zones accidentogènes' as NomCouche,
-    ST_Envelope(Geom) as Geom
+    ST_ConvexHull(Geom) as Geom
 from ClusterAccidentsGraves, PointVersPRA(ST_Centroid(Geom))
 where ST_NumGeometries(Geom) >= 5;
 
@@ -144,7 +146,7 @@ select
     'https://www.objectifgard.com/' || to_char(DateCreation + interval '1 day', 'YYYY/MM/DD/')      as "Lien ObjectifGard.fr Jour J+1 ",
     '/Ressources/Images/Waze/70x70/couleur/ACCIDENT_MAJOR.png'::varchar as Icone,
     'Accidents graves' as NomCouche,
-    'Accidents graves' as Legende,
+    'Accident grave' as Legende,
     h.Geom
 from m.HistoAlerteWaze h
 inner join PointVersPRA(h.Geom) on true
@@ -168,8 +170,8 @@ select
     end as Icone,
     'Autres accidents' as NomCouche,
     case
-        when IdSousTypeAlerteWaze = 'ACCIDENT_MINOR' then 'Accidents légers'::varchar
-        else 'Accidents (gravitée non définie)'::varchar
+        when IdSousTypeAlerteWaze = 'ACCIDENT_MINOR' then 'Accident léger'::varchar
+        else 'Accident (gravitée non définie)'::varchar
     end as Legende,
     h.Geom
 from m.HistoAlerteWaze h
