@@ -23,6 +23,10 @@ $departements = @(
     '84' # Vaucluse
 )
 
+# nettoyage préalable
+Remove-Item "$dossierDonnees\*-etalab.csv.gz"
+Remove-Item "$dossierDonnees\*-dgfip.csv.gz"
+
 # paramétrage des jobs de téléchargement
 $parametresJobs = [Collections.ArrayList]::new($departements.Count * 2)
 
