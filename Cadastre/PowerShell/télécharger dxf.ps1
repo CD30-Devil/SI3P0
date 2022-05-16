@@ -51,4 +51,4 @@ foreach ($fragmentListeArchiveTarBz2 in $fragmentsListeArchiveTarBz2) {
 }
 
 # exécution des jobs d'extraction des .tar.bz2
-Executer-Jobs -parametresJobs $parametresJobs -afficherSortieJobs $false
+Executer-Jobs -parametresJobs $parametresJobs -nombreJobs 16 -afficherSortieJobs $false

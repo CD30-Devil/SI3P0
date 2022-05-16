@@ -32,6 +32,9 @@ $natures = @(
     'batiments'
 )
 
+# nettoyage préalable
+Remove-Item "$dossierCadastreDataGouv\cadastre-*.json.gz"
+
 # paramétrage des jobs de téléchargement
 $parametresJobs = [Collections.ArrayList]::new($departements.Count * $natures.Count)
 
