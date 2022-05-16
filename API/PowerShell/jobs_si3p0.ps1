@@ -15,7 +15,6 @@
 # .titre : Le titre de la carte.
 # .daterTitre : Pour demander l'ajout de la date de génération dans le titre.
 # .couchesActives : Les noms des couches à activer par défaut.
-# .nbCouchesActives : Nombre de couches actives par défaut.
 # .fondDePlan : Le fond de plan à afficher par défaut.
 # .idInfo : L'identifiant du texte d'information à afficher sur le bouton
 #           d'aide.
@@ -43,7 +42,6 @@ $Job_SI3P0_Generer_Carte = {
         -fondDePlan $parametres.fondDePlan `
         -idInfo $parametres.idInfo `
         -couchesActives $parametres.couchesActives `
-        -nbCouchesActives $parametres.nbCouchesActives `
         -activerInfosBulles $parametres.activerInfosBulles `
         -replierBoiteControle $parametres.replierBoiteControle `
         -activerZoomClic $parametres.activerZoomClic `
@@ -68,7 +66,6 @@ $Job_SI3P0_Generer_Carte = {
 # $idInfo : L'identifiant du texte d'information à afficher sur le bouton
 #           d'aide.
 # $couchesActives : Les noms des couches à activer par défaut.
-# $nbCouchesActives : Nombre de couches actives par défaut.
 # $activerInfosBulles : Pour activer l'affichage des informations au survol.
 # $replierBoiteControle : Pour replier la boîte de contrôle en haut à droite.
 # $activerZoomClic : Pour activer le zoom auto lors du clic sur un élément
@@ -95,7 +92,6 @@ function Parametrer-Job-SI3P0-Generer-Carte {
         [string] $fondDePlan = 'cartoDB',
         [string] $idInfo = 'vue_defaut',
         [string[]] $couchesActives = $null,
-        [int] $nbCouchesActives = $null,
         [bool] $activerInfosBulles = $true,
         [bool] $replierBoiteControle = $false,
         [bool] $activerZoomClic = $true,
@@ -116,7 +112,6 @@ function Parametrer-Job-SI3P0-Generer-Carte {
         fondDePlan = $fondDePlan
         idInfo = $idInfo
         couchesActives = $couchesActives
-        nbCouchesActives = $nbCouchesActives
         activerInfosBulles = $activerInfosBulles
         replierBoiteControle = $replierBoiteControle
         activerZoomClic = $activerZoomClic

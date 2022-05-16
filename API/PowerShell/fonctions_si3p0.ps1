@@ -330,7 +330,6 @@ insert into m.infos_carte (id, texte_info) values ('$identifiant', '$($texte.Rep
 # $idInfo : L'identifiant du texte d'information à afficher sur le bouton
 #           d'aide.
 # $couchesActives : Les noms des couches à activer par défaut.
-# $nbCouchesActives : Nombre de couches actives par défaut.
 # $activerInfosBulles : Pour activer l'affichage des informations au survol.
 # $replierBoiteControle : Pour replier la boîte de contrôle en haut à droite.
 # $activerZoomClic : Pour activer le zoom auto lors du clic sur un élément
@@ -356,7 +355,6 @@ function SI3P0-Generer-Carte {
         [string] $fondDePlan = 'cartoDB',
         [string] $idInfo = 'vue_defaut',
         [string[]] $couchesActives = $null,
-        [int] $nbCouchesActives = $null,
         [bool] $activerInfosBulles = $true,
         [bool] $replierBoiteControle = $false,
         [bool] $activerZoomClic = $true,
@@ -371,30 +369,9 @@ function SI3P0-Generer-Carte {
     $tableauSources = "array[$([string]::Join(', ', ($sources | foreach {"'$($_.ToLower())'"})))]"
     $tableauCouchesActives = "'$([string]::Join(',', ($sources | foreach { if ($couchesActives -ne $null -and $couchesActives.Contains($_)) { 1 } else { 0 }})))'"
 
-    if (!$nbCouchesActives) {
-        $nbCouchesActives = $sources.Count
-    }
-
     $commande = `
 @"
         select vershtml_n(
-            $tableauSources,
-            '$([System.Web.HttpUtility]::HtmlEncode($titre))',
-            '$fondDePlan',
-            $activerInfosBulles,
-            $daterTitre,
-            $replierBoiteControle,
-            $activerZoomClic,
-            $activerPermaliens,
-            '$idInfo',
-            $actualisationAuto,
-            $activerPegman,
-            $nbCouchesActives)
-"@
-
-$commandelegende = `
-@"
-        select vershtml_legende(
             $tableauSources,
             $tableauCouchesActives,
             '$([System.Web.HttpUtility]::HtmlEncode($titre))',
@@ -414,8 +391,7 @@ $commandelegende = `
     $carteTemp = "$dossierTravailTemp\SI3P0-Generer-Carte\$(New-Guid).html"
 
     SIg-Executer-Commande -commande $commande -utilisateur $utilisateur -autresParams '--tuples-only', '--no-align' -sortie $carteTemp -erreur $false
-    #SIg-Executer-Commande -commande $commandelegende -utilisateur $utilisateur -autresParams '--tuples-only', '--no-align' -sortie "\\intra.cg30.fr\DGAML\Dossiers\MSI\Production\qualif-si3p0\Site\Cartes\TestVersHTMLLegende\\$([IO.Path]::GetFileName($carte)) " -erreur $false
-
+    
     New-Item -ItemType Directory -Force -Path (Split-Path -Path $carte)
     Move-Item $carteTemp $carte -Force
 }
