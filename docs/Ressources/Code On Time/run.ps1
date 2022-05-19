@@ -143,8 +143,7 @@ while ($score -le 1700) {
         where coalesce(array_length(fichiersnonrecuperes, 1), 0) > 1 -- il faut que l'itération permette a minima la récupération d'un fichier
         order by
             score desc,
-            --least(coalesce(array_length(fichiersnonrecuperes, 1), 0), 10) desc -- à score équivalent on privilégie le plus grand nombre de fichiers capé à 10
-            random() -- on peut rajouter une part de suspens/d'aléatoire
+            random()
         limit 5 -- limit à 5 pour voir ce que cela donne dans le fichier de sortie, possibilité de limiter à 1
 "@
 
