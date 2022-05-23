@@ -1,4 +1,5 @@
 ﻿. ("$PSScriptRoot\constantes.ps1")
+. ("$PSScriptRoot\fonctions_outils.ps1")
 
 # -----------------------------------------------------------------------------
 # Exécution du navigateur Chromium.
@@ -12,9 +13,9 @@ Function Executer-Chromium {
         [int] $delaiMaxProcess = $null
     )
 
-    Afficher-Message-Date -message "`"$Chromium`" $parametres" -couleur gray
+    Afficher-Message-Date -message "`"$chromium`" $parametres" -couleur gray
 
-    $process = Start-Process -FilePath "`"$Chromium`"" -ArgumentList $parametres -PassThru
+    $process = Start-Process -FilePath "`"$chromium`"" -WindowStyle Hidden -ArgumentList $parametres -PassThru
     
     $delaiMaxAtteint = $null
 
