@@ -14,6 +14,19 @@ create or replace function FabriquerPointL93(_X double precision, _Y double prec
 $$ language sql;
 
 -- ----------------------------------------------------------------------------
+-- Création d'un point en coordonnées Lambert93.
+-- Paramètres :
+--   - _X : La valeur X du point.
+--   - _Y : La valeur Y du point.
+--   - _Z : La valeur Z du point.
+-- Résultats :
+--   - Le point.
+-- ----------------------------------------------------------------------------
+create or replace function FabriquerPointL93(_X double precision, _Y double precision, _Z double precision) returns geometry as $$
+    select ST_SetSRID(ST_MakePoint(_X, _Y, _Z), 2154);
+$$ language sql;
+
+-- ----------------------------------------------------------------------------
 -- Création d'un point en coordonnées WGS84.
 -- Paramètres :
 --   - _X : La valeur X (longitude) du point.
@@ -26,6 +39,19 @@ create or replace function FabriquerPointWGS84(_X double precision, _Y double pr
 $$ language sql;
 
 -- ----------------------------------------------------------------------------
+-- Création d'un point en coordonnées WGS84.
+-- Paramètres :
+--   - _X : La valeur X (longitude) du point.
+--   - _Y : La valeur Y (latitude) du point.
+--   - _Z : La valeur Z du point.
+-- Résultats :
+--   - Le point.
+-- ----------------------------------------------------------------------------
+create or replace function FabriquerPointWGS84(_X double precision, _Y double precision, _Z double precision) returns geometry as $$
+    select ST_SetSRID(ST_MakePoint(_X, _Y, _Z), 4326);
+$$ language sql;
+
+-- ----------------------------------------------------------------------------
 -- Création d'un point en coordonnées RFG93-CC44.
 -- Paramètres :
 --   - _X : La valeur X du point.
@@ -35,6 +61,19 @@ $$ language sql;
 -- ----------------------------------------------------------------------------
 create or replace function FabriquerPointCC44(_X double precision, _Y double precision) returns geometry as $$
     select ST_SetSRID(ST_MakePoint(_X, _Y), 3944);
+$$ language sql;
+
+-- ----------------------------------------------------------------------------
+-- Création d'un point en coordonnées RFG93-CC44.
+-- Paramètres :
+--   - _X : La valeur X du point.
+--   - _Y : La valeur Y du point.
+--   - _Z : La valeur Z du point.
+-- Résultats :
+--   - Le point.
+-- ----------------------------------------------------------------------------
+create or replace function FabriquerPointCC44(_X double precision, _Y double precision, _Z double precision) returns geometry as $$
+    select ST_SetSRID(ST_MakePoint(_X, _Y, _Z), 3944);
 $$ language sql;
 
 -- ----------------------------------------------------------------------------
