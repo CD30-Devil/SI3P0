@@ -86,7 +86,7 @@ select
     LatLong[7] as "LongitudeSec",
     LatLong[8] as "LongitudeCard",
     case
-        when IdImage = 1 then degrees(ST_Azimuth(Geom, lead(Geom, 1) over(partition by IdSequence order by IdImage)))
+        when IdImage = 0 then degrees(ST_Azimuth(Geom, lead(Geom, 1) over(partition by IdSequence order by IdImage)))
         else degrees(ST_Azimuth(lag(Geom, 1) over(partition by IdSequence order by IdImage), Geom))
     end as "Angle"
 from SequencesVaisala;
