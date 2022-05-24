@@ -82,7 +82,7 @@ foreach ($idSequence in $idSequences) {
                 $metaDonnees = [Windows.Media.Imaging.BitmapMetadata]::new('jpg')
 
                 # heure de prise de vue
-                $metaDonnees.DateTaken = $image.DateHeure
+                $metaDonnees.DateTaken = $image.DateHeureFictive
 
                 # latitude
                 $metaDonnees.SetQuery('/app1/ifd/gps/subifd:{char=1}', [char]$image.LatitudeCard)

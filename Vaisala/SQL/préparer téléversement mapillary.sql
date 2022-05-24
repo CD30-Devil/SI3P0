@@ -38,7 +38,7 @@ with recursive SequencesVaisala as (
     (
         -- recherche de la première image de chaque séquence
         -- la première image n'a pas d'autre image qui la précède sur la même RD, dans la même direction dans les 5 minutes qui précèdent
-        select row_number() over() as IdSequence, 1 as IdImage, DateHeure as DebutSequence, rvvo1.*
+        select row_number() over() as IdSequence, 0 as IdImage, DateHeure as DebutSequence, rvvo1.*
         from tmp.RapportVideoVaisalaOrdonne rvvo1
         where not exists (
             select true
@@ -75,6 +75,7 @@ select
     NumeroRoute as "NumeroRoute",
     Direction as "Direction",
     to_char(DateHeure at time zone 'utc', 'YYYY/MM/DD HH24:MI:SS') as "DateHeure",
+    to_char(DebutSequence at time zone 'utc' + IdImage * '1 second'::interval, 'YYYY/MM/DD HH24:MI:SS') as "DateHeureFictive",
     URLImage as "URLImage",
     LatLong[1] as "LatitudeDeg",
     LatLong[2] as "LatitudeMin",
