@@ -6,6 +6,7 @@
 . ("$PSScriptRoot\fonctions_web.ps1")
 . ("$PSScriptRoot\fonctions_chromium.ps1")
 . ("$PSScriptRoot\fonctions_twitter.ps1")
+. ("$PSScriptRoot\fonctions_mapillary.ps1")
 . ("$PSScriptRoot\fonctions_géodonnées.ps1")
 
 . ("$PSScriptRoot\fonctions_oledb.ps1")

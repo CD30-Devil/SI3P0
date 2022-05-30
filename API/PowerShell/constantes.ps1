@@ -34,6 +34,9 @@ $ogr2ogr = "$racineOSGeo4W\bin\ogr2ogr.exe"
 # chemin vers 7-Zip
 $7z = "$env:ProgramFiles\7-Zip\7z.exe"
 
+# chemin vers Mapillary Tools
+$mapillaryTools = '"$PSScriptRoot\..\Outils\mapillary_tools-0.8.2-win.exe'
+
 # chemin vers un navigateur basé sur Chromium (Google Chrome, Microsoft Edge, ...)
 #$chromium = "${env:ProgramFiles(x86)}\Google\Chrome\Application\chrome.exe"
 $chromium = "${env:ProgramFiles(x86)}\Microsoft\Edge\Application\msedge.exe"
