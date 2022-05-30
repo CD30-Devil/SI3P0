@@ -17,6 +17,9 @@ Rapports/
 SQL.4Test/
 SQL.4Qlik/
 
+# API
+/API/Outils/*.exe
+
 # 3V
 !/3V/Données/
 
