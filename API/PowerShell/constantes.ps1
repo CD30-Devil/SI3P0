@@ -5,8 +5,9 @@
 $email_generique = '<contact@ma-collectivité.fr>'
 $email_contact = '<moi@ma-collectivité.fr>'
 
+$racineQGis = Get-ChildItem "${env:ProgramFiles}\QGIS*" | select -Last 1 -ExpandProperty FullName
+$racineOSGeo4W = $racineQGis
 $racinePostgreSQL = '<C:\PostgreSQL\10>'
-$racineOSGeo4W = '<C:\OSGeo4W64>'
 $racineOracle = '<c:\Ora11g>'
 
 # variables d'environnement
@@ -16,6 +17,9 @@ $Env:GDAL_DATA = "$racineOSGeo4W\share\gdal\"
 # chemin vers un répertoire de travail temporaire
 # pour le bon fonctionnement de certaines fonctions, il ne doit pas y avoir d'accent dans le chemin
 $dossierTravailTemp = "$env:TEMP\si3p0"
+
+# chemins vers les outils QGis
+$qgisProcess = "$racineQGis\bin\qgis_process-qgis-ltr.bat"
 
 # chemins vers les outils PostgreSQL
 $psql = "$racinePostgreSQL\bin\psql.exe"
