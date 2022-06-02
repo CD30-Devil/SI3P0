@@ -51,7 +51,7 @@ Function Executer-QGisProcess {
 #           porte le même nom que celui de la sortie standard avec ajout de
 #           l'extension .err.
 # -----------------------------------------------------------------------------
-function QGisProcess-ImprimerPDF {
+function QGisProcess-Imprimer-MiseEnPage {
     param(
         [parameter(Mandatory=$true)] [string] $projet,
         [parameter(Mandatory=$true)] [string] $miseEnPage,
