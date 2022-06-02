@@ -145,6 +145,76 @@ function Importer-SHP-Postgis {
 }
 
 # -----------------------------------------------------------------------------
+# Import d'un MIF/MID (par appel à Ogr2Ogr).
+#
+# $midmid : Le MIF/MID à importer.
+# $serveur : Le serveur de base de données.
+# $port : Le port du serveur de base de données.
+# $bdd : Le nom de la base de données.
+# $utilisateur : L'utilisateur pour la connexion à la base de données.
+# $mdp : Le mot de passe pour la connexion à la base de données, $null pour
+#        lire le mot de passe depuis le pgpass.conf.
+# $table : La table destination.
+# $sridSource : Le SRID source.
+# $sridCible : Le SRID cible.
+# $multiGeom : Pour demander la création d'une géométrie multi*.
+# $autresParams : Les paramètres d'appel supplémentaires à Ogr2Ogr.
+# $sortie : Chemin de redirection de la sortie standard, $null pour ne pas
+#           activer la redirection.
+# $erreur : Pour demander, lorsque la redirection de la sortie standard est
+#           activée, la redirection de la sortie erreur. Le fichier de sortie
+#           porte le même nom que celui de la sortie standard avec ajout de
+#           l'extension .err.
+# $priorite : La priorité donnée au processus.
+# -----------------------------------------------------------------------------
+function Importer-MIFMID-Postgis {
+    param (
+        [parameter(Mandatory=$true)] [string] $mifmid,
+        [parameter(Mandatory=$true)] [string] $serveur,
+        [string] $port = '5432',
+        [parameter(Mandatory=$true)] [string] $bdd,
+        [parameter(Mandatory=$true)] [string] $utilisateur,
+        [string] $mdp = $null,
+        [parameter(Mandatory=$true)] [string] $table,
+        [string] $sridSource = $sridDefaut,
+        [string] $sridCible = $sridDefaut,
+        [bool] $multiGeom = $true,
+        [string[]] $autresParams = @('-lco SPATIAL_INDEX=GIST', '-lco GEOMETRY_NAME=geom'),
+        [string] $sortie = $null,
+        [bool] $erreur = $true,
+        [System.Diagnostics.ProcessPriorityClass] $priorite = [System.Diagnostics.ProcessPriorityClass]::Normal
+    )
+
+    Afficher-Message-Date -message "Import de $mifmid vers $serveur\$bdd."
+
+    if (!$mdp) {
+        $mdp = Rechercher-MDP-PGPass -serveur $serveur -port $port -bdd $bdd -utilisateur $utilisateur
+    }
+    
+    $parametres = [Collections.ArrayList]::new()
+    [void]$parametres.Add("-nln $table")
+    [void]$parametres.Add("-s_srs EPSG:$sridSource")
+    [void]$parametres.Add("-t_srs EPSG:$sridCible")
+    
+    if ($multiGeom) {
+        [void]$parametres.Add('-nlt PROMOTE_TO_MULTI')
+    }
+
+    if ($autresParams) {
+        [void]$parametres.AddRange($autresParams)
+    }
+
+    Executer-Ogr2Ogr `
+        -source $mifmid `
+        -formatDestination 'PostgreSQL' `
+        -destination "PG:host=$serveur port=$port dbname=$bdd user=$utilisateur password=$mdp" `
+        -autresParams $parametres `
+        -sortie $sortie `
+        -erreur $erreur `
+        -priorite $priorite
+}
+
+# -----------------------------------------------------------------------------
 # Export d'un GeoJSON (par appel à Ogr2Ogr).
 #
 # $serveur : Le serveur de base de données.

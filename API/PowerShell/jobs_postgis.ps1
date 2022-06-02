@@ -223,6 +223,118 @@ function Parametrer-Job-Importer-SHP-Postgis {
 }
 
 # -----------------------------------------------------------------------------
+# Job d'import d'un MIF/MID (par appel à Ogr2Ogr).
+#
+# Format attendu de $parametres :
+# .racineAPI : Le chemin vers le dossier racine de l'API PowerShell.
+# .midmid : Le MIF/MID à importer.
+# .serveur : Le serveur de base de données.
+# .port : Le port du serveur de base de données.
+# .bdd : Le nom de la base de données.
+# .utilisateur : L'utilisateur pour la connexion à la base de données.
+# .mdp : Le mot de passe pour la connexion à la base de données, $null pour
+#        lire le mot de passe depuis le pgpass.conf.
+# .table : La table destination.
+# .sridSource : Le SRID source.
+# .sridCible : Le SRID cible.
+# .multiGeom : Pour demander la création d'une géométrie multi*.
+# .autresParams : Les paramètres d'appel supplémentaires à Ogr2Ogr.
+# .sortie : Chemin de redirection de la sortie standard, $null pour ne pas
+#           activer la redirection.
+# .erreur : Pour demander, lorsque la redirection de la sortie standard est
+#           activée, la redirection de la sortie erreur. Le fichier de sortie
+#           porte le même nom que celui de la sortie standard avec ajout de
+#           l'extension .err.
+# .priorite : La priorité donnée au processus.
+# -----------------------------------------------------------------------------
+$Job_Importer_MIFMID_Postgis = {
+    param (
+        [object] $parametres
+    )
+
+    . ("$($parametres.racineAPI)\fonctions_postgis.ps1")
+
+    Importer-MIFMID-Postgis `
+        -mifmid $parametres.mifmid `
+        -serveur $parametres.serveur `
+        -port $parametres.port `
+        -bdd $parametres.bdd `
+        -utilisateur $parametres.utilisateur `
+        -mdp $parametres.mdp `
+        -table $parametres.table `
+        -sridSource $parametres.sridSource `
+        -sridCible $parametres.sridCible `
+        -multiGeom $parametres.multiGeom `
+        -autresParams $parametres.autresParams `
+        -sortie $parametres.sortie `
+        -erreur $parametres.erreur `
+        -priorite $parametres.priorite
+}
+
+# -----------------------------------------------------------------------------
+# Paramétrage d'un job d'import d'un MIF/MID (par appel à Ogr2Ogr).
+#
+# $racineAPI : Le chemin vers le dossier racine de l'API PowerShell.
+# $midmid : Le MIF/MID à importer.
+# $serveur : Le serveur de base de données.
+# $port : Le port du serveur de base de données.
+# $bdd : Le nom de la base de données.
+# $utilisateur : L'utilisateur pour la connexion à la base de données.
+# $mdp : Le mot de passe pour la connexion à la base de données, $null pour
+#        lire le mot de passe depuis le pgpass.conf.
+# $table : La table destination.
+# $sridSource : Le SRID source.
+# $sridCible : Le SRID cible.
+# $multiGeom : Pour demander la création d'une géométrie multi*.
+# $autresParams : Les paramètres d'appel supplémentaires à Ogr2Ogr.
+# $sortie : Chemin de redirection de la sortie standard, $null pour ne pas
+#           activer la redirection.
+# $erreur : Pour demander, lorsque la redirection de la sortie standard est
+#           activée, la redirection de la sortie erreur. Le fichier de sortie
+#           porte le même nom que celui de la sortie standard avec ajout de
+#           l'extension .err.
+# $priorite : La priorité donnée au processus.
+# -----------------------------------------------------------------------------
+function Parametrer-Job-Importer-MIFMID-Postgis {
+    param (
+        [string] $racineAPI = $PSScriptRoot,
+        [parameter(Mandatory=$true)] [string] $mifmid,
+        [parameter(Mandatory=$true)] [string] $serveur,
+        [string] $port = '5432',
+        [parameter(Mandatory=$true)] [string] $bdd,
+        [parameter(Mandatory=$true)] [string] $utilisateur,
+        [string] $mdp = $null,
+        [parameter(Mandatory=$true)] [string] $table,
+        [string] $sridSource = '4326',
+        [string] $sridCible = $sridDefaut,
+        [bool] $multiGeom = $true,
+        [string[]] $autresParams = @('-lco SPATIAL_INDEX=GIST', '-lco GEOMETRY_NAME=geom'),
+        [string] $sortie = $null,
+        [bool] $erreur = $true,
+        [System.Diagnostics.ProcessPriorityClass] $priorite = [System.Diagnostics.ProcessPriorityClass]::Normal
+    )
+
+    @{
+        script = $Job_Importer_MIFMID_Postgis
+        racineAPI = $racineAPI
+        mifmid = $mifmid
+        serveur = $serveur
+        port = $port
+        bdd = $bdd
+        utilisateur = $utilisateur
+        mdp = $mdp
+        table = $table
+        sridSource = $sridSource
+        sridCible = $sridCible
+        multiGeom = $multiGeom
+        autresParams = $autresParams
+        sortie = $sortie
+        erreur = $erreur
+        priorite = $priorite
+    }
+}
+
+# -----------------------------------------------------------------------------
 # Job d'export d'un GeoJSON (par appel à Ogr2Ogr).
 #
 # Format attendu de $parametres :

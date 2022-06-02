@@ -371,6 +371,65 @@ function SIg-Importer-SHP {
 }
 
 # -----------------------------------------------------------------------------
+# Import d'un MIF/MIF (par appel à Ogr2Ogr).
+# Les valeurs pré-établies des paramètres font que le SIg par défaut est ciblé.
+#
+# $midmid : Le MIF/MID à importer.
+# $serveur : Le serveur de base de données.
+# $port : Le port du serveur de base de données.
+# $bdd : Le nom de la base de données.
+# $utilisateur : L'utilisateur pour la connexion à la base de données.
+# $mdp : Le mot de passe pour la connexion à la base de données, $null pour
+#        lire le mot de passe depuis le pgpass.conf
+# $table : La table destination.
+# $sridSource : Le SRID source.
+# $sridCible : Le SRID cible.
+# $multiGeom : Pour demander la création d'une géométrie multi*.
+# $autresParams : Les paramètres d'appel supplémentaires à Ogr2Ogr.
+# $sortie : Chemin de redirection de la sortie standard, $null pour ne pas
+#           activer la redirection.
+# $erreur : Pour demander, lorsque la redirection de la sortie standard est
+#           activée, la redirection de la sortie erreur. Le fichier de sortie
+#           porte le même nom que celui de la sortie standard avec ajout de
+#           l'extension .err.
+# $priorite : La priorité donnée au processus.
+# -----------------------------------------------------------------------------
+function SIg-Importer-MIFMID {
+    param (
+        [parameter(Mandatory=$true)] [string] $mifmid,
+        [string] $serveur = $sigServeur,
+        [string] $port = $sigPort,
+        [string] $bdd = $sigBDD,
+        [string] $utilisateur = $sigUtilisateur,
+        [string] $mdp = $sigMDP,
+        [parameter(Mandatory=$true)] [string] $table,
+        [string] $sridSource = $sridDefaut,
+        [string] $sridCible = $sridDefaut,
+        [bool] $multiGeom = $true,
+        [string[]] $autresParams = @('-lco SPATIAL_INDEX=GIST', '-lco GEOMETRY_NAME=geom'),
+        [string] $sortie = $null,
+        [bool] $erreur = $true,
+        [System.Diagnostics.ProcessPriorityClass] $priorite = [System.Diagnostics.ProcessPriorityClass]::Normal
+    )
+
+    Importer-MIFMID-Postgis `
+        -mifmid $mifmid `
+        -serveur $serveur `
+        -port $port `
+        -bdd $bdd `
+        -utilisateur $utilisateur `
+        -mdp $mdp `
+        -table $table `
+        -sridSource $sridSource `
+        -sridCible $sridCible `
+        -multiGeom $multiGeom `
+        -autresParams $autresParams `
+        -sortie $sortie `
+        -erreur $erreur `
+        -priorite $priorite
+}
+
+# -----------------------------------------------------------------------------
 # Export d'un CSV.
 # Les valeurs pré-établies des paramètres font que le SIg par défaut est
 # utilisé comme source.
@@ -971,6 +1030,68 @@ function Parametrer-Job-SIg-Importer-SHP {
     Parametrer-Job-Importer-SHP-Postgis `
         -racineAPI $racineAPI `
         -shp $shp `
+        -serveur $serveur `
+        -port $port `
+        -bdd $bdd `
+        -utilisateur $utilisateur `
+        -mdp $mdp `
+        -table $table `
+        -sridSource $sridSource `
+        -sridCible $sridCible `
+        -multiGeom $multiGeom `
+        -autresParams $autresParams `
+        -sortie $sortie `
+        -erreur $erreur `
+        -priorite $priorite `
+}
+
+# -----------------------------------------------------------------------------
+# Paramétrage d'un job d'import d'un MIF/MID (par appel à Ogr2Ogr).
+# Les valeurs pré-établies des paramètres font que le SIg par défaut est ciblé.
+#
+# $racineAPI : Le chemin vers le dossier racine de l'API PowerShell.
+# $mifmid : Le MIF/MID à importer.
+# $serveur : Le serveur de base de données.
+# $port : Le port du serveur de base de données.
+# $bdd : Le nom de la base de données.
+# $utilisateur : L'utilisateur pour la connexion à la base de données.
+# $mdp : Le mot de passe pour la connexion à la base de données, $null pour
+#        lire le mot de passe depuis le pgpass.conf.
+# $table : La table destination.
+# $sridSource : Le SRID source.
+# $sridCible : Le SRID cible.
+# $multiGeom : Pour demander la création d'une géométrie multi*.
+# $autresParams : Les paramètres d'appel supplémentaires à Ogr2Ogr.
+# $sortie : Chemin de redirection de la sortie standard, $null pour ne pas
+#           activer la redirection.
+# $erreur : Pour demander, lorsque la redirection de la sortie standard est
+#           activée, la redirection de la sortie erreur. Le fichier de sortie
+#           porte le même nom que celui de la sortie standard avec ajout de
+#           l'extension .err.
+# $priorite : La priorité donnée au processus.
+# -----------------------------------------------------------------------------
+function Parametrer-Job-SIg-Importer-MIFMID {
+    param (
+        [string] $racineAPI = $PSScriptRoot,
+        [parameter(Mandatory=$true)] [string] $mifmid,
+        [string] $serveur = $sigServeur,
+        [string] $port = $sigPort,
+        [string] $bdd = $sigBDD,
+        [string] $utilisateur = $sigUtilisateur,
+        [string] $mdp = $sigMDP,
+        [parameter(Mandatory=$true)] [string] $table,
+        [string] $sridSource = $sridDefaut,
+        [string] $sridCible = $sridDefaut,
+        [bool] $multiGeom = $true,
+        [string[]] $autresParams = @('-lco SPATIAL_INDEX=GIST', '-lco GEOMETRY_NAME=geom'),
+        [string] $sortie = $null,
+        [bool] $erreur = $true,
+        [System.Diagnostics.ProcessPriorityClass] $priorite = [System.Diagnostics.ProcessPriorityClass]::Normal
+    )
+
+    Parametrer-Job-Importer-MIFMID-Postgis `
+        -racineAPI $racineAPI `
+        -mifmid $mifmid `
         -serveur $serveur `
         -port $port `
         -bdd $bdd `
