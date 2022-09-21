@@ -1,7 +1,7 @@
 ﻿. ("$PSScriptRoot\..\..\API\PowerShell\api_complète.ps1")
 . ("$PSScriptRoot\..\..\API\PowerShell\constantes_privées.ps1")
 
-$dossierDonnnes = "$PSScriptRoot\..\Données"
+$dossierDonnees = "$PSScriptRoot\..\Données"
 
 # liste des stations à moissonner
 $stationsInfoClimat = @(
@@ -26,7 +26,7 @@ $stationsInfoClimat = @(
 )
 
 # nettoyage préalable
-Remove-Item "$dossierDonnnes\www.infoclimat.fr.csv"
+Remove-Item "$dossierDonnees\www.infoclimat.fr.csv"
 
 # appel de l'API www.infoclimat.fr
 $parametres = [string]::Join('&', ($stationsInfoClimat | foreach -process { "stations[]=$_" }))
@@ -58,4 +58,4 @@ foreach ($station in $donneesInfoClimat.stations) {
     }
 }
 
-$releves | Export-Csv -Path "$dossierDonnnes\www.infoclimat.fr.csv" -NoTypeInformation -Delimiter ';' -Encoding UTF8
+$releves | Export-Csv -Path "$dossierDonnees\www.infoclimat.fr.csv" -NoTypeInformation -Delimiter ';' -Encoding UTF8
