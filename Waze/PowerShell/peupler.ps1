@@ -1,9 +1,9 @@
 ﻿. ("$PSScriptRoot\..\..\API\PowerShell\api_complète.ps1")
 
-$dossierDonnnes = "$PSScriptRoot\..\Données"
+$dossierDonnees = "$PSScriptRoot\..\Données"
 $dossierRapports = "$PSScriptRoot\..\Rapports\peupler"
 
-if (!(Test-Path "$dossierDonnnes\alertes*.json")) {
+if (!(Test-Path "$dossierDonnees\alertes*.json")) {
     # s'il n'y a aucun fichier d'alertes, sortie
     exit
 }
@@ -42,9 +42,9 @@ $ecriture.WriteLine("")
 
 # itération sur les fichiers JSON Waze d'alertes
 # utilisation d'un while plutôt que foreach pour prendre en compte les téléchargements qui pourraient se terminer durant la boucle de traitement
-while (Test-Path "$dossierDonnnes\alertes*.json") {
+while (Test-Path "$dossierDonnees\alertes*.json") {
     
-    $FichierAlertes = Get-ChildItem "$dossierDonnnes\alertes*.json" | Sort-Object -Property BaseName | select -First 1
+    $FichierAlertes = Get-ChildItem "$dossierDonnees\alertes*.json" | Sort-Object -Property BaseName | select -First 1
 
     Afficher-Message-Date -message "Traitement du fichier $FichierAlertes."
     
@@ -92,11 +92,11 @@ $ecriture.WriteLine("")
 
 # traitement des ralentissements (embouteillages et irrégularités)
 
-if (Test-Path "$dossierDonnnes\embouteillages.json") {
+if (Test-Path "$dossierDonnees\embouteillages.json") {
 
-    Afficher-Message-Date -message "Traitement du fichier $dossierDonnnes\embouteillages.json."
+    Afficher-Message-Date -message "Traitement du fichier $dossierDonnees\embouteillages.json."
 
-    $json = ConvertFrom-Json (Get-Content "$dossierDonnnes\embouteillages.json")
+    $json = ConvertFrom-Json (Get-Content "$dossierDonnees\embouteillages.json")
 
     $embouteillages = $json.jams | where line -ne $null | foreach {
         [pscustomobject] @{
@@ -113,11 +113,11 @@ if (Test-Path "$dossierDonnnes\embouteillages.json") {
     }
 }
 
-if (Test-Path "$dossierDonnnes\irrégularités.json") {
+if (Test-Path "$dossierDonnees\irrégularités.json") {
 
-    Afficher-Message-Date -message "Traitement du fichier $dossierDonnnes\irrégularités.json."
+    Afficher-Message-Date -message "Traitement du fichier $dossierDonnees\irrégularités.json."
 
-    $json = ConvertFrom-Json (Get-Content "$dossierDonnnes\irrégularités.json")
+    $json = ConvertFrom-Json (Get-Content "$dossierDonnees\irrégularités.json")
 
     $irregularites = $json.irregularities | where line -ne $null | foreach {
         [pscustomobject] @{

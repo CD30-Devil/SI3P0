@@ -1,10 +1,10 @@
 ﻿. ("$PSScriptRoot\..\..\API\PowerShell\api_complète.ps1")
 
-$dossierDonnnes = "$PSScriptRoot\..\Données"
+$dossierDonnees = "$PSScriptRoot\..\Données"
 
-$fichierEmbouteillages = "$dossierDonnnes\embouteillages.json"
-$fichierIrregularites = "$dossierDonnnes\irrégularités.json"
-$fichierAlertes = "$dossierDonnnes\alertes $(Get-Date -Format 'yyyy-MM-dd HH-mm-ss').json" # seules les alertes sont historisées
+$fichierEmbouteillages = "$dossierDonnees\embouteillages.json"
+$fichierIrregularites = "$dossierDonnees\irrégularités.json"
+$fichierAlertes = "$dossierDonnees\alertes $(Get-Date -Format 'yyyy-MM-dd HH-mm-ss').json" # seules les alertes sont historisées
 
 Telecharger `
     -url "https://world-georss.waze.com/rtserver/web/TGeoRSS?tk=ccp_partner&ccp_partner_name=$wazeCCP&format=JSON&types=irregularities&polygon=3.135889,43.359627;3.135889,44.553825;4.989098,44.553825;4.989098,43.359627;3.135889,43.359627" `
