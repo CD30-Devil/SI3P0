@@ -1,6 +1,4 @@
-﻿-- TODO requête à revoir lorsque la base SIRENE sera dans le schéma m
-
-create view tmp.VVV_SegmentEtatAvancement_4Map as
+﻿create view tmp.VVV_SegmentEtatAvancement_4Map as
 select
     case sc.CodeEtatAvancement3V
         when 4 then 'Ouvert'
@@ -43,9 +41,9 @@ left join m.TypePortionCyclable tpc on tpc.CodeTypePortionCyclable = pc.CodeType
 left join m.PortionCyclable_ItineraireCyclable pi on pi.IdPortionCyclable = pc.IdPortionCyclable
 left join m.ItineraireCyclable ic on ic.NumeroItineraireCyclable = pi.NumeroItineraireCyclable
 left join m.SegmentCyclable_Gestionnaire scg on scg.IdsegmentCyclable = sc.IdSegmentCyclable
-left join d.Sirene_UniteLegale gest on gest.Siren = scg.Siren
+left join m.UniteLegale gest on gest.Siren = scg.Siren
 left join m.SegmentCyclable_Proprietaire scp on scp.IdsegmentCyclable = sc.IdSegmentCyclable
-left join d.Sirene_UniteLegale prop on prop.Siren = scp.Siren
+left join m.UniteLegale prop on prop.Siren = scp.Siren
 group by
     sc.CodeEtatAvancement3V, r.CodeRevetement3V, r.Description, s.CodeStatut3V, s.Description, sc.AnneeOuverture, sc.SensUnique, sc.SourceGeometrie, sc.IdGeometrie, sc.DateSource, sc.Fictif, sc.Geom
 order by sc.CodeEtatAvancement3V;
@@ -90,9 +88,9 @@ left join m.TypePortionCyclable tpc on tpc.CodeTypePortionCyclable = pc.CodeType
 left join m.PortionCyclable_ItineraireCyclable pi on pi.IdPortionCyclable = pc.IdPortionCyclable
 left join m.ItineraireCyclable ic on ic.NumeroItineraireCyclable = pi.NumeroItineraireCyclable
 left join m.SegmentCyclable_Gestionnaire scg on scg.IdsegmentCyclable = sc.IdSegmentCyclable
-left join d.Sirene_UniteLegale gest on gest.Siren = scg.Siren
+left join m.UniteLegale gest on gest.Siren = scg.Siren
 left join m.SegmentCyclable_Proprietaire scp on scp.IdsegmentCyclable = sc.IdSegmentCyclable
-left join d.Sirene_UniteLegale prop on prop.Siren = scp.Siren
+left join m.UniteLegale prop on prop.Siren = scp.Siren
 group by
     sc.CodeEtatAvancement3V, r.CodeRevetement3V, r.Description, s.CodeStatut3V, s.Description, sc.AnneeOuverture, sc.SensUnique, sc.SourceGeometrie, sc.IdGeometrie, sc.DateSource, sc.Fictif, sc.Geom
 order by s.CodeStatut3V;
@@ -216,9 +214,9 @@ left join m.TypePortionCyclable tpc on tpc.CodeTypePortionCyclable = pc.CodeType
 left join m.PortionCyclable_ItineraireCyclable pi on pi.IdPortionCyclable = pc.IdPortionCyclable
 left join m.ItineraireCyclable ic on ic.NumeroItineraireCyclable = pi.NumeroItineraireCyclable
 left join m.SegmentCyclable_Gestionnaire scg on scg.IdsegmentCyclable = sc.IdSegmentCyclable
-left join d.Sirene_UniteLegale gest on gest.Siren = scg.Siren
+left join m.UniteLegale gest on gest.Siren = scg.Siren
 left join m.SegmentCyclable_Proprietaire scp on scp.IdsegmentCyclable = sc.IdSegmentCyclable
-left join d.Sirene_UniteLegale prop on prop.Siren = scp.Siren
+left join m.UniteLegale prop on prop.Siren = scp.Siren
 group by
     sc.CodeEtatAvancement3V, r.CodeRevetement3V, r.Description, s.CodeStatut3V, s.Description, sc.AnneeOuverture, sc.SensUnique, sc.SourceGeometrie, sc.IdGeometrie, sc.DateSource, sc.Fictif, sc.Geom
 order by Legende;

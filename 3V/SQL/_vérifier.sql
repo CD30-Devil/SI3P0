@@ -1,5 +1,5 @@
 ﻿select '***************************************************************************************************';
-select 'Métriques 3V';
+select 'Métriques';
 select '***************************************************************************************************';
 select '';
 
@@ -95,11 +95,17 @@ select '';
 
 select 'Liste des segments (IdSegmentCyclable | SourceGeometrie | IdGeometrie) non-ouverts mais avec une date d''ouverture non nulle :';
 select IdSegmentCyclable, SourceGeometrie, IdGeometrie
-from
-m.SegmentCyclable
+from m.SegmentCyclable
 where CodeEtatAvancement3V < 4 and AnneeOuverture is not null
 and SourceGeometrie <> 'bdtopo.troncon_de_route'
 order by SourceGeometrie, IdGeometrie;
+select 'Remarque : cette liste devrait être vide.';
+select '';
+
+select 'Liste des segments (IdSegmentCyclable | SourceGeometrie | IdGeometrie) ouverts et fictifs :';
+select IdSegmentCyclable, SourceGeometrie, IdGeometrie
+from m.SegmentCyclable
+where CodeEtatAvancement3V = 4 and Fictif;
 select 'Remarque : cette liste devrait être vide.';
 select '';
 
@@ -139,20 +145,21 @@ from SegmentCyclable sc
 where not sc.Fictif
 and sc.CodeStatut3V = 'RTE'
 and not exists (select * from SegmentCyclable_Proprietaire sp where sp.IdSegmentCyclable = sc.IdSegmentCyclable and sp.Siren = '223000019' limit 1)
-and exists (select * from m.Troncon where IdIGN = sc.IdGeometrie limit 1);
+and exists (select * from m.Troncon where IdIGN = sc.IdGeometrie and SirenProprietaire = '223000019' limit 1);
 select 'Remarque : cette liste devrait être vide.';
 select '';
 
 select 'Liste des segments cyclables (IdSegmentCyclable | IdGeometrie | CodeInsee) dont le propriétaire défini ne correspond pas à la BDTOPO :';
 with CodeInseeSegmentViaProprio as (
-    select sc.IdSegmentCyclable, sc.IdGeometrie, se.codeinsee
+    select sc.IdSegmentCyclable, sc.IdGeometrie, es.COGCommune
     from m.SegmentCyclable sc
     inner join m.SegmentCyclable_Proprietaire scp on sc.IdSegmentCyclable = scp.IdSegmentCyclable
-    inner join d.sirene_etablissement se on scp.Siren = se.siren
+    inner join m.EtablissementSirene es on scp.Siren = es.siren
     where sc.SourceGeometrie = 'bdtopo.troncon_de_route'
-    and se.siege
+    and es.siege
     and scp.Siren <> '223000019' -- Département du Gard
     and scp.Siren <> '223400011' -- Département de l'Hérault
+    and scp.Siren <> '221300015' -- Département des Bouches-du-Rhône
     and scp.Siren <> '130017791' -- Voies Navigables de France
     and scp.Siren <> '550200661' -- BRL
     and scp.Siren <> '957520901' -- Compagnie Nationale du Rhône
@@ -171,7 +178,7 @@ from CodeInseeSegmentViaProprio
 except
 select *
 from CodeInseeSegmentViaTroncon
-order by CodeInsee;
+order by COGCommune;
 select 'Remarque : vérifier que le propriétaire de ces segments est correct.';
 select '';
 
@@ -194,6 +201,53 @@ or (sc.SensUnique and t.sens_de_circulation = 'Sens inverse' and not ST_Ordering
 order by Description, sc.IdGeometrie;
 select 'Remarque : vérifier cette liste pour être sûr que les cyclistes ne sont pas invités à prendre des sens interdits.';
 select '';
+
+select 'Comparaison des natures de segments/tronçons (IdGeometrie | Statut | Revêtement | nature | nature_de_la_restriction | bande_cyclable) :';
+select
+    sc.IdGeometrie,
+    s3v.Description,
+    r3v.Description,
+    tr.nature,
+    tr.nature_de_la_restriction,
+    tr.bande_cyclable
+from m.SegmentCyclable sc
+inner join m.Statut3V s3v on s3v.CodeStatut3V = sc.CodeStatut3V
+inner join m.Revetement3V r3v on r3v.CodeRevetement3V = sc.CodeRevetement3V
+inner join d.bdtopo_troncon_de_route tr on sc.IdGeometrie = tr.cleabs
+and sc.CodeEtatAvancement3v = 4
+and (
+    (
+        s3v.Description not in ('Voie verte', 'Piste cyclable', 'Bande cyclable', 'Route')
+    )
+    or
+    (
+        s3v.Description = 'Voie verte' and
+        tr.nature_de_la_restriction <> 'Voie verte'
+    )
+    or
+    (
+        s3v.Description = 'Piste cyclable' and
+        tr.nature <> 'Piste cyclable'
+    )
+    or
+    (
+        s3v.Description = 'Bande cyclable' and
+        tr.bande_cyclable not in ('Sens direct', 'Sens inverse', 'Double sens')
+    )
+    or
+    (
+        s3v.Description = 'Route' and
+        r3v.Description in ('Rugueux', 'Meuble') and
+        tr.nature not in ('Route empierrée', 'Chemin', 'Sentier')
+    )
+    or
+    (
+        s3v.Description = 'Route' and
+        r3v.Description = 'Lisse' and
+        tr.nature not in ('Route à 2 chaussées', 'Route à 1 chaussée', 'Rond-point')
+    )
+)
+order by 2, 4, 1;
 
 -- TODO voir s'il est utile d'activer cette requête de vérification qui recherche les couples de segments d'une même portion qui ont un même début ou une même fin
 -- select sc1.IdSegmentCyclable, sc2.IdSegmentCyclable, pc1.Nom

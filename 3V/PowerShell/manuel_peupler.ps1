@@ -1,17 +1,15 @@
 ﻿. ("$PSScriptRoot\..\..\API\PowerShell\api_complète.ps1")
 
 $dossierDonnees = "$PSScriptRoot\..\Données"
-$dossierRapports = "$PSScriptRoot\..\Rapports\peupler"
+$dossierRapports = "$PSScriptRoot\..\Rapports\manuel_peupler"
 $dossierSQL = "$PSScriptRoot\..\SQL"
 
-$dateBDTopo = '2021-12-15'
-$dateComplement3V = '2021-01-25'
+$dateBDTopo = '2021-06-15'
+$dateComplement3V = '2022-08-23'
 
 # nettoyage préalable
-Remove-Item "$dossierRapports\*.txt"
-Remove-Item "$dossierRapports\*.err"
-
-Remove-Item "$dossierTravailTemp\3v_peupler\*.csv"
+Remove-Item "$dossierRapports\*"
+Remove-Item "$dossierTravailTemp\3v_peupler\*"
 
 SIg-Effacer-Table -table 'tmp.ItineraireCyclable' -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - effacement tmp.ItineraireCyclable.txt"
 SIg-Effacer-Table -table 'tmp.PortionCyclable' -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - effacement tmp.PortionCyclable.txt"

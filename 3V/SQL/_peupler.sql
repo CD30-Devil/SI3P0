@@ -217,23 +217,21 @@ from AjoutDescription ad
 where pc.IdPortionCyclable = ad.IdPortionCyclable;
 
 -- ajout du lien segment <-> gestionnaire
--- TODO requête à revoir lorsque la base SIRENE sera dans le schéma m
 insert into m.SegmentCyclable_Gestionnaire (IdSegmentCyclable, Siren)
 select distinct
     sc.IdSegmentCyclable,
     ul.Siren
 from m.SegmentCyclable sc
 inner join tmp.SegmentCyclable tsc on sc.SourceGeometrie = tsc.SourceGeometrie and sc.IdGeometrie = tsc.IdGeometrie and ((sc.Fictif and tsc.Fictif = 'oui') or (not(sc.Fictif) and tsc.Fictif = 'non'))
-inner join d.Sirene_UniteLegale ul on ul.Siren = any(regexp_split_to_array(tsc.Gestionnaires, '[^0-9]+'));
+inner join m.UniteLegale ul on ul.Siren = any(regexp_split_to_array(tsc.Gestionnaires, '[^0-9]+'));
 
 -- ajout du lien segment <-> propriétaire
--- TODO requête à revoir lorsque la base SIRENE sera dans le schéma m
 insert into m.SegmentCyclable_Proprietaire (IdSegmentCyclable, Siren)
 select distinct
     sc.IdSegmentCyclable,
     ul.Siren
 from m.SegmentCyclable sc
 inner join tmp.SegmentCyclable tsc on sc.SourceGeometrie = tsc.SourceGeometrie and sc.IdGeometrie = tsc.IdGeometrie and ((sc.Fictif and tsc.Fictif = 'oui') or (not(sc.Fictif) and tsc.Fictif = 'non'))
-inner join d.Sirene_UniteLegale ul on ul.Siren = any(regexp_split_to_array(tsc.Proprietaires, '[^0-9]+'));
+inner join m.UniteLegale ul on ul.Siren = any(regexp_split_to_array(tsc.Proprietaires, '[^0-9]+'));
 
 commit;

@@ -17,6 +17,7 @@ select
     s.Description as "StatutSegment",
     sc.AnneeOuverture as "AnneeOuvertureSegment",
     sc.SensUnique  as "SensUniqueSegment",
+    t.position_par_rapport_au_sol as "PositionParRapportAuSolSegment",
     sc.SourceGeometrie as "SourceGeometrieSegment",
     sc.IdGeometrie as "IdGeometrieSegment",
     to_char(sc.DateSource, 'DD-MM-YYYY') as "DateSourceSegment",
@@ -34,12 +35,14 @@ left join m.TypePortionCyclable tpc on tpc.CodeTypePortionCyclable = pc.CodeType
 left join m.PortionCyclable_ItineraireCyclable pi on pi.IdPortionCyclable = pc.IdPortionCyclable
 left join m.ItineraireCyclable ic on ic.NumeroItineraireCyclable = pi.NumeroItineraireCyclable
 left join m.SegmentCyclable_Gestionnaire scg on scg.IdsegmentCyclable = sc.IdSegmentCyclable
-left join d.Sirene_UniteLegale gest on gest.Siren = scg.Siren
+left join m.UniteLegale gest on gest.Siren = scg.Siren
 left join m.SegmentCyclable_Proprietaire scp on scp.IdsegmentCyclable = sc.IdSegmentCyclable
-left join d.Sirene_UniteLegale prop on prop.Siren = scp.Siren
+left join m.UniteLegale prop on prop.Siren = scp.Siren
+left join d.bdtopo_troncon_de_route t on sc.SourceGeometrie = 'bdtopo.troncon_de_route' and sc.IdGeometrie = t.cleabs
 group by
     ic.NumeroItineraireCyclable, ic.NomOfficiel, ic.NomUsage, ic.Depart, ic.Arrivee, ic.NiveauSchema, ic.SiteWeb, ic.AnneeOuverture,
     pc.Nom, pc.Description, tpc.Description,
+    t.position_par_rapport_au_sol,
     ea.Description, r.Description, s.Description, sc.AnneeOuverture, sc.SensUnique, sc.SourceGeometrie, sc.IdGeometrie, sc.DateSource, sc.Fictif, sc.Geom;
 
 create view tmp.VVV_AvecDoublons_4SHP as
@@ -60,6 +63,7 @@ select
     "StatutSegment" as "StatutSeg",
     "AnneeOuvertureSegment" as "AnOuvSeg",
     "SensUniqueSegment" as "SensUniSeg",
+    "PositionParRapportAuSolSegment" as "PositSeg",
     "SourceGeometrieSegment" as "SrcGeomSeg",
     "IdGeometrieSegment" as "IdGeomSeg",
     "DateSourceSegment" as "DateSrcSeg",
@@ -77,6 +81,7 @@ select
     s.Description as "StatutSegment",
     sc.AnneeOuverture as "AnneeOuvertureSegment",
     sc.SensUnique as "SensUniqueSegment",
+    t.position_par_rapport_au_sol as "PositionParRapportAuSolSegment",
     sc.SourceGeometrie as "SourceGeometrieSegment",
     sc.IdGeometrie as "IdGeometrieSegment",
     to_char(sc.DateSource, 'DD-MM-YYYY') as "DateSourceSegment",
@@ -96,11 +101,12 @@ left join m.TypePortionCyclable tpc on tpc.CodeTypePortionCyclable = pc.CodeType
 left join m.PortionCyclable_ItineraireCyclable pi on pi.IdPortionCyclable = pc.IdPortionCyclable
 left join m.ItineraireCyclable ic on ic.NumeroItineraireCyclable = pi.NumeroItineraireCyclable
 left join m.SegmentCyclable_Gestionnaire scg on scg.IdsegmentCyclable = sc.IdSegmentCyclable
-left join d.Sirene_UniteLegale gest on gest.Siren = scg.Siren
+left join m.UniteLegale gest on gest.Siren = scg.Siren
 left join m.SegmentCyclable_Proprietaire scp on scp.IdsegmentCyclable = sc.IdSegmentCyclable
-left join d.Sirene_UniteLegale prop on prop.Siren = scp.Siren
+left join m.UniteLegale prop on prop.Siren = scp.Siren
+left join d.bdtopo_troncon_de_route t on sc.SourceGeometrie = 'bdtopo.troncon_de_route' and sc.IdGeometrie = t.cleabs
 group by
-    ea.CodeEtatAvancement3V, ea.Description, r.CodeRevetement3V, r.Description, s.CodeStatut3V, s.Description, sc.AnneeOuverture, sc.SensUnique, sc.SourceGeometrie, sc.IdGeometrie, sc.DateSource, sc.Fictif, sc.Geom;
+    t.position_par_rapport_au_sol, ea.CodeEtatAvancement3V, ea.Description, r.CodeRevetement3V, r.Description, s.CodeStatut3V, s.Description, sc.AnneeOuverture, sc.SensUnique, sc.SourceGeometrie, sc.IdGeometrie, sc.DateSource, sc.Fictif, sc.Geom;
 
 create view tmp.VVV_SansDoublons_4SHP as
 select
@@ -109,6 +115,7 @@ select
     "StatutSegment" as "StatutSeg",
     "AnneeOuvertureSegment" as "AnOuvSeg",
     "SensUniqueSegment"as "SensUniSeg",
+    "PositionParRapportAuSolSegment" as "PositSeg",
     "SourceGeometrieSegment" as "SrcGeomSeg",
     "IdGeometrieSegment" as "IdGeomSeg",
     "DateSourceSegment" as "DateSrcSeg",

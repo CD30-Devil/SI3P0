@@ -1,4 +1,5 @@
-﻿create view tmp.VetT_Segment_4Layer as
+﻿-- Vélo et Territoires
+create view tmp.VetT_Segment_4Layer as
 select
     distinct
     sc.IdSegmentCyclable as "ID_LOCAL",
@@ -23,9 +24,9 @@ select
     sc.Geom
 from m.SegmentCyclable sc
 left join m.SegmentCyclable_Gestionnaire scg on scg.IdsegmentCyclable = sc.IdSegmentCyclable
-left join d.Sirene_UniteLegale gest on gest.Siren = scg.Siren
+left join m.UniteLegale gest on gest.Siren = scg.Siren
 left join m.SegmentCyclable_Proprietaire scp on scp.IdsegmentCyclable = sc.IdSegmentCyclable
-left join d.Sirene_UniteLegale prop on prop.Siren = scp.Siren
+left join m.UniteLegale prop on prop.Siren = scp.Siren
 left join m.SegmentCyclable_PortionCyclable sp on sp.IdSegmentCyclable = sc.IdSegmentCyclable
 left join m.PortionCyclable pc on pc.IdPortionCyclable = sp.IdPortionCyclable
 left join m.PortionCyclable_ItineraireCyclable pi on pi.IdPortionCyclable = pc.IdPortionCyclable
@@ -154,3 +155,51 @@ left join DistancesItineraireParEtat proj on proj.NumeroItineraireCyclable = ic.
 where ic.NumeroItineraireCyclable like 'B%'
 group by ic.NumeroItineraireCyclable, total.Distance, ouve.Distance, trvx.Distance, tarr.Distance, proj.Distance
 order by "ID_ITI";
+
+-- OpenData
+create view tmp.OpenData_3V_4Part as
+with PointSegment as (
+    select
+        IdSegmentCyclable,
+        (ST_DumpPoints(geom)).path[1] as NumPoint,
+        ST_Z((ST_DumpPoints(geom)).geom) as AltiPoint
+    from m.SegmentCyclable
+),
+DeniveleSegment as (
+    select
+        IdSegmentCyclable,
+        case
+            when AltiPoint > lead(AltiPoint, 1) over(partition by IdSegmentCyclable order by NumPoint) then AltiPoint - lead(AltiPoint, 1) over(partition by IdSegmentCyclable order by NumPoint)
+            else 0
+        end as DNegatif,
+        case
+            when AltiPoint < lead(AltiPoint, 1) over(partition by IdSegmentCyclable order by NumPoint) then lead(AltiPoint, 1) over(partition by IdSegmentCyclable order by NumPoint) - AltiPoint
+            else 0
+        end as DPositif
+    from PointSegment
+)
+select
+    ic.NumeroItineraireCyclable as "NumeroItineraire",
+    ic.NomOfficiel as "NomItineraire",
+    pc.Nom as "NomPortion",
+    tpc.Description as "TypePortion",
+    s.Description as "StatutSegment",
+    r.Description as "RevetementSegment",
+    sc.SensUnique  as "SensUniqueSegment",
+    round(sum(dc.DNegatif)::numeric, 1) as "EstimationDNegatifSegment",
+    round(sum(dc.DPositif)::numeric, 1) as "EstimationDPositifSegment",
+    sc.SourceGeometrie as "SourceGeometrieSegment",
+    sc.IdGeometrie as "IdGeometrieSegment",
+    sc.Geom
+from m.SegmentCyclable sc
+inner join DeniveleSegment dc on dc.IdSegmentCyclable = sc.IdSegmentCyclable
+left join m.Statut3V s on s.CodeStatut3V = sc.CodeStatut3V
+left join m.Revetement3V r on r.CodeRevetement3V = sc.CodeRevetement3V
+left join m.SegmentCyclable_PortionCyclable sp on sp.IdSegmentCyclable = sc.IdSegmentCyclable
+left join m.PortionCyclable pc on pc.IdPortionCyclable = sp.IdPortionCyclable
+left join m.TypePortionCyclable tpc on tpc.CodeTypePortionCyclable = pc.CodeTypePortionCyclable
+left join m.PortionCyclable_ItineraireCyclable pi on pi.IdPortionCyclable = pc.IdPortionCyclable
+inner join m.ItineraireCyclable ic on ic.NumeroItineraireCyclable = pi.NumeroItineraireCyclable
+where sc.CodeEtatAvancement3V = '4' and not sc.Fictif
+group by ic.NumeroItineraireCyclable, pc.IdPortionCyclable, sc.IdSegmentCyclable, tpc.CodeTypePortionCyclable, r.CodeRevetement3V, s.CodeStatut3V, pi.Ordre
+order by ic.NumeroItineraireCyclable, pi.Ordre;
