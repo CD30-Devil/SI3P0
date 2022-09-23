@@ -39,10 +39,10 @@ select
     (economiesocialesolidaireunitelegale is not null and economiesocialesolidaireunitelegale = 'O'),
     etatadministratifunitelegale,
     case
-        when datederniertraitementunitelegale ~ '[0-9]{4}-[0-9]{2}-[0-9]{2}' then to_date(datederniertraitementunitelegale, 'YYYY-MM-DD')::date
+        when datederniertraitementunitelegale ~ '^[0-9]{4}-[0-9]{2}-[0-9]{2}$' then to_date(datederniertraitementunitelegale, 'YYYY-MM-DD')::date
         else null::date
     end
-from Sirene_UniteLegale;
+from source_unitelegale;
 
 insert into EtablissementSirene (
     Siren,
@@ -69,10 +69,10 @@ select
     trancheeffectifsetablissement,
     etatadministratifetablissement,
     case
-        when datederniertraitementetablissement ~ '[0-9]{4}-[0-9]{2}-[0-9]{2}' then to_date(datederniertraitementetablissement, 'YYYY-MM-DD')::date
+        when datederniertraitementetablissement ~ '^[0-9]{4}-[0-9]{2}-[0-9]{2}$' then to_date(datederniertraitementetablissement, 'YYYY-MM-DD')::date
         else null::date
     end
-from tmp.Sirene_Etablissement
+from tmp.source_etablissementsirene
 where substring(coalesce(codecommuneetablissement, codecommune2etablissement) for 2) in (
     '07', -- Ardèche
     '12', -- Aveyron

@@ -2,35 +2,18 @@
 
 $dossierDonnees = "$PSScriptRoot\..\Données"
 $dossierSQL = "$PSScriptRoot\..\SQL"
-$dossierRapports = "$PSScriptRoot\..\Rapports\peupler"
-
-$Job_PeuplerSirene = {
-    param (
-        $parametres
-    )
-
-    . ("$($parametres.racineAPI)\api_complète.ps1")
-
-    # décompression du fichier à importer
-    7Z-Decompresser -archive "$($parametres.dossierDonnees)\$($parametres.archive).zip" -extraireVers "$($parametres.dossierDonnees)\"
-
-    # import des données dans les structures temporaires
-    SIg-Importer-CSV `        -csv "$($parametres.dossierDonnees)\$($parametres.archive).csv" `        -table "tmp.$($parametres.table)" -delimiteur ',' `        -sortie "$($parametres.dossierRapports)\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - copie $($parametres.archive).txt"
-
-    Remove-Item -Path "$($parametres.dossierDonnees)\$($parametres.archive).csv"
-}
+$dossierRapports = "$PSScriptRoot\..\Rapports\1erD_4h_peupler"
 
 # nettoyage préalable
-Remove-Item "$dossierDonnees\*.csv"
 Remove-Item "$dossierRapports\*"
 
-SIg-Effacer-Table -table 'tmp.Sirene_Etablissement' -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - effacement tmp.Sirene_Etablissement.txt"
-SIg-Effacer-Table -table 'tmp.Sirene_UniteLegale' -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - effacement tmp.Sirene_UniteLegale.txt"
+SIg-Effacer-Table -table 'tmp.source_unitelegale' -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - effacement tmp.source_unitelegale.txt"
+SIg-Effacer-Table -table 'tmp.source_etablissementsirene' -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - effacement tmp.source_etablissementsirene.txt"
 
 # création des structures temporaires
 SIg-Creer-Table-Temp `
-    -table 'tmp.Sirene_UniteLegale' `
-    -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - création tmp.Sirene_UniteLegale.txt" `
+    -table 'tmp.source_unitelegale' `
+    -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - création tmp.source_unitelegale.txt" `
     -colonnes `        'siren', `        'statutdiffusionunitelegale', `        'unitepurgeeunitelegale', `        'datecreationunitelegale', `
         'sigleunitelegale', `        'sexeunitelegale', `        'prenom1unitelegale', `        'prenom2unitelegale', `        'prenom3unitelegale', `        'prenom4unitelegale', `        'prenomusuelunitelegale', `        'pseudonymeunitelegale', `
         'identifiantassociationunitelegale', `        'trancheeffectifsunitelegale', `        'anneeeffectifsunitelegale', `        'datederniertraitementunitelegale', `        'nombreperiodesunitelegale', `        'categorieentreprise', `        'anneecategorieentreprise', `        'datedebut', `        'etatadministratifunitelegale', `        'nomunitelegale', `        'nomusageunitelegale', `
@@ -38,8 +21,8 @@ SIg-Creer-Table-Temp `
         'categoriejuridiqueunitelegale', `        'activiteprincipaleunitelegale', `        'nomenclatureactiviteprincipaleunitelegale', `        'nicsiegeunitelegale', `        'economiesocialesolidaireunitelegale', `        'caractereemployeurunitelegale'
 
 SIg-Creer-Table-Temp `
-    -table 'tmp.Sirene_Etablissement' `
-    -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - création tmp.Sirene_Etablissement.txt" `
+    -table 'tmp.source_etablissementsirene' `
+    -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - création tmp.source_etablissementsirene.txt" `
     -colonnes `        'siren', `        'nic', `        'siret', `        'statutdiffusionetablissement', `        'datecreationetablissement', `        'trancheeffectifsetablissement', `        'anneeeffectifsetablissement', `
         'activiteprincipaleregistremetiersetablissement', `        'datederniertraitementetablissement', `        'etablissementsiege', `        'nombreperiodesetablissement', `
         'complementadresseetablissement', `        'numerovoieetablissement', `        'indicerepetitionetablissement', `        'typevoieetablissement', `        'libellevoieetablissement', `        'codepostaletablissement', `        'libellecommuneetablissement', `
@@ -49,33 +32,18 @@ SIg-Creer-Table-Temp `
         'datedebut', `        'etatadministratifetablissement', `        'enseigne1etablissement', `        'enseigne2etablissement', `        'enseigne3etablissement', `        'denominationusuelleetablissement', `
         'activiteprincipaleetablissement', `        'nomenclatureactiviteprincipaleetablissement', `        'caractereemployeuretablissement'
 
-# paramétrage des jobs d'import dans les structures temporaires
+# paramétrage des jobs d'import
 $parametresJobs = [Collections.ArrayList]::new()
 
-[void]$parametresJobs.Add((@{
-        script = $Job_PeuplerSirene
-        racineAPI = "$PSScriptRoot\..\..\API\PowerShell"
-        dossierDonnees = $dossierDonnees
-        dossierRapports = $dossierRapports
-        archive = 'StockUniteLegale_utf8'
-        table = 'Sirene_UniteLegale'
-    }))
+[void]$parametresJobs.Add((Parametrer-Job-SIg-Importer-CSV -csv "$dossierDonnees\StockUniteLegale_utf8.csv" -table 'tmp.source_unitelegale' -delimiteur ',' -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - import StockUniteLegale_utf8.csv.txt"))
+[void]$parametresJobs.Add((Parametrer-Job-SIg-Importer-CSV -csv "$dossierDonnees\StockEtablissement_utf8.csv" -table 'tmp.source_etablissementsirene' -delimiteur ',' -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - import StockEtablissement_utf8.csv.txt"))
 
-[void]$parametresJobs.Add((@{
-        script = $Job_PeuplerSirene
-        racineAPI = "$PSScriptRoot\..\..\API\PowerShell"
-        dossierDonnees = $dossierDonnees
-        dossierRapports = $dossierRapports
-        archive = 'StockEtablissement_utf8'
-        table = 'Sirene_Etablissement'
-    }))
-
-# exécution des jobs d'import des données dans les structures temporaires
+# exécution des jobs d'import
 Executer-Jobs -parametresJobs $parametresJobs
 
 # transfert des données du schéma tmp au schéma m
 SIg-Executer-Fichier -fichier "$dossierSQL\_peupler.sql" -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - _peupler.txt"
 
 # nettoyage final
-SIg-Effacer-Table -table 'tmp.Sirene_Etablissement' -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - effacement tmp.Sirene_Etablissement.txt"
-SIg-Effacer-Table -table 'tmp.Sirene_UniteLegale' -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - effacement tmp.Sirene_UniteLegale.txt"
+SIg-Effacer-Table -table 'tmp.source_unitelegale' -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - effacement tmp.source_unitelegale.txt"
+SIg-Effacer-Table -table 'tmp.source_etablissementsirene' -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - effacement tmp.source_etablissementsirene.txt"
