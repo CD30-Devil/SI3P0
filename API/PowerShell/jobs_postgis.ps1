@@ -681,11 +681,12 @@ function Parametrer-Job-Exporter-SHP-Postgis {
 # .utilisateur : L'utilisateur pour la connexion à la base de données.
 # .mdp : Le mot de passe pour la connexion à la base de données, $null pour
 #        lire le mot de passe depuis le pgpass.conf.
-# .requete : La requête SQL source de l'export.
+# .requetes : Les requêtes SQL sources de l'export.
 # .gpkg : Le GPKG d'export.
-# .couche : Le nom de la couche dans le GPKG cible.
+# .couches : Le nom de chaque couche dans le GPKG cible à classer dans l'ordre
+#            respectif des requêtes SQL.
 # .ecraserGPKG : Pour indiquer s'il faut mettre à jour ou écraser le GPKG.
-# .ecraserCouche : Pour indiquer s'il faut compléter ou écraser la couche.
+# .ecraserCouche : Pour indiquer s'il faut compléter ou écraser les couches.
 # .sridSource : Le SRID source.
 # .sridCible : Le SRID cible.
 # .autresParams : Les paramètres d'appel supplémentaires à Ogr2Ogr.
@@ -710,9 +711,9 @@ $Job_Exporter_GPKG_Postgis = {
         -bdd $parametres.bdd `
         -utilisateur $parametres.utilisateur `
         -mdp $parametres.mdp `
-        -requete $parametres.requete `
+        -requetes $parametres.requetes `
         -gpkg $parametres.gpkg `
-        -couche $parametres.couche `
+        -couches $parametres.couches `
         -ecraserGPKG $parametres.ecraserGPKG `
         -ecraserCouche $parametres.ecraserCouche `
         -sridSource $parametres.sridSource `
@@ -733,11 +734,12 @@ $Job_Exporter_GPKG_Postgis = {
 # $utilisateur : L'utilisateur pour la connexion à la base de données.
 # $mdp : Le mot de passe pour la connexion à la base de données, $null pour
 #        lire le mot de passe depuis le pgpass.conf.
-# $requete : La requête SQL source de l'export.
+# $requetes : Les requêtes SQL sources de l'export.
 # $gpkg : Le GPKG d'export.
-# $couche : Le nom de la couche dans le GPKG cible.
+# $couches : Le nom de chaque couche dans le GPKG cible à classer dans l'ordre
+#            respectif des requêtes SQL.
 # $ecraserGPKG : Pour indiquer s'il faut mettre à jour ou écraser le GPKG.
-# $ecraserCouche : Pour indiquer s'il faut compléter ou écraser la couche.
+# $ecraserCouche : Pour indiquer s'il faut compléter ou écraser les couches.
 # $sridSource : Le SRID source.
 # $sridCible : Le SRID cible.
 # $autresParams : Les paramètres d'appel supplémentaires à Ogr2Ogr.
@@ -757,9 +759,9 @@ function Parametrer-Job-Exporter-GPKG-Postgis {
         [parameter(Mandatory=$true)] [string] $bdd,
         [parameter(Mandatory=$true)] [string] $utilisateur,
         [string] $mdp = $null,
-        [parameter(Mandatory=$true)] [string] $requete,
+        [parameter(Mandatory=$true)] [string[]] $requetes,
         [parameter(Mandatory=$true)] [string] $gpkg,
-        [parameter(Mandatory=$true)] [string] $couche,
+        [parameter(Mandatory=$true)] [string[]] $couches,
         [bool] $ecraserGPKG = $false,
         [bool] $ecraserCouche = $true,
         [string] $sridSource = $sridDefaut,
@@ -778,9 +780,9 @@ function Parametrer-Job-Exporter-GPKG-Postgis {
         bdd = $bdd
         utilisateur = $utilisateur
         mdp = $mdp
-        requete = $requete
+        requetes = $requetes
         gpkg = $gpkg
-        couche = $couche
+        couches = $couches
         ecraserGPKG = $ecraserGPKG
         ecraserCouche = $ecraserCouche
         sridSource = $sridSource

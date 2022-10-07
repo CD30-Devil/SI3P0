@@ -460,11 +460,12 @@ function Exporter-SHP-Postgis {
 # $utilisateur : L'utilisateur pour la connexion à la base de données.
 # $mdp : Le mot de passe pour la connexion à la base de données, $null pour
 #        lire le mot de passe depuis le pgpass.conf.
-# $requete : La requête SQL source de l'export.
+# $requetes : Les requêtes SQL sources de l'export.
 # $gpkg : Le GPKG d'export.
-# $couche : Le nom de la couche dans le GPKG cible.
+# $couches : Le nom de chaque couche dans le GPKG cible à classer dans l'ordre
+#            respectif des requêtes SQL.
 # $ecraserGPKG : Pour indiquer s'il faut mettre à jour ou écraser le GPKG.
-# $ecraserCouche : Pour indiquer s'il faut compléter ou écraser la couche.
+# $ecraserCouche : Pour indiquer s'il faut compléter ou écraser les couches.
 # $sridSource : Le SRID source.
 # $sridCible : Le SRID cible.
 # $autresParams : Les paramètres d'appel supplémentaires à Ogr2Ogr.
@@ -483,9 +484,9 @@ function Exporter-GPKG-Postgis {
         [parameter(Mandatory=$true)] [string] $bdd,
         [parameter(Mandatory=$true)] [string] $utilisateur,
         [string] $mdp = $null,
-        [parameter(Mandatory=$true)] [string] $requete,
+        [parameter(Mandatory=$true)] [string[]] $requetes,
         [parameter(Mandatory=$true)] [string] $gpkg,
-        [parameter(Mandatory=$true)] [string] $couche,
+        [parameter(Mandatory=$true)] [string[]] $couches,
         [bool] $ecraserGPKG = $false,
         [bool] $ecraserCouche = $true,
         [string] $sridSource = $sridDefaut,
@@ -502,35 +503,44 @@ function Exporter-GPKG-Postgis {
         $mdp = Rechercher-MDP-PGPass -serveur $serveur -port $port -bdd $bdd -utilisateur $utilisateur
     }
     
-    $parametres = [Collections.ArrayList]::new()
-    [void]$parametres.Add("-s_srs EPSG:$sridSource")
-    [void]$parametres.Add("-t_srs EPSG:$sridCible")
-    [void]$parametres.Add("-sql `"$requete`"")
-    [void]$parametres.Add("-nln $couche")
-
-    if (!($ecraserGPKG) -and (Test-Path $gpkg)) {
-        [void]$parametres.Add("-update")
-    }
-
-    if ($ecraserCouche) {
-        [void]$parametres.Add("-overwrite")
-    }
-
-    if ($autresParams) {
-        [void]$parametres.AddRange($autresParams)
-    }
-
     New-Item -ItemType Directory -Force -Path (Split-Path -Path $gpkg)
 
-    
-    Executer-Ogr2Ogr `
-        -source "PG:host=$serveur port=$port dbname=$bdd user=$utilisateur password=$mdp" `
-        -formatDestination 'GPKG' `
-        -destination $gpkg `
-        -autresParams $parametres `
-        -sortie $sortie `
-        -erreur $erreur `
-        -priorite $priorite
+    for ($n = 0; $n -lt $requetes.Count; $n++) {
+
+        $parametres = [Collections.ArrayList]::new()
+        [void]$parametres.Add("-s_srs EPSG:$sridSource")
+        [void]$parametres.Add("-t_srs EPSG:$sridCible")
+        [void]$parametres.Add("-sql `"$($requetes[$n])`"")
+        [void]$parametres.Add("-nln $($couches[$n])")
+
+        if (!($ecraserGPKG) -and (Test-Path $gpkg)) {
+            [void]$parametres.Add("-update")
+        }
+
+        if ($ecraserCouche) {
+            [void]$parametres.Add("-overwrite")
+        }
+
+        if ($autresParams) {
+            [void]$parametres.AddRange($autresParams)
+        }
+
+        if ($sortie) {
+            $sortie_couche = "$([IO.Path]::GetDirectoryName($sortie))\$([IO.Path]::GetFileNameWithoutExtension($sortie)) - $($couches[$n])$([IO.Path]::GetExtension($sortie))"
+        }
+        else {
+            $sortie_couche = $null
+        }
+
+        Executer-Ogr2Ogr `
+            -source "PG:host=$serveur port=$port dbname=$bdd user=$utilisateur password=$mdp" `
+            -formatDestination 'GPKG' `
+            -destination $gpkg `
+            -autresParams $parametres `
+            -sortie $sortie_couche `
+            -erreur $erreur `
+            -priorite $priorite
+    }
 }
 
 # -----------------------------------------------------------------------------
