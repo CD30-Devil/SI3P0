@@ -12,7 +12,7 @@ $sigUtilisateur = '<mon-utilisateur-postgis>'
 $sigMDP = Rechercher-MDP-PGPass -serveur $sigServeur -port $sigPort -bdd $sigBDD -utilisateur $sigUtilisateur
 
 # nombre de coeurs disponibles sur le serveur SIg
-$sigNbCoeurs = 8
+$sigNbCoeurs = 6
 
 # -----------------------------------------------------------------------------
 # Exécution d'un script SQL via l'outil psql.exe.
@@ -635,6 +635,72 @@ function SIg-Exporter-SHP {
         -requete $requete `
         -shp $shp `
         -compresser $compresser `
+        -sridSource $sridSource `
+        -sridCible $sridCible `
+        -autresParams $autresParams `
+        -sortie $sortie `
+        -erreur $erreur `
+        -priorite $priorite
+}
+
+# -----------------------------------------------------------------------------
+# Export d'un GPKG (par appel à Ogr2Ogr).
+# Les valeurs pré-établies des paramètres font que le SIg par défaut est
+# utilisé comme source.
+#
+# $serveur : Le serveur de base de données.
+# $port : Le port du serveur de base de données.
+# $bdd : Le nom de la base de données.
+# $utilisateur : L'utilisateur pour la connexion à la base de données.
+# $mdp : Le mot de passe pour la connexion à la base de données, $null pour
+#        lire le mot de passe depuis le pgpass.conf.
+# $requete : La requête SQL source de l'export.
+# $gpkg : Le GPKG d'export.
+# $couche : Le nom de la couche dans le GPKG cible.
+# $ecraserGPKG : Pour indiquer s'il faut mettre à jour ou écraser le GPKG.
+# $ecraserCouche : Pour indiquer s'il faut compléter ou écraser la couche.
+# $sridSource : Le SRID source.
+# $sridCible : Le SRID cible.
+# $autresParams : Les paramètres d'appel supplémentaires à Ogr2Ogr.
+# $sortie : Chemin de redirection de la sortie standard, $null pour ne pas
+#           activer la redirection.
+# $erreur : Pour demander, lorsque la redirection de la sortie standard est
+#           activée, la redirection de la sortie erreur. Le fichier de sortie
+#           porte le même nom que celui de la sortie standard avec ajout de
+#           l'extension .err.
+# $priorite : La priorité donnée au processus.
+# -----------------------------------------------------------------------------
+function SIg-Exporter-GPKG {
+    param (
+        [string] $serveur = $sigServeur,
+        [string] $port = $sigPort,
+        [string] $bdd = $sigBDD,
+        [string] $utilisateur = $sigUtilisateur,
+        [string] $mdp = $sigMDP,
+        [parameter(Mandatory=$true)] [string] $requete,
+        [parameter(Mandatory=$true)] [string] $gpkg,
+        [parameter(Mandatory=$true)] [string] $couche,
+        [bool] $ecraserGPKG = $false,
+        [bool] $ecraserCouche = $true,
+        [string] $sridSource = $sridDefaut,
+        [string] $sridCible = $sridDefaut,
+        [string[]] $autresParams = @(),
+        [string] $sortie = $null,
+        [bool] $erreur = $true,
+        [System.Diagnostics.ProcessPriorityClass] $priorite = [System.Diagnostics.ProcessPriorityClass]::Normal
+    )
+
+    Exporter-GPKG-Postgis `
+        -serveur $serveur `
+        -port $port `
+        -bdd $bdd `
+        -utilisateur $utilisateur `
+        -mdp $mdp `
+        -requete $requete `
+        -gpkg $gpkg `
+        -couche $couche `
+        -ecraserGPKG $ecraserGPKG `
+        -ecraserCouche $ecraserCouche `
         -sridSource $sridSource `
         -sridCible $sridCible `
         -autresParams $autresParams `
@@ -1424,6 +1490,74 @@ function Parametrer-Job-SIg-Exporter-SHP {
         -requete $requete `
         -shp $shp `
         -compresser $compresser `
+        -sridSource $sridSource `
+        -sridCible $sridCible `
+        -autresParams $autresParams `
+        -sortie $sortie `
+        -erreur $erreur `
+        -priorite $priorite
+}
+
+# -----------------------------------------------------------------------------
+# Paramétrage d'un job d'export d'un GPKG (par appel à Ogr2Ogr).
+# Les valeurs pré-établies des paramètres font que le SIg par défaut est
+# utilisé comme source.
+#
+# $serveur : Le serveur de base de données.
+# $port : Le port du serveur de base de données.
+# $bdd : Le nom de la base de données.
+# $utilisateur : L'utilisateur pour la connexion à la base de données.
+# $mdp : Le mot de passe pour la connexion à la base de données, $null pour
+#        lire le mot de passe depuis le pgpass.conf.
+# $requete : La requête SQL source de l'export.
+# $gpkg : Le GPKG d'export.
+# $couche : Le nom de la couche dans le GPKG cible.
+# $ecraserGPKG : Pour indiquer s'il faut mettre à jour ou écraser le GPKG.
+# $ecraserCouche : Pour indiquer s'il faut compléter ou écraser la couche.
+# $sridSource : Le SRID source.
+# $sridCible : Le SRID cible.
+# $autresParams : Les paramètres d'appel supplémentaires à Ogr2Ogr.
+# $sortie : Chemin de redirection de la sortie standard, $null pour ne pas
+#           activer la redirection.
+# $erreur : Pour demander, lorsque la redirection de la sortie standard est
+#           activée, la redirection de la sortie erreur. Le fichier de sortie
+#           porte le même nom que celui de la sortie standard avec ajout de
+#           l'extension .err.
+# $priorite : La priorité donnée au processus.
+# -----------------------------------------------------------------------------
+function Parametrer-Job-SIg-Exporter-GPKG {
+    param (
+        [string] $racineAPI = $PSScriptRoot,
+        [string] $serveur = $sigServeur,
+        [string] $port = $sigPort,
+        [string] $bdd = $sigBDD,
+        [string] $utilisateur = $sigUtilisateur,
+        [string] $mdp = $sigMDP,
+        [parameter(Mandatory=$true)] [string] $requete,
+        [parameter(Mandatory=$true)] [string] $gpkg,
+        [parameter(Mandatory=$true)] [string] $couche,
+        [bool] $ecraserGPKG = $false,
+        [bool] $ecraserCouche = $true,
+        [string] $sridSource = $sridDefaut,
+        [string] $sridCible = $sridDefaut,
+        [string[]] $autresParams = @(),
+        [string] $sortie = $null,
+        [bool] $erreur = $true,
+        [System.Diagnostics.ProcessPriorityClass] $priorite = [System.Diagnostics.ProcessPriorityClass]::Normal
+    )
+
+    Parametrer-Job-Exporter-GPKG-Postgis `
+        -racineAPI $racineAPI `
+        -serveur $serveur `
+        -port $port `
+        -bdd $bdd `
+        -utilisateur $utilisateur `
+        -mdp $mdp `
+        -requete $requete `
+        -gpkg $gpkg `
+        -couche $couche `
+        -ecraserGPKG $ecraserGPKG `
+        -ecraserCouche $ecraserCouche `
         -sridSource $sridSource `
         -sridCible $sridCible `
         -autresParams $autresParams `

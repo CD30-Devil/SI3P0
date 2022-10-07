@@ -201,6 +201,19 @@ Assert-CheminExiste -message 'SIg-Exporter-SHP avec compression' -chemin "$bas\t
     SIg-Effacer-Table -table 'table_tu_sig_defaut'
 }
 
+# Test de la fonction SIg-Exporter-GPKG
+Assert-CheminExiste -message 'SIg-Exporter-GPKG' -chemin "$bas\test.gpkg" `
+-avant {
+    Vider-BacASable
+    SIg-Effacer-Table -table 'table_tu_sig_defaut'
+    SIg-Importer-GeoJSON -geoJSON "$PSScriptRoot\..\Ressources\fichiers GeoJSON\d13.geojson" -table 'table_tu_sig_defaut'
+    SIg-Exporter-GPKG -requete 'select * from table_tu_sig_defaut' -gpkg "$bas\test.gpkg" -couche 'test' -priorite High
+} `
+-apres {
+    Vider-BacASable
+    SIg-Effacer-Table -table 'table_tu_sig_defaut'
+}
+
 # Test de la fonction SIg-Exporter-GPX
 Assert-CheminExiste -message 'SIg-Exporter-GPX' -chemin "$bas\test.gpx" `
 -avant {

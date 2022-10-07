@@ -452,6 +452,88 @@ function Exporter-SHP-Postgis {
 }
 
 # -----------------------------------------------------------------------------
+# Export d'un GPKG (par appel à Ogr2Ogr).
+#
+# $serveur : Le serveur de base de données.
+# $port : Le port du serveur de base de données.
+# $bdd : Le nom de la base de données.
+# $utilisateur : L'utilisateur pour la connexion à la base de données.
+# $mdp : Le mot de passe pour la connexion à la base de données, $null pour
+#        lire le mot de passe depuis le pgpass.conf.
+# $requete : La requête SQL source de l'export.
+# $gpkg : Le GPKG d'export.
+# $couche : Le nom de la couche dans le GPKG cible.
+# $ecraserGPKG : Pour indiquer s'il faut mettre à jour ou écraser le GPKG.
+# $ecraserCouche : Pour indiquer s'il faut compléter ou écraser la couche.
+# $sridSource : Le SRID source.
+# $sridCible : Le SRID cible.
+# $autresParams : Les paramètres d'appel supplémentaires à Ogr2Ogr.
+# $sortie : Chemin de redirection de la sortie standard, $null pour ne pas
+#           activer la redirection.
+# $erreur : Pour demander, lorsque la redirection de la sortie standard est
+#           activée, la redirection de la sortie erreur. Le fichier de sortie
+#           porte le même nom que celui de la sortie standard avec ajout de
+#           l'extension .err.
+# $priorite : La priorité donnée au processus.
+# -----------------------------------------------------------------------------
+function Exporter-GPKG-Postgis {
+    param (
+        [parameter(Mandatory=$true)] [string] $serveur,
+        [string] $port = '5432',
+        [parameter(Mandatory=$true)] [string] $bdd,
+        [parameter(Mandatory=$true)] [string] $utilisateur,
+        [string] $mdp = $null,
+        [parameter(Mandatory=$true)] [string] $requete,
+        [parameter(Mandatory=$true)] [string] $gpkg,
+        [parameter(Mandatory=$true)] [string] $couche,
+        [bool] $ecraserGPKG = $false,
+        [bool] $ecraserCouche = $true,
+        [string] $sridSource = $sridDefaut,
+        [string] $sridCible = $sridDefaut,
+        [string[]] $autresParams = @(),
+        [string] $sortie = $null,
+        [bool] $erreur = $true,
+        [System.Diagnostics.ProcessPriorityClass] $priorite = [System.Diagnostics.ProcessPriorityClass]::Normal
+    )
+
+    Afficher-Message-Date -message "Export de $requete depuis $serveur\$bdd vers $gpkg."
+
+    if (!$mdp) {
+        $mdp = Rechercher-MDP-PGPass -serveur $serveur -port $port -bdd $bdd -utilisateur $utilisateur
+    }
+    
+    $parametres = [Collections.ArrayList]::new()
+    [void]$parametres.Add("-s_srs EPSG:$sridSource")
+    [void]$parametres.Add("-t_srs EPSG:$sridCible")
+    [void]$parametres.Add("-sql `"$requete`"")
+    [void]$parametres.Add("-nln $couche")
+
+    if (!($ecraserGPKG) -and (Test-Path $gpkg)) {
+        [void]$parametres.Add("-update")
+    }
+
+    if ($ecraserCouche) {
+        [void]$parametres.Add("-overwrite")
+    }
+
+    if ($autresParams) {
+        [void]$parametres.AddRange($autresParams)
+    }
+
+    New-Item -ItemType Directory -Force -Path (Split-Path -Path $gpkg)
+
+    
+    Executer-Ogr2Ogr `
+        -source "PG:host=$serveur port=$port dbname=$bdd user=$utilisateur password=$mdp" `
+        -formatDestination 'GPKG' `
+        -destination $gpkg `
+        -autresParams $parametres `
+        -sortie $sortie `
+        -erreur $erreur `
+        -priorite $priorite
+}
+
+# -----------------------------------------------------------------------------
 # Export d'un GPX (par appel à Ogr2Ogr).
 #
 # $serveur : Le serveur de base de données.
