@@ -120,7 +120,7 @@ function DeGZipper {
 #           porte le même nom que celui de la sortie standard avec ajout de
 #           l'extension .err.
 # -----------------------------------------------------------------------------
-Function Executer-7Z {
+function Executer-7Z {
     param(
         [parameter(Mandatory=$true)] [string] $commande,
         [parameter(Mandatory=$true)] [string] $archive,

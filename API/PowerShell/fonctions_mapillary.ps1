@@ -12,7 +12,7 @@
 #           porte le même nom que celui de la sortie standard avec ajout de
 #           l'extension .err.
 # -----------------------------------------------------------------------------
-Function Executer-MapillaryTools {
+function Executer-MapillaryTools {
     param(
         [string[]] $parametres = $null,
         [string] $sortie = $null,

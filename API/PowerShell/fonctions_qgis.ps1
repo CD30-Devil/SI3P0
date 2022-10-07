@@ -12,7 +12,7 @@
 #           porte le même nom que celui de la sortie standard avec ajout de
 #           l'extension .err.
 # -----------------------------------------------------------------------------
-Function Executer-QGisProcess {
+function Executer-QGisProcess {
     param(
         [string[]] $parametres = $null,
         [string] $sortie = $null,

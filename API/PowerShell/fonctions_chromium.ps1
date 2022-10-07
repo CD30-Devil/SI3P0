@@ -7,7 +7,7 @@
 # $parametres : Les paramètres d'appel à Chromium.
 # $delaiMaxProcess : Le délai d'exécution max (secondes) laissé à Chromium.
 # -----------------------------------------------------------------------------
-Function Executer-Chromium {
+function Executer-Chromium {
     param(
         [string[]] $parametres = $null,
         [int] $delaiMaxProcess = $null
