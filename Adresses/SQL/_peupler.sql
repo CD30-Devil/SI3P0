@@ -1,34 +1,41 @@
-﻿start transaction;
+﻿-- schémas spécifiques SI3P0 (m = modèle, f = fonctions, tmp = temporaire)
+set search_path to m, f, tmp, public;
+
+start transaction;
 
 set constraints all deferred;
 
-delete from m.Adresse;
+delete from Adresse;
 
-select pg_catalog.setval('m.adresse_idadresse_seq', 1, false);
+select pg_catalog.setval('adresse_idadresse_seq', 1, false);
 
--- insertion des adresses Etalab
-insert into m.Adresse (COGCommune, Numero, Repetition, NomVoie, Source, IdSource, Geom)
+-- insertion des adresses
+insert into Adresse (COGCommune, Numero, Repetition, NomVoie, Source, IdSource, Position, Geom)
 select
-    code_insee,
-    numero::integer,
-    coalesce(rep, ''),
-    nom_voie,
-    '1-Etalab',
-    id,
-    FabriquerPointL93(x::numeric, y::numeric)
-from tmp.Adresse_Etalab;
-
--- insertion des adresses "fictives" DGFIP
-insert into m.Adresse (COGCommune, Numero, Repetition, NomVoie, Source, IdSource, Geom)
-select
-    commune_code,
+    commune_insee,
     numero::integer,
     coalesce(suffixe, ''),
     voie_nom,
-    '2-DGFIP',
+    case source
+        when 'commune' then '1-commune'
+        when 'laposte' then '2-laposte'
+        when 'arcep' then '3-arcep'
+        when 'cadastre' then '4-cadastre'
+        else '5-autre'
+    end,
     cle_interop,
+    case position
+        when 'logement' then '1-logement'
+        when 'cage d''escalier' then '2-cage d''escalier'
+        when 'bâtiment' then '3-bâtiment'
+        when 'entrée' then '4-entrée'
+        when 'délivrance postale' then '5-délivrance postale'
+        when 'parcelle' then '6-parcelle'
+        when 'service technique' then '7-service technique'
+        when 'segment' then '8-segment'
+        else '9-autre'
+    end,
     FabriquerPointL93(x::numeric, y::numeric)
-from tmp.Adresse_DGFIP
-where pseudo_numero = 'true';
+from source_adresse;
 
 commit;

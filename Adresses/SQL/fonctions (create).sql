@@ -49,7 +49,7 @@ begin
         and (a.Numero = _Numero)
         and (_RepetitionMinuscule is null or Lower(a.Repetition) = _RepetitionMinuscule)
         and (Lower(a.NomVoie) = _NomVoieMinuscule or Lower(a.NomVoie) = _SansMentionLieuDit)
-        order by a.Source
+        order by a.Position, a.Source
         limit _Limit
     );
     
@@ -65,7 +65,7 @@ begin
         and (a.Numero = _Numero)
         and (_RepetitionMinuscule is null or UnAccent(Lower(a.Repetition)) = UnAccent(_RepetitionMinuscule))
         and (RegExp_Replace(UnAccent(Lower(a.NomVoie)), '\W', ' ', 'g') = RegExp_Replace(UnAccent(_NomVoieMinuscule), '\W', ' ', 'g') or RegExp_Replace(UnAccent(Lower(a.NomVoie)), '\W', ' ', 'g') = RegExp_Replace(UnAccent(_SansMentionLieuDit), '\W', ' ', 'g'))
-        order by a.Source
+        order by a.Position, a.Source
         limit _Limit
     );
     
@@ -79,7 +79,7 @@ begin
         from Adresse a
         where (a.COGCommune = _COGCommune)
         and (Lower(a.NomVoie) = _NomVoieMinuscule or Lower(a.NomVoie) = _SansMentionLieuDit)
-        order by DifferenceNumero, a.Repetition, a.Source
+        order by DifferenceNumero, a.Repetition, a.Position, a.Source
         limit _Limit
     );
     
@@ -93,7 +93,7 @@ begin
         from Adresse a
         where (a.COGCommune = _COGCommune)
         and (RegExp_Replace(UnAccent(Lower(a.NomVoie)), '\W', ' ', 'g') = RegExp_Replace(UnAccent(_NomVoieMinuscule), '\W', ' ', 'g') or RegExp_Replace(UnAccent(Lower(a.NomVoie)), '\W', ' ', 'g') = RegExp_Replace(UnAccent(_SansMentionLieuDit), '\W', ' ', 'g'))
-        order by DifferenceNumero, a.Repetition, a.Source
+        order by DifferenceNumero, a.Repetition, a.Position, a.Source
         limit _Limit
     );
     
@@ -111,6 +111,7 @@ begin
             DifferenceNumero,
             case when _RepetitionMinuscule is null or _RepetitionMinuscule = '' then a.Repetition end,
             case when _RepetitionMinuscule is not null and _RepetitionMinuscule <> '' then Similarity(UnAccent(Lower(a.Repetition)), UnAccent(_RepetitionMinuscule)) end desc,
+            a.Position,
             a.Source
         limit _Limit
     );
@@ -129,6 +130,7 @@ begin
             DifferenceNumero,
             case when _RepetitionMinuscule is null or _RepetitionMinuscule = '' then a.Repetition end,
             case when _RepetitionMinuscule is not null and _RepetitionMinuscule <> '' then Similarity(UnAccent(Lower(a.Repetition)), UnAccent(_RepetitionMinuscule)) end desc,
+            a.Position,
             a.Source
         limit _Limit
     );

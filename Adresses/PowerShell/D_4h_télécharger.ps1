@@ -24,16 +24,19 @@ $departements = @(
 )
 
 # nettoyage préalable
-Remove-Item "$dossierDonnees\*-etalab.csv.gz"
-Remove-Item "$dossierDonnees\*-dgfip.csv.gz"
+Remove-Item "$dossierDonnees\*"
 
 # paramétrage des jobs de téléchargement
-$parametresJobs = [Collections.ArrayList]::new($departements.Count * 2)
+$parametresJobs = [Collections.ArrayList]::new($departements.Count)
 
 foreach ($departement in $departements) {
-    [void]$parametresJobs.Add((Parametrer-Job-Telecharger -url "https://adresse.data.gouv.fr/data/ban/adresses/latest/csv/adresses-$departement.csv.gz" -enregistrerSous "$dossierDonnees\$departement-etalab.csv.gz"))
-    [void]$parametresJobs.Add((Parametrer-Job-Telecharger -url "https://adresse.data.gouv.fr/data/adresses-cadastre/latest/csv/adresses-cadastre-$departement.csv.gz" -enregistrerSous "$dossierDonnees\$departement-dgfip.csv.gz"))
+    [void]$parametresJobs.Add((Parametrer-Job-Telecharger -url "https://adresse.data.gouv.fr/data/ban/adresses/latest/csv-bal/adresses-$departement.csv.gz" -enregistrerSous "$dossierDonnees\adresses-$departement.csv.gz"))
 }
 
 # exécution des jobs de téléchargement
 Executer-Jobs -parametresJobs $parametresJobs
+
+# décompression des archives
+foreach ($gz in Get-ChildItem "$dossierDonnees\*.gz") {
+    7Z-Decompresser-Ici $gz -supprimer $true
+}

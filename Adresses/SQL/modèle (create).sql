@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* Nom de SGBD :  PostgreSQL SI3P0                              */
-/* Date de création :  21/07/2021 22:33:14                      */
+/* Date de création :  04/10/2022 11:04:49                      */
 /*==============================================================*/
 
 
@@ -19,6 +19,7 @@ create table adresse (
    nomvoie              VARCHAR              null,
    source               VARCHAR              null,
    idsource             VARCHAR              null,
+   "position"           VARCHAR              null,
    constraint pkadresse primary key (idadresse)
 );
 
