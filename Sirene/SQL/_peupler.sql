@@ -45,6 +45,7 @@ select
 from source_unitelegale;
 
 insert into EtablissementSirene (
+    Siret,
     Siren,
     Nic,
     COGCommune,
@@ -57,8 +58,9 @@ insert into EtablissementSirene (
     EtatAdministratif,
     DateDernierTraitement
 )
-select 
-    siren,
+select
+    siret,
+    ul.Siren,
     nic,
     coalesce(codecommuneetablissement, codecommune2etablissement),
     (etablissementsiege is not null and etablissementsiege = 'true'),
@@ -72,7 +74,8 @@ select
         when datederniertraitementetablissement ~ '^[0-9]{4}-[0-9]{2}-[0-9]{2}$' then to_date(datederniertraitementetablissement, 'YYYY-MM-DD')::date
         else null::date
     end
-from tmp.source_etablissementsirene
+from tmp.source_etablissementsirene se
+left join UniteLegale ul on ul.Siren = se.siren
 where substring(coalesce(codecommuneetablissement, codecommune2etablissement) for 2) in (
     '07', -- Ardèche
     '12', -- Aveyron

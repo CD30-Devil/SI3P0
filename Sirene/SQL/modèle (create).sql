@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* Nom de SGBD :  PostgreSQL SI3P0                              */
-/* Date de création :  12/09/2022 11:55:02                      */
+/* Date de création :  27/10/2022 21:25:24                      */
 /*==============================================================*/
 
 
@@ -12,8 +12,9 @@ set search_path to m, public;
 /* Table : etablissementsirene                                  */
 /*==============================================================*/
 create table etablissementsirene (
-   siren                VARCHAR              not null,
-   nic                  VARCHAR              not null,
+   siret                VARCHAR              not null,
+   siren                VARCHAR              null,
+   nic                  VARCHAR              null,
    cogcommune           VARCHAR              null,
    siege                BOOL                 null,
    denominationusuelle  VARCHAR              null,
@@ -23,15 +24,14 @@ create table etablissementsirene (
    trancheeffectifs     VARCHAR              null,
    etatadministratif    VARCHAR              null,
    datederniertraitement DATE                 null,
-   constraint pketablissementsirene primary key (siren, nic)
+   constraint pketablissementsirene primary key (siret)
 );
 
 /*==============================================================*/
 /* Index : etablissementsirene_pk                               */
 /*==============================================================*/
 create unique index etablissementsirene_pk on etablissementsirene (
-siren,
-nic
+siret
 );
 
 /*==============================================================*/

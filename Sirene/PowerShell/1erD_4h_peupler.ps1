@@ -18,7 +18,7 @@ SIg-Creer-Table-Temp `
         'sigleunitelegale', `        'sexeunitelegale', `        'prenom1unitelegale', `        'prenom2unitelegale', `        'prenom3unitelegale', `        'prenom4unitelegale', `        'prenomusuelunitelegale', `        'pseudonymeunitelegale', `
         'identifiantassociationunitelegale', `        'trancheeffectifsunitelegale', `        'anneeeffectifsunitelegale', `        'datederniertraitementunitelegale', `        'nombreperiodesunitelegale', `        'categorieentreprise', `        'anneecategorieentreprise', `        'datedebut', `        'etatadministratifunitelegale', `        'nomunitelegale', `        'nomusageunitelegale', `
         'denominationunitelegale', `        'denominationusuelle1unitelegale', `        'denominationusuelle2unitelegale', `        'denominationusuelle3unitelegale', `
-        'categoriejuridiqueunitelegale', `        'activiteprincipaleunitelegale', `        'nomenclatureactiviteprincipaleunitelegale', `        'nicsiegeunitelegale', `        'economiesocialesolidaireunitelegale', `        'caractereemployeurunitelegale'
+        'categoriejuridiqueunitelegale', `        'activiteprincipaleunitelegale', `        'nomenclatureactiviteprincipaleunitelegale', `        'nicsiegeunitelegale', `        'economiesocialesolidaireunitelegale', `        'societeMissionUniteLegale', `        'caractereemployeurunitelegale'
 
 SIg-Creer-Table-Temp `
     -table 'tmp.source_etablissementsirene' `
