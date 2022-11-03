@@ -15,7 +15,7 @@ SIg-Creer-Table-Temp -table 'tmp.source_adresse' -colonnes 'uid_adresse', 'cle_i
 # paramétrage des jobs d'import des données dans les structures temporaires
 $parametresJobs = [Collections.ArrayList]::new()
 
-foreach ($csv in Get-ChildItem -Path "$dossierDonnees\*csv") {
+foreach ($csv in Get-ChildItem -Path "$dossierDonnees\*.csv") {
     [void]$parametresJobs.Add((Parametrer-Job-SIg-Importer-CSV -csv $csv -table 'tmp.source_adresse' -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - import $([IO.Path]::GetFileName($csv)).txt"))
 }
 
