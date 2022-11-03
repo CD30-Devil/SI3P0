@@ -7,6 +7,7 @@ $si3p0DossierInfoGeo = '<\\monserveur\infogeo>'
 $si3p0DossierExportDump = "$si3p0DossierInfoGeo\Dump"
 $si3p0DossierExportDXF = "$si3p0DossierInfoGeo\DXF"
 $si3p0DossierExportGeoJSON = "$si3p0DossierInfoGeo\GeoJSON"
+$si3p0DossierExportGPKG = "$si3p0DossierInfoGeo\GPKG"
 $si3p0DossierExportSHP = "$si3p0DossierInfoGeo\SHP"
 $si3p0DossierExportPartenaires = "$si3p0DossierInfoGeo\Partenaires"
 
