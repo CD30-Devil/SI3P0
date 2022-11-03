@@ -3,23 +3,21 @@
 $dossierDonnees = "$PSScriptRoot\..\Données"
 $dossierCadastreDataGouv = "$dossierDonnees\cadastre.data.gouv.fr"
 $dossierDataEconomieGouv = "$dossierDonnees\data.economie.gouv.fr"
-$dossierRapports = "$PSScriptRoot\..\Rapports\peupler"
+$dossierRapports = "$PSScriptRoot\..\Rapports\1erD_4h_peupler"
 $dossierSQL = "$PSScriptRoot\..\SQL"
 
 # nettoyage préalable
 Remove-Item "$dossierTravailTemp\cadastre_peupler\*"
-Remove-Item "$dossierRapports\*.txt"
-Remove-Item "$dossierRapports\*.err"
+Remove-Item "$dossierRapports\*"
 
 # -----------------------------------------------------------------------------
 # traitements des données issues de cadastre.data.gouv.fr
 # -----------------------------------------------------------------------------
 
 $natures = @(
-    @{ nom = 'lieux_dits'; table = 'tmp.Cadastre_LieuDit' }
-    @{ nom = 'sections'; table = 'tmp.Cadastre_Section' }
-    @{ nom = 'parcelles'; table = 'tmp.Cadastre_Parcelle' }
-    @{ nom = 'batiments'; table = 'd.Cadastre_Batiment' }
+    @{ nom = 'lieux_dits'; table = 'tmp.source_cadastre_lieudit' }
+    @{ nom = 'sections'; table = 'tmp.source_cadastre_section' }
+    @{ nom = 'parcelles'; table = 'tmp.source_cadastre_parcelle' }
 )
 
 # -----------------------------------------------------------------------------
@@ -39,38 +37,28 @@ $Job_Importer_Cadastre = {
 
     . ("$($parametres.racineAPI)\api_complète.ps1")
 
-    $dossierRapports = $parametres.dossierRapports
+    # parcours des fichiers JSON de la nature à traiter
+    $fichiersGeoJSON = Get-ChildItem "$($parametres.dossierDonnees)\cadastre-*-$($parametres.nature).json"
 
-    # parcours des archives de la nature à traiter
-    $archives = Get-ChildItem "$($parametres.dossierDonnees)\cadastre-*-$($parametres.nature).json.gz"
+    # import du premier en mode "create"
+    SIg-Importer-GeoJSON `
+        -geoJSON ($fichiersGeoJSON[0]) `
+        -table "$($parametres.table)" `
+        -sortie "$($parametres.dossierRapports)\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - import $([System.IO.Path]::GetFileName($fichiersGeoJSON[0])).txt"
 
-    for ($i = 0; $i -lt $archives.Count; $i++) {
+    # import des suivants en mode "append"
+    foreach ($fichierGeoJSON in $fichiersGeoJSON | select -Skip 1) {
 
-        # extraction du GeoJSON
-        7Z-Decompresser -archive $archives[$i] -extraireVers "$dossierTravailTemp\cadastre_peupler\"
+        SIg-Importer-GeoJSON `
+            -geoJSON $fichierGeoJSON `
+            -table "$($parametres.table)" `
+            -sortie "$($parametres.dossierRapports)\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - import $([System.IO.Path]::GetFileName($fichierGeoJSON)).txt" `
+            -autresParams @('-append')
 
-        # import du GeoJSON
-        $nomGeoJSON = [System.IO.Path]::GetFileNameWithoutExtension($archives[$i])
-
-        if ($i -eq 0) {
-            SIg-Importer-GeoJSON `
-                -geoJSON "$dossierTravailTemp\cadastre_peupler\$nomGeoJSON" `
-                -table "$($parametres.table)" `
-                -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - import $nomGeoJSON.txt"
-        }
-        else {
-            SIg-Importer-GeoJSON `
-                -geoJSON "$dossierTravailTemp\cadastre_peupler\$nomGeoJSON" `
-                -table "$($parametres.table)" `
-                -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - import $nomGeoJSON.txt" `
-                -autresParams @('-append')
-        }
-
-        # suppression du geojson extrait
-        Remove-Item "$dossierTravailTemp\cadastre_peupler\$nomGeoJSON"
     }
 }
 
+# nettoyage préalable
 foreach ($nature in $natures) {
     SIg-Effacer-Table -table "$($nature.table)" -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - effacement $($nature.table).txt"
 }
@@ -96,11 +84,11 @@ Executer-Jobs -parametresJobs $parametresJobs
 # traitements des données issues de data.economie.gouv.fr
 # -----------------------------------------------------------------------------
 
-SIg-Effacer-Table -table 'tmp.ParcellePersonneMorale' -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - effacement tmp.ParcellePersonneMorale.txt"
+SIg-Effacer-Table -table 'tmp.source_parcelle_personnemorale' -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - effacement tmp.source_parcelle_personnemorale.txt"
 
 # création des structures temporaires
 SIg-Creer-Table-Temp `
-    -table 'tmp.ParcellePersonneMorale' `
+    -table 'tmp.source_parcelle_personnemorale' `
     -colonnes `
         'code_departement', `
         'code_direction', `
@@ -126,14 +114,16 @@ SIg-Creer-Table-Temp `
         'forme_juridique', `
         'forme_juridique_abregee', `
         'denomination' `
-    -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - effacement tmp.ParcellePersonneMorale.txt"
+    -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - effacement tmp.source_parcelle_personnemorale.txt"
 
+# import des données dans les structures temporaires
+[System.IO.Directory]::CreateDirectory("$dossierTravailTemp\cadastre_peupler")
 foreach ($fichier in (Get-ChildItem -Path "$dossierDataEconomieGouv\PM_*_NB_*.txt")) {
 
     $nomFichier = [IO.Path]::GetFileName($fichier)
     Copy-Item $fichier "$dossierTravailTemp\cadastre_peupler\$nomFichier"
     Changer-Encodage "$dossierTravailTemp\cadastre_peupler\$nomFichier" -encodageAvant 'iso-8859-1' -encodageApres 'utf-8'
-    SIg-Importer-CSV -csv "$dossierTravailTemp\cadastre_peupler\$nomFichier" -table 'tmp.ParcellePersonneMorale' -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - import $nomFichier.txt"
+    SIg-Importer-CSV -csv "$dossierTravailTemp\cadastre_peupler\$nomFichier" -table 'tmp.source_parcelle_personnemorale' -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - import $nomFichier.txt"
 
 }
 
@@ -144,9 +134,7 @@ SIg-Executer-Fichier -fichier "$dossierSQL\_peupler.sql" -sortie "$dossierRappor
 Remove-Item "$dossierTravailTemp\cadastre_peupler\*"
 
 foreach ($nature in $natures) {
-    if ($nature.table.StartsWith('tmp.')) {
-        SIg-Effacer-Table -table "$($nature.table)" -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - effacement $($nature.table).txt"
-    }
+    SIg-Effacer-Table -table "$($nature.table)" -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - effacement $($nature.table).txt"
 }
 
-SIg-Effacer-Table -table 'tmp.ParcellePersonneMorale' -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - effacement tmp.ParcellePersonneMorale.txt"
+SIg-Effacer-Table -table 'tmp.source_parcelle_personnemorale' -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - effacement tmp.source_parcelle_personnemorale.txt"
