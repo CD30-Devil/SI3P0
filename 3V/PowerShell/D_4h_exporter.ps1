@@ -7,6 +7,7 @@ $dossierSQLPart = "$PSScriptRoot\..\SQL.4Part"
 
 # nettoyage préalable
 Remove-Item "$dossierRapports\*"
+if (Test-Path "$si3p0DossierExportGPKG\3V\3V.gpkg") { Remove-Item "$si3p0DossierExportGPKG\3V\3V.gpkg" }
 
 SIg-Executer-Fichier -fichier "$dossierSQL4Layer\tmp(.v).4Layer (drop).sql" -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - tmp(.v).4Layer (drop).txt"
 SIg-Executer-Fichier -fichier "$dossierSQL4Sheet\tmp(.v).4Sheet (drop).sql" -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - tmp(.v).4Sheet (drop).txt"
@@ -38,7 +39,14 @@ order by NumeroItineraireCyclable
 # paramétrage des jobs d'export
 $parametresJobs = [Collections.ArrayList]::new()
 
-# geojson (WGS84)
+# gpkg
+# l'export du GPKG n'est pas réalisé par job pour éviter les problèmes d'accès concurrents au fichier
+foreach ($itineraire in Import-Csv -Delimiter (Get-Culture).TextInfo.ListSeparator -Path "$dossierRapports\itinéraires.csv") {
+
+    SIg-Exporter-GPKG `        -requete "select * from tmp.VVV_AvecDoublons_4Layer where `"`"NumeroItineraire`"`" = '$($itineraire.NumeroItineraireCyclable)'" `        -gpkg "$si3p0DossierExportGPKG\3V\3V.gpkg" `        -couche """$($itineraire.NumeroItineraireCyclable) - $($itineraire.NomOfficiel)""" `        -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - Export $($itineraire.NumeroItineraireCyclable) - $($itineraire.NomOfficiel) dans 3V.gpkg.txt" -ecraserGPKG $false
+}
+
+# geojson
 [void]$parametresJobs.Add((Parametrer-Job-SIg-Exporter-GeoJSON -requete 'select * from tmp.VVV_AvecDoublons_4Layer' -geoJSON "$si3p0DossierExportGeoJSON\3V\D30_3V avec doublons.geojson" -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - Export D30_3V avec doublons.geojson.txt"))
 [void]$parametresJobs.Add((Parametrer-Job-SIg-Exporter-GeoJSON -requete 'select * from tmp.VVV_SansDoublons_4Layer' -geoJSON "$si3p0DossierExportGeoJSON\3V\D30_3V sans doublons.geojson" -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - Export D30_3V sans doublons.geojson.txt"))
 [void]$parametresJobs.Add((Parametrer-Job-SIg-Exporter-GeoJSON -requete 'select * from tmp.VVV_InventaireD30_4Layer' -geoJSON "$si3p0DossierExportGeoJSON\3V\D30_Inventaire.geojson" -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - Export D30_Inventaire.geojson.txt"))
@@ -78,7 +86,7 @@ foreach ($itineraire in Import-Csv -Delimiter (Get-Culture).TextInfo.ListSeparat
         ($itineraire.NumeroItineraireCyclable.StartsWith('ID30') -and [int]::Parse($itineraire.TauxOuverture) -ge 50) -or # - 50% pour les itinéraires départementaux
         ($itineraire.NumeroItineraireCyclable.StartsWith('V') -and [int]::Parse($itineraire.TauxOuverture) -ge 10) -or    # - 10% pour les itinéraires nationaux
         ($itineraire.NumeroItineraireCyclable.StartsWith('EV') -and [int]::Parse($itineraire.TauxOuverture) -ge 5)) {     # - 5% pour les itinéraires européens
-        
+
         [void]$parametresJobs.Add((Parametrer-Job-SIg-Exporter-GeoJSON -requete "select * from tmp.OpenData_3V_4Part where `"`"NumeroItineraire`"`" = '$($itineraire.NumeroItineraireCyclable)'" -geoJSON "$si3p0DossierExportPartenaires\OpenData\3V\GeoJSON\$($itineraire.NumeroItineraireCyclable) - $($itineraire.NomOfficiel).geojson" -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - Export $($itineraire.NumeroItineraireCyclable) - $($itineraire.NomOfficiel).geojson.txt"))
         
         [void]$parametresJobs.Add((Parametrer-Job-SIg-Exporter-GPX `            -gpx "$si3p0DossierExportPartenaires\OpenData\3V\GPX\$($itineraire.NumeroItineraireCyclable) - $($itineraire.NomOfficiel).gpx" `            -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - Export Géométrie - $($itineraire.NumeroItineraireCyclable) - $($itineraire.NomOfficiel).gpx.txt" `            -requete @"
