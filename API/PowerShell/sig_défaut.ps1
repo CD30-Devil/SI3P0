@@ -842,7 +842,7 @@ function SIg-Exporter-Dump {
         [string] $utilisateur = $sigUtilisateur,
         [string[]] $tables = $null,
         [parameter(Mandatory=$true)] [string] $dump,
-        [string[]] $autresParams = @('--inserts', '--no-owner', '--no-privileges')
+        [string[]] $autresParams = @('--no-owner', '--no-privileges')
     )
 
     Exporter-Dump-PostgreSQL `
@@ -1361,7 +1361,7 @@ function Parametrer-Job-SIg-Exporter-Dump {
         [string] $utilisateur = $sigUtilisateur,
         [string[]] $tables = $null,
         [parameter(Mandatory=$true)] [string] $dump,
-        [string[]] $autresParams = @('--inserts', '--no-owner', '--no-privileges')
+        [string[]] $autresParams = @('--no-owner', '--no-privileges')
     )
 
     Parametrer-Job-Exporter-Dump-PostgreSQL `

@@ -454,7 +454,7 @@ function Parametrer-Job-Exporter-Dump-PostgreSQL {
         [parameter(Mandatory=$true)] [string] $utilisateur,
         [string[]] $tables = $null,
         [parameter(Mandatory=$true)] [string] $dump,
-        [string[]] $autresParams = @('--inserts', '--no-owner', '--no-privileges')
+        [string[]] $autresParams = @('--no-owner', '--no-privileges')
     )
 
     @{
