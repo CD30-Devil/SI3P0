@@ -133,15 +133,12 @@ begin;
 set search_path to d, public;
 
 create table d30limit_bdtopo_troncon_de_route as
-with UnionGardEtLimitrophes as (
-    select ST_Union(geometrie) as geometrie
-    from bdtopo_departement
-    where code_insee in ('07', '12', '13', '26', '30', '34', '48', '84')
-)
 select
-    bd.*
+    distinct bd.*
 from bdtopo_troncon_de_route bd
-inner join UnionGardEtLimitrophes u on ST_Intersects(bd.geometrie, u.geometrie);
+inner join bdtopo_departement d on
+ST_Intersects(bd.geometrie, d.geometrie)
+and d.code_insee in ('07', '12', '13', '26', '30', '34', '48', '84');
 
 commit;
 

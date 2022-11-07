@@ -7,6 +7,38 @@ $dossierSQL = "$PSScriptRoot\..\SQL"
 # détermine l'archive de la BDTopo la plus récente
 $archiveBDTopo = Get-ChildItem "$dossierDonnees\BDTOPO_3-0_TOUSTHEMES_SQL_LAMB93_FXX_*.7z.001" | sort -Property Name -Descending | select -First 1
 
+# liste des thèmes à importer
+$themes = @(
+    # administratif
+    @{ nom = 'commune'; type = "geometry(MultiPolygon,2154)" }
+    @{ nom = 'departement'; type = "geometry(MultiPolygon,2154)" }
+    @{ nom = 'epci'; type = "geometry(MultiPolygon,2154)" }
+    @{ nom = 'region'; type = "geometry(MultiPolygon,2154)" }
+    
+    # bati
+    @{ nom = 'batiment'; type = "geometry(MultiPolygonZ,2154)" }
+
+    # hydrographie
+    @{ nom = 'cours_d_eau'; type = "geometry(MultiLineString,2154)" }
+    @{ nom = 'plan_d_eau'; type = "geometry(MultiPolygon,2154)" }
+    @{ nom = 'surface_hydrographique'; type = "geometry(MultiPolygonZ,2154)" }
+    @{ nom = 'troncon_hydrographique'; type = "geometry(LineStringZ,2154)" }
+
+    # occupation du sol
+    @{ nom = 'zone_de_vegetation'; type = "geometry(MultiPolygon,2154)" }
+
+    # services et activités
+    @{ nom = 'ligne_electrique'; type = "geometry(LineStringZ,2154)" }
+    @{ nom = 'zone_d_activite_ou_d_interet'; type = "geometry(MultiPolygon,2154)" }
+
+    # transport
+    @{ nom = 'point_de_repere'; type = "geometry(Point,2154)" }
+    @{ nom = 'route_numerotee_ou_nommee'; type = "geometry(MultiLineString,2154)" }
+    @{ nom = 'troncon_de_route'; type = "geometry(LineStringZ,2154)" }
+    @{ nom = 'troncon_de_voie_ferree'; type = "geometry(LineStringZ,2154)" }
+    @{ nom = 'voie_ferree_nommee'; type = "geometry(MultiLineString,2154)" }
+)
+
 # -----------------------------------------------------------------------------
 # Job d'import d'un thème de la BDTopo dans le schéma d.
 #
@@ -16,7 +48,7 @@ $archiveBDTopo = Get-ChildItem "$dossierDonnees\BDTOPO_3-0_TOUSTHEMES_SQL_LAMB93
 # .bdd : La base de données cible de l'import.
 # .theme : Le nom du thème à importer. La table correspondante portera le nom
 #          du thème préfixé par BDTopo_.
-# .typeGeometrie : Le type de la géométrie à importer.
+# .type : Le type de la géométrie à importer.
 # .dossierRapports : Le chemin vers le dossier de sortie des rapports.
 # -----------------------------------------------------------------------------
 $Job_Importer_BDTopo = {
@@ -25,152 +57,58 @@ $Job_Importer_BDTopo = {
     )
 
     . ("$($parametres.racineAPI)\api_complète.ps1")
-
-    # extraction du fichier sql
-    Executer-7Z -commande 'e' -archive "`"$($parametres.archiveBDTopo)`"" -autresParams "-o`"$($parametres.dossierDonnees)\extraction`"", "-ir!$($parametres.theme).sql", "-aoa"
     
-    # adaptation du contenu du fichier aux besoins spécifiques si3p0
-    $lecture = [System.IO.File]::OpenText("$($parametres.dossierDonnees)\extraction\$($parametres.theme).sql")
-    $ligne = ''
+    $dossierExtraction = "$([IO.Path]::GetDirectoryName($parametres.archiveBDTopo))\extraction\"
+    $theme = $parametres.theme
 
-
-    # drop
-    # le "drop" contenu dans le fichier est ignoré et remplacé par un drop sans 'CASCADE'
-    while ('BEGIN;' -ne ($ligne = $lecture.ReadLine())) {
-    }
-
-    SIg-Executer-Commande `        -bdd $parametres.bdd `        -sortie "$($parametres.dossierRapports)\$($parametres.theme) - $(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - effacement.txt" `        -commande @"
-            set search_path to d, public;
-            drop table if exists bdtopo_$($parametres.theme);
-"@
-
-
-    # create
-    # le "create" est adapté pour spécifier le schéma et changer le nom de la table
-    $ordreCreate = ''
-    while ('COMMIT;' -ne ($ligne = $lecture.ReadLine())) {
-        $ordreCreate += $ligne
-    }
-
-    $ordreCreate = $ordreCreate.replace("`"$($parametres.theme)`"", "bdtopo_$($parametres.theme)")
-    $ordreCreate = $ordreCreate.replace("SELECT AddGeometryColumn('$($parametres.theme)','geometrie',2154,'GEOMETRY',", "SELECT AddGeometryColumn('bdtopo_$($parametres.theme)', 'geometrie', 2154, '$($parametres.typeGeometrie)', ")
+    # extraction du fichier SQL du thème
+    Executer-7Z -commande 'e' -archive "`"$($parametres.archiveBDTopo)`"" -autresParams "-o`"$dossierExtraction`"", "-ir!$theme.sql", "-aoa"
     
-    SIg-Executer-Commande `        -bdd $parametres.bdd `        -sortie "$($parametres.dossierRapports)\$($parametres.theme) - $(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - création.txt" `        -commande @"
-            set search_path to d, public;
-            $ordreCreate
+    # génération d'un fichier de lancement qui fixe préalablement le search_path
+    "set search_path to tmp, public; \ir '$theme.sql'" | Out-File "$dossierExtraction\lancement_$theme.sql" -Encoding utf8
+
+    SIg-Executer-Fichier `        -bdd $parametres.bdd `        -fichier "$dossierExtraction\lancement_$theme.sql" `        -sortie "$($parametres.dossierRapports)\$theme - chargement.txt"
+
+    Remove-Item "$dossierExtraction\lancement_$theme.sql"
+    Remove-Item "$dossierExtraction\$theme.sql"
+
+    SIg-Executer-Commande `        -bdd $parametres.bdd `        -sortie "$($parametres.dossierRapports)\$theme - transfert vers le schéma d.txt" `        -commande @"
+            start transaction;
+
+            drop table if exists d.bdtopo_$theme;
+            create table d.bdtopo_$theme as select * from tmp.$theme limit 0;
+            alter table d.bdtopo_$theme alter column geometrie set data type $($parametres.type);
+            insert into d.bdtopo_$theme select * from tmp.$theme;
+
+            drop table tmp.$theme;
+
+            commit;
 "@
-
-    # on complète par un delete au cas ou le drop n'aurait pas fonctionné
-    SIg-Executer-Commande `        -bdd $parametres.bdd `        -sortie "$($parametres.dossierRapports)\$($parametres.theme) - $(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - raz.txt" `        -commande @"
-            set search_path to d, public;
-            delete from bdtopo_$($parametres.theme);
-"@
-
-
-    # copy
-    # le "copy" est adapté pour spécifier le schéma et changer le nom de la table
-    while (!($ligne = $lecture.ReadLine()).StartsWith('COPY')) {
-    }
-
-    $ordreCopy = $ligne
-    while (!$ligne.EndsWith('FROM STDIN;')) {
-        $ligne = $lecture.ReadLine()
-        $ordreCopy += $ligne
-    }
-
-    $ordreCopy = $ordreCopy.replace("`"$($parametres.theme)`"", "bdtopo_$($parametres.theme)")
-
-    # de plus, le "copy" est fait par paquet d'environ 1Go de données
-    $premier = 1
-    $dernier = 0
-
-    $fichierSQL = "$($parametres.dossierDonnees)\extraction\copy_$($parametres.theme) (offset $premier).sql"
-    $ecriture = [System.IO.StreamWriter]::new($fichierSQL)
-    $ecriture.WriteLine('set search_path to d, public;')
-    $ecriture.WriteLine($ordreCopy)
-
-    while ('\.' -ne ($ligne = $lecture.ReadLine())) {
-
-        $ecriture.WriteLine($ligne)
-        $dernier++
-
-        if ((Get-Childitem $fichierSQL).length -gt 1GB) {
-            
-            $ecriture.Close()
-            $ecriture = $null
-
-            Afficher-Message-Date -message "Import des entités $premier à $dernier du thème $($parametres.theme)"
-
-            SIg-Executer-Fichier `                -bdd $parametres.bdd `                -sortie "$($parametres.dossierRapports)\$($parametres.theme) - $(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - import de $premier à $dernier.txt" `                -fichier "$($parametres.dossierDonnees)\extraction\copy_$($parametres.theme) (offset $premier).sql"
-
-            Remove-Item -Path "$($parametres.dossierDonnees)\extraction\copy_$($parametres.theme) (offset $premier).sql"
-            
-            $premier = $dernier + 1
-
-            $fichierSQL = "$($parametres.dossierDonnees)\extraction\copy_$($parametres.theme) (offset $premier).sql"
-            $ecriture = [System.IO.StreamWriter]::new($fichierSQL)
-            $ecriture.WriteLine('set search_path to d, public;')
-            $ecriture.WriteLine($ordreCopy)
-        }
-    }
-
-    $lecture.Close()
-    $lecture = $null
-
-    Remove-Item -Path "$($parametres.dossierDonnees)\extraction\$($parametres.theme).sql"
-
-    $ecriture.Close()
-    $ecriture = $null
-
-    if ($dernier -ge $premier) {
-        Afficher-Message-Date -message "Import des entités $premier à $dernier du thème $($parametres.theme)"
-
-        SIg-Executer-Fichier `            -bdd $parametres.bdd `            -sortie "$($parametres.dossierRapports)\$($parametres.theme) - $(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - import de $premier à $dernier.txt" `            -fichier "$($parametres.dossierDonnees)\extraction\copy_$($parametres.theme) (offset $premier).sql"
-
-        Remove-Item -Path "$($parametres.dossierDonnees)\extraction\copy_$($parametres.theme) (offset $premier).sql"
-    }
-    
 }
 
 $bdd = Choisir-Option 'Merci de choisir la base de données cible de l''import' -options $sigBDD, 'si3p0_qualif'
 
 # nettoyage préalable
 Remove-Item "$dossierRapports\*"
-Remove-Item "$dossierDonnees\extraction\*"
+Remove-Item "$([IO.Path]::GetDirectoryName($archiveBDTopo))\extraction\*"
 
 SIg-Executer-Fichier -bdd $bdd -fichier "$dossierSQL\tables de précalcul (drop).sql" -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - tables de précalcul (drop).txt"
 
 # paramétrage des jobs d'import des données
 $parametresJobs = [Collections.ArrayList]::new()
 
-# administratif
-[void]$parametresJobs.Add(@{ script = $Job_Importer_BDTopo; racineAPI = "$PSScriptRoot\..\..\API\PowerShell"; archiveBDTopo = $archiveBDTopo; bdd = $bdd; theme = 'commune'; typeGeometrie = 'MULTIPOLYGON'; dossierDonnees = $dossierDonnees; dossierRapports = $dossierRapports })
-[void]$parametresJobs.Add(@{ script = $Job_Importer_BDTopo; racineAPI = "$PSScriptRoot\..\..\API\PowerShell"; archiveBDTopo = $archiveBDTopo; bdd = $bdd; theme = 'departement'; typeGeometrie = 'MULTIPOLYGON'; dossierDonnees = $dossierDonnees; dossierRapports = $dossierRapports })
-[void]$parametresJobs.Add(@{ script = $Job_Importer_BDTopo; racineAPI = "$PSScriptRoot\..\..\API\PowerShell"; archiveBDTopo = $archiveBDTopo; bdd = $bdd; theme = 'epci'; typeGeometrie = 'MULTIPOLYGON'; dossierDonnees = $dossierDonnees; dossierRapports = $dossierRapports })
-[void]$parametresJobs.Add(@{ script = $Job_Importer_BDTopo; racineAPI = "$PSScriptRoot\..\..\API\PowerShell"; archiveBDTopo = $archiveBDTopo; bdd = $bdd; theme = 'region'; typeGeometrie = 'MULTIPOLYGON'; dossierDonnees = $dossierDonnees; dossierRapports = $dossierRapports })
+foreach ($theme in $themes) {
 
-# bati
-[void]$parametresJobs.Add(@{ script = $Job_Importer_BDTopo; racineAPI = "$PSScriptRoot\..\..\API\PowerShell"; archiveBDTopo = $archiveBDTopo; bdd = $bdd; theme = 'batiment'; typeGeometrie = 'MULTIPOLYGON'; dossierDonnees = $dossierDonnees; dossierRapports = $dossierRapports })
+    [void]$parametresJobs.Add(@{
+        script = $Job_Importer_BDTopo
+        racineAPI = "$PSScriptRoot\..\..\API\PowerShell"
+        archiveBDTopo = $archiveBDTopo; bdd = $bdd
+        theme = $theme.nom
+        type = $theme.type
+        dossierRapports = $dossierRapports
+    })
 
-# hydrographie
-[void]$parametresJobs.Add(@{ script = $Job_Importer_BDTopo; racineAPI = "$PSScriptRoot\..\..\API\PowerShell"; archiveBDTopo = $archiveBDTopo; bdd = $bdd; theme = 'cours_d_eau'; typeGeometrie = 'MULTILINESTRING'; dossierDonnees = $dossierDonnees; dossierRapports = $dossierRapports })
-[void]$parametresJobs.Add(@{ script = $Job_Importer_BDTopo; racineAPI = "$PSScriptRoot\..\..\API\PowerShell"; archiveBDTopo = $archiveBDTopo; bdd = $bdd; theme = 'plan_d_eau'; typeGeometrie = 'MULTIPOLYGON'; dossierDonnees = $dossierDonnees; dossierRapports = $dossierRapports })
-[void]$parametresJobs.Add(@{ script = $Job_Importer_BDTopo; racineAPI = "$PSScriptRoot\..\..\API\PowerShell"; archiveBDTopo = $archiveBDTopo; bdd = $bdd; theme = 'surface_hydrographique'; typeGeometrie = 'MULTIPOLYGON'; dossierDonnees = $dossierDonnees; dossierRapports = $dossierRapports })
-[void]$parametresJobs.Add(@{ script = $Job_Importer_BDTopo; racineAPI = "$PSScriptRoot\..\..\API\PowerShell"; archiveBDTopo = $archiveBDTopo; bdd = $bdd; theme = 'troncon_hydrographique'; typeGeometrie = 'LINESTRING'; dossierDonnees = $dossierDonnees; dossierRapports = $dossierRapports })
-
-# occupation du sol
-[void]$parametresJobs.Add(@{ script = $Job_Importer_BDTopo; racineAPI = "$PSScriptRoot\..\..\API\PowerShell"; archiveBDTopo = $archiveBDTopo; bdd = $bdd; theme = 'zone_de_vegetation'; typeGeometrie = 'MULTIPOLYGON'; dossierDonnees = $dossierDonnees; dossierRapports = $dossierRapports })
-
-# services et activités
-[void]$parametresJobs.Add(@{ script = $Job_Importer_BDTopo; racineAPI = "$PSScriptRoot\..\..\API\PowerShell"; archiveBDTopo = $archiveBDTopo; bdd = $bdd; theme = 'ligne_electrique'; typeGeometrie = 'LINESTRING'; dossierDonnees = $dossierDonnees; dossierRapports = $dossierRapports })
-[void]$parametresJobs.Add(@{ script = $Job_Importer_BDTopo; racineAPI = "$PSScriptRoot\..\..\API\PowerShell"; archiveBDTopo = $archiveBDTopo; bdd = $bdd; theme = 'zone_d_activite_ou_d_interet'; typeGeometrie = 'MULTIPOLYGON'; dossierDonnees = $dossierDonnees; dossierRapports = $dossierRapports })
-
-# transport
-[void]$parametresJobs.Add(@{ script = $Job_Importer_BDTopo; racineAPI = "$PSScriptRoot\..\..\API\PowerShell"; archiveBDTopo = $archiveBDTopo; bdd = $bdd; theme = 'point_de_repere'; typeGeometrie = 'POINT'; dossierDonnees = $dossierDonnees; dossierRapports = $dossierRapports })
-[void]$parametresJobs.Add(@{ script = $Job_Importer_BDTopo; racineAPI = "$PSScriptRoot\..\..\API\PowerShell"; archiveBDTopo = $archiveBDTopo; bdd = $bdd; theme = 'route_numerotee_ou_nommee'; typeGeometrie = 'MULTILINESTRING'; dossierDonnees = $dossierDonnees; dossierRapports = $dossierRapports })
-[void]$parametresJobs.Add(@{ script = $Job_Importer_BDTopo; racineAPI = "$PSScriptRoot\..\..\API\PowerShell"; archiveBDTopo = $archiveBDTopo; bdd = $bdd; theme = 'troncon_de_route'; typeGeometrie = 'LINESTRING'; dossierDonnees = $dossierDonnees; dossierRapports = $dossierRapports })
-[void]$parametresJobs.Add(@{ script = $Job_Importer_BDTopo; racineAPI = "$PSScriptRoot\..\..\API\PowerShell"; archiveBDTopo = $archiveBDTopo; bdd = $bdd; theme = 'troncon_de_voie_ferree'; typeGeometrie = 'LINESTRING'; dossierDonnees = $dossierDonnees; dossierRapports = $dossierRapports })
-[void]$parametresJobs.Add(@{ script = $Job_Importer_BDTopo; racineAPI = "$PSScriptRoot\..\..\API\PowerShell"; archiveBDTopo = $archiveBDTopo; bdd = $bdd; theme = 'voie_ferree_nommee'; typeGeometrie = 'MULTILINESTRING'; dossierDonnees = $dossierDonnees; dossierRapports = $dossierRapports })
+}
 
 # exécution des jobs d'import des données
 Executer-Jobs -parametresJobs $parametresJobs
