@@ -18,6 +18,7 @@
 . ("$PSScriptRoot\fonctions_postgis.ps1")
 
 . ("$PSScriptRoot\fonctions_jobs.ps1")
+. ("$PSScriptRoot\jobs_archives.ps1")
 . ("$PSScriptRoot\jobs_web.ps1")
 . ("$PSScriptRoot\jobs_excel.ps1")
 . ("$PSScriptRoot\jobs_postgresql.ps1")
