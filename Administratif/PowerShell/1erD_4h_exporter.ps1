@@ -14,7 +14,7 @@ SIg-Executer-Fichier -fichier "$dossierSQL4Layer\4Layer (create).sql" -sortie "$
 # paramétrage des jobs d'export
 $parametresJobs = [Collections.ArrayList]::new()
 
-# geojson (WGS84)
+# geojson
 [void]$parametresJobs.Add((Parametrer-Job-SIg-Exporter-GeoJSON -requete "select * from Region_4Layer" -geoJSON "$si3p0DossierExportGeoJSON\Administratif\FR_Région.geojson" -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - Export FR_Région.geojson.txt"))
 [void]$parametresJobs.Add((Parametrer-Job-SIg-Exporter-GeoJSON -requete "select * from Departement_4Layer" -geoJSON "$si3p0DossierExportGeoJSON\Administratif\FR_Département.geojson" -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - Export FR_Département.geojson.txt"))
 [void]$parametresJobs.Add((Parametrer-Job-SIg-Exporter-GeoJSON -requete "select * from EPCI_4Layer" -geoJSON "$si3p0DossierExportGeoJSON\Administratif\FR_EPCI.geojson" -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - Export FR_EPCI.geojson.txt"))
