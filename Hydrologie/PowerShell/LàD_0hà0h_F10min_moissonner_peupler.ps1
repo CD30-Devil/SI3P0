@@ -1,7 +1,7 @@
 ﻿. ("$PSScriptRoot\..\..\API\PowerShell\api_complète.ps1")
 
 $dossierDonnees = "$PSScriptRoot\..\Données"
-$dossierRapports = "$PSScriptRoot\..\Rapports\LàD_0hà0h_F10min_Stop_moissonner_peupler"
+$dossierRapports = "$PSScriptRoot\..\Rapports\LàD_0hà0h_F10min_moissonner_peupler"
 
 # nettoyage préalable
 Remove-Item "$dossierDonnees\hydrométrie.sql"
@@ -12,8 +12,6 @@ SIg-Exporter-CSV -requete 'select CodeTronconHydro from TronconHydro' -csv "$dos
 SIg-Exporter-CSV -requete 'select CodeStationHydro from StationHydro' -csv "$dossierRapports\stations_hydro.csv"
 
 # construction d'un fichier SQL à partir des données issues de Vigicrues et Hubeau
-New-Item -ItemType Directory -Force -Path "$dossierDonnees\"
-
 $fichierSQL = "$dossierDonnees\hydrométrie.sql"
 $ecriture = [System.IO.StreamWriter]::new($fichierSQL, [Text.UTF8Encoding]::new($true))
 
@@ -46,14 +44,10 @@ foreach ($codeStation in Import-Csv "$dossierRapports\stations_hydro.csv" -Encod
         $ecriture.WriteLine("insert into ReleveHydro (CodeStationHydro, Date) values ('$codeStation', '$dateReleve'::timestamp at time zone 'UTC');")
     }
 
-    $ecriture.WriteLine("")
-
     # mise à jour de la hauteur
     foreach ($releve in $relevesStation.data | where grandeur_hydro -eq 'H' | select date_obs, resultat_obs) {
         $ecriture.WriteLine("update ReleveHydro set hauteur = $($releve.resultat_obs) where CodeStationHydro = '$codeStation' and Date = '$($releve.date_obs)'::timestamp at time zone 'UTC';")
     }
-
-    $ecriture.WriteLine("")
 
     # mise à jour du débit
     foreach ($releve in $relevesStation.data | where grandeur_hydro -eq 'Q' | select date_obs, resultat_obs) {
@@ -64,7 +58,6 @@ foreach ($codeStation in Import-Csv "$dossierRapports\stations_hydro.csv" -Encod
 }
 
 $ecriture.WriteLine("commit;")
-$ecriture.WriteLine("")
 
 $ecriture.Close() 
 $ecriture = $null
