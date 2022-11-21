@@ -14,6 +14,11 @@ $parametresJobs = [Collections.ArrayList]::new()
 # exécution des jobs de téléchargement
 Executer-Jobs -parametresJobs $parametresJobs
 
-# décompression des archives
-7Z-Decompresser-Ici "$dossierDonnees\StockUniteLegale_utf8.zip" -supprimer $true
-7Z-Decompresser-Ici "$dossierDonnees\StockEtablissement_utf8.zip" -supprimer $true
+# paramétrage des jobs de décompression des archives
+$parametresJobs = [Collections.ArrayList]::new()
+
+[void]$parametresJobs.Add((Parametrer-Job-7Z-Decompresser-Ici -archive "$dossierDonnees\StockUniteLegale_utf8.zip" -supprimer $true))
+[void]$parametresJobs.Add((Parametrer-Job-7Z-Decompresser-Ici -archive "$dossierDonnees\StockEtablissement_utf8.zip" -supprimer $true))
+
+# exécution des jobs de décompression des archives
+Executer-Jobs -parametresJobs $parametresJobs
