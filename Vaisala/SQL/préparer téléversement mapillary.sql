@@ -1,14 +1,14 @@
--- suppression des points trop éloignés de la RD de rattachement (> 50 mètres)
+-- suppression des points trop Ã©loignÃ©s de la RD de rattachement (> 50 mÃ¨tres)
 delete
 from tmp.RapportVideoVaisala rvv
 where not exists (
     select true
-    from v.TronconReel t
+    from m.TronconReel t
     where t.NumeroRoute = rvv.NumeroRoute
     and ST_DWithin(t.Geom, TransformerEnL93(FabriquerPointWGS84(rvv.Longitude::numeric, rvv.Latitude::numeric)), 50)
 );
 
--- typage et mise en ordre des rapports vidéos
+-- typage et mise en ordre des rapports vidÃ©os
 create table tmp.RapportVideoVaisalaOrdonne as
 with RapportVideoVaisala as (
 select
@@ -17,7 +17,7 @@ select
         Abs::numeric as CumulDist,
         Direction::varchar,
         URLImage::varchar,
-		FabriquerPointWGS84(Longitude::numeric, Latitude::numeric) as Geom
+        FabriquerPointWGS84(Longitude::numeric, Latitude::numeric) as Geom
     from tmp.RapportVideoVaisala
 )
 select
@@ -27,17 +27,17 @@ select
     string_to_array(ST_AsLatLonText(Geom, 'D M S.SSSS C'), ' ') as LatLong
 from RapportVideoVaisala;
 
--- création des index en vu de la constitution des séquences
+-- crÃ©ation des index en vu de la constitution des sÃ©quences
 create index RapportVideoVaisalaOrdonne_NumeroRoute_IDX on tmp.RapportVideoVaisalaOrdonne(NumeroRoute);
 create index RapportVideoVaisalaOrdonne_Direction_IDX on tmp.RapportVideoVaisalaOrdonne(Direction);
 create index RapportVideoVaisalaOrdonne_Date_IDX on tmp.RapportVideoVaisalaOrdonne(Date);
 
--- constitution des séquences par RD et direction
+-- constitution des sÃ©quences par RD et direction
 create table tmp.SequencesVaisala as
 with recursive SequencesVaisala as (
     (
-        -- recherche de la première image de chaque séquence
-        -- la première image n'a pas d'autre image qui la précède sur la même RD, dans la même direction dans les 5 minutes qui précèdent
+        -- recherche de la premiÃ¨re image de chaque sÃ©quence
+        -- la premiÃ¨re image n'a pas d'autre image qui la prÃ©cÃ¨de sur la mÃªme RD, dans la mÃªme direction dans les 5 minutes qui prÃ©cÃ¨dent
         select row_number() over() as IdSequence, 0 as IdImage, DateHeure as DebutSequence, rvvo1.*
         from tmp.RapportVideoVaisalaOrdonne rvvo1
         where not exists (
