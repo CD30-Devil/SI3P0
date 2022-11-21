@@ -1,15 +1,15 @@
 ﻿-- inventaire global, c-a-d tous gestionnaires/propriétaires, tous états, tous statuts
 create view tmp.VVVInventaireGlobal_4Sheet as
 with SegmentRetenu as (
-	select sc.IdSegmentCyclable
-	from m.SegmentCyclable sc
+    select sc.IdSegmentCyclable
+    from m.SegmentCyclable sc
 ),
 DistancesPortionParEtat as (
     select pc.IdPortionCyclable, sc.CodeEtatAvancement3V, round(sum(ST_Length(geom))::numeric / 1000, 3) as Distance
     from m.PortionCyclable pc
     inner join m.SegmentCyclable_PortionCyclable ps on ps.IdPortionCyclable = pc.IdPortionCyclable
     inner join m.SegmentCyclable sc on sc.IdSegmentCyclable = ps.IdSegmentCyclable
-	inner join SegmentRetenu sr on sr.IdSegmentCyclable = sc.IdSegmentCyclable
+    inner join SegmentRetenu sr on sr.IdSegmentCyclable = sc.IdSegmentCyclable
     group by pc.IdPortionCyclable, sc.CodeEtatAvancement3V
 ),
 DistancesPortionParStatut as (
@@ -17,7 +17,7 @@ DistancesPortionParStatut as (
     from m.PortionCyclable pc
     inner join m.SegmentCyclable_PortionCyclable ps on ps.IdPortionCyclable = pc.IdPortionCyclable
     inner join m.SegmentCyclable sc on sc.IdSegmentCyclable = ps.IdSegmentCyclable
-	inner join SegmentRetenu sr on sr.IdSegmentCyclable = sc.IdSegmentCyclable
+    inner join SegmentRetenu sr on sr.IdSegmentCyclable = sc.IdSegmentCyclable
     group by pc.IdPortionCyclable, sc.CodeStatut3V
 )
 select
@@ -57,9 +57,9 @@ order by pc.Nom;
 -- inventaire D30, c-a-d dont le Gard est propriétaire, tous états, tous statuts sauf RD
 create view tmp.VVVInventaireD30_4Sheet as
 with SegmentRetenu as (
-	select sc.IdSegmentCyclable, CodeEtatAvancement3V
-	from m.SegmentCyclable sc
-	inner join m.SegmentCyclable_Proprietaire sp on sp.Siren = '223000019' and sc.IdSegmentCyclable = sp.IdSegmentCyclable -- le segment doit appartenir au Département du Gard
+    select sc.IdSegmentCyclable, CodeEtatAvancement3V
+    from m.SegmentCyclable sc
+    inner join m.SegmentCyclable_Proprietaire sp on sp.Siren = '223000019' and sc.IdSegmentCyclable = sp.IdSegmentCyclable -- le segment doit appartenir au Département du Gard
     and ((CodeStatut3V <> 'RTE') or (CodeStatut3V = 'RTE' and IdGeometrie not in (select IdIGN from m.Troncon))) -- le segment ne doit pas être une route ou, s'il l'est, ne doit pas être inclus dans le référentiel routier
 ),
 DistancesPortionParEtat as (
@@ -67,7 +67,7 @@ DistancesPortionParEtat as (
     from m.PortionCyclable pc
     inner join m.SegmentCyclable_PortionCyclable ps on ps.IdPortionCyclable = pc.IdPortionCyclable
     inner join m.SegmentCyclable sc on sc.IdSegmentCyclable = ps.IdSegmentCyclable
-	inner join SegmentRetenu sr on sr.IdSegmentCyclable = sc.IdSegmentCyclable
+    inner join SegmentRetenu sr on sr.IdSegmentCyclable = sc.IdSegmentCyclable
     group by pc.IdPortionCyclable, sc.CodeEtatAvancement3V
 ),
 DistancesPortionParStatut as (
@@ -75,7 +75,7 @@ DistancesPortionParStatut as (
     from m.PortionCyclable pc
     inner join m.SegmentCyclable_PortionCyclable ps on ps.IdPortionCyclable = pc.IdPortionCyclable
     inner join m.SegmentCyclable sc on sc.IdSegmentCyclable = ps.IdSegmentCyclable
-	inner join SegmentRetenu sr on sr.IdSegmentCyclable = sc.IdSegmentCyclable
+    inner join SegmentRetenu sr on sr.IdSegmentCyclable = sc.IdSegmentCyclable
     group by pc.IdPortionCyclable, sc.CodeStatut3V
 )
 select
@@ -115,9 +115,9 @@ order by pc.Nom;
 -- inventaire D30 ouvert, c-a-d dont le Gard est propriétaire, état = 4, tous statuts sauf RD
 create view tmp.VVVInventaireD30Ouvert_4Sheet as
 with SegmentRetenu as (
-	select sc.IdSegmentCyclable, CodeEtatAvancement3V
-	from m.SegmentCyclable sc
-	inner join m.SegmentCyclable_Proprietaire sp on sp.Siren = '223000019' and sc.IdSegmentCyclable = sp.IdSegmentCyclable -- le segment doit appartenir au Département du Gard
+    select sc.IdSegmentCyclable, CodeEtatAvancement3V
+    from m.SegmentCyclable sc
+    inner join m.SegmentCyclable_Proprietaire sp on sp.Siren = '223000019' and sc.IdSegmentCyclable = sp.IdSegmentCyclable -- le segment doit appartenir au Département du Gard
     where CodeEtatAvancement3V = 4 -- le segment doit être ouvert
     and ((CodeStatut3V <> 'RTE') or (CodeStatut3V = 'RTE' and IdGeometrie not in (select IdIGN from m.Troncon))) -- le segment ne doit pas être une route ou, s'il l'est, ne doit pas être inclus dans le référentiel routier
 ),
@@ -126,7 +126,7 @@ DistancesPortionParEtat as (
     from m.PortionCyclable pc
     inner join m.SegmentCyclable_PortionCyclable ps on ps.IdPortionCyclable = pc.IdPortionCyclable
     inner join m.SegmentCyclable sc on sc.IdSegmentCyclable = ps.IdSegmentCyclable
-	inner join SegmentRetenu sr on sr.IdSegmentCyclable = sc.IdSegmentCyclable
+    inner join SegmentRetenu sr on sr.IdSegmentCyclable = sc.IdSegmentCyclable
     group by pc.IdPortionCyclable, sc.CodeEtatAvancement3V
 ),
 DistancesPortionParStatut as (
@@ -134,7 +134,7 @@ DistancesPortionParStatut as (
     from m.PortionCyclable pc
     inner join m.SegmentCyclable_PortionCyclable ps on ps.IdPortionCyclable = pc.IdPortionCyclable
     inner join m.SegmentCyclable sc on sc.IdSegmentCyclable = ps.IdSegmentCyclable
-	inner join SegmentRetenu sr on sr.IdSegmentCyclable = sc.IdSegmentCyclable
+    inner join SegmentRetenu sr on sr.IdSegmentCyclable = sc.IdSegmentCyclable
     group by pc.IdPortionCyclable, sc.CodeStatut3V
 )
 select
@@ -170,10 +170,10 @@ order by pc.Nom;
 -- inventaire D30 ouvert pour le vote en assemblée, c-a-d dont le Gard est propriétaire, état = 4 à l'année N-1, tous statuts sauf RD
 create view tmp.VVVInventaireD30OuvertPourVote_4Sheet as
 with SegmentRetenu as (
-	select sc.IdSegmentCyclable
-	from m.SegmentCyclable sc
-	inner join m.SegmentCyclable_Proprietaire sp on sp.Siren = '223000019' and sc.IdSegmentCyclable = sp.IdSegmentCyclable -- le segment doit appartenir au Département du Gard
-	where CodeEtatAvancement3V = 4 -- le segment doit être ouvert
+    select sc.IdSegmentCyclable
+    from m.SegmentCyclable sc
+    inner join m.SegmentCyclable_Proprietaire sp on sp.Siren = '223000019' and sc.IdSegmentCyclable = sp.IdSegmentCyclable -- le segment doit appartenir au Département du Gard
+    where CodeEtatAvancement3V = 4 -- le segment doit être ouvert
     and (AnneeOuverture is null or AnneeOuverture < extract(year from current_date)) -- le date d'ouverture du segment doit être antérieure à l'année courante
     and ((CodeStatut3V <> 'RTE') or (CodeStatut3V = 'RTE' and IdGeometrie not in (select IdIGN from m.Troncon))) -- le segment ne doit pas être une route ou, s'il l'est, ne doit pas être inclus dans le référentiel routier
 ),
@@ -182,7 +182,7 @@ DistancesPortionParEtat as (
     from m.PortionCyclable pc
     inner join m.SegmentCyclable_PortionCyclable ps on ps.IdPortionCyclable = pc.IdPortionCyclable
     inner join m.SegmentCyclable sc on sc.IdSegmentCyclable = ps.IdSegmentCyclable
-	inner join SegmentRetenu sr on sr.IdSegmentCyclable = sc.IdSegmentCyclable
+    inner join SegmentRetenu sr on sr.IdSegmentCyclable = sc.IdSegmentCyclable
     group by pc.IdPortionCyclable, sc.CodeEtatAvancement3V
 ),
 DistancesPortionParStatut as (
@@ -190,7 +190,7 @@ DistancesPortionParStatut as (
     from m.PortionCyclable pc
     inner join m.SegmentCyclable_PortionCyclable ps on ps.IdPortionCyclable = pc.IdPortionCyclable
     inner join m.SegmentCyclable sc on sc.IdSegmentCyclable = ps.IdSegmentCyclable
-	inner join SegmentRetenu sr on sr.IdSegmentCyclable = sc.IdSegmentCyclable
+    inner join SegmentRetenu sr on sr.IdSegmentCyclable = sc.IdSegmentCyclable
     group by pc.IdPortionCyclable, sc.CodeStatut3V
 )
 select
@@ -240,9 +240,9 @@ DistancesPortionParStatut as (
     group by pc.IdPortionCyclable, sc.CodeStatut3V
 )
 select
-	ic.NumeroItineraireCyclable || ' - ' || ic.NomOfficiel as "Itinéraire",
+    ic.NumeroItineraireCyclable || ' - ' || ic.NomOfficiel as "Itinéraire",
     pc.Nom as "Portion",
-	tpc.Description as "Type portion",
+    tpc.Description as "Type portion",
     replace((coalesce(total.Distance, 0))::varchar, '.', ',') as "Longueur (km)",
     replace((coalesce(ouve.Distance, 0))::varchar, '.', ',') as "dont ouvert",
     replace((coalesce(trvx.Distance, 0))::varchar, '.', ',') as "dont travaux en cours",
