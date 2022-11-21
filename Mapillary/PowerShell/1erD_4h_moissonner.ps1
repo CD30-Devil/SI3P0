@@ -36,8 +36,7 @@ $Job_Moissonner_Features_Rectangle = {
 
         # si le résultat contient 2000 "features", c'est probablement qu'on a atteint la limite du nombre de "features" renvoyé par appel API
         # on va relancer la récupération des données sur de plus petits rectangles
-        # TODO : retirer le paramètre -serveur lorsque la bascule vers srw-si3p02 sera terminée
-        SIg-Exporter-CSV -serveur 'srw-si3p02' -csv "$($parametres.dossierRapports)\rectangles_$($parametres.IdRectangle).csv" -requete @"
+        SIg-Exporter-CSV -csv "$($parametres.dossierRapports)\rectangles_$($parametres.IdRectangle).csv" -requete @"
             with Rectangle as (
                 select ST_Polygon(
                     ST_MakeLine(
@@ -89,8 +88,7 @@ Remove-Item "$dossierRapports\*"
 # l'objectif est de récupèrer les "features" à proximité d'une RD
 # on calcule pour cela une grille de 1600m de côté sur l'emprise du référentiel routier
 # et on ne conserve que les rectangles qui se trouvent à moins de 25m d'un tronçon de RD
-# TODO : retirer le paramètre -serveur lorsque la bascule vers srw-si3p02 sera terminée
-SIg-Exporter-CSV -serveur 'srw-si3p02' -csv "$dossierRapports\rectangles_initiaux.csv" -requete @'
+SIg-Exporter-CSV -csv "$dossierRapports\rectangles_initiaux.csv" -requete @'
     with Emprise as (
         select ST_Collect(Geom) as Geom
         from TronconReel
