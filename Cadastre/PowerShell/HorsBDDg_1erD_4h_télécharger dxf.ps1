@@ -36,9 +36,9 @@ Telecharger -url 'https://cadastre.data.gouv.fr/data/dgfip-pci-vecteur/latest/dx
 # extraction du zip global
 7Z-Decompresser-Ici -archive "$dossierDonnees\dep30.zip" -supprimer $true
 
-# paramétrage de 32 jobs d'extraction des .tar.bz2
+# paramétrage des jobs d'extraction des .tar.bz2
 $listeArchiveTarBz2 = Get-ChildItem $dossierDonnees -Include "*.tar.bz2" -Recurse
-$fragmentsListeArchiveTarBz2 = Fragmenter-Liste -liste $listeArchiveTarBz2 -nombreFragments 32
+$fragmentsListeArchiveTarBz2 = Fragmenter-Liste -liste $listeArchiveTarBz2 -nombreFragments (2 * ($env:NUMBER_OF_PROCESSORS - 1))
 
 $parametresJobs = [Collections.ArrayList]::new()
 
@@ -51,4 +51,4 @@ foreach ($fragmentListeArchiveTarBz2 in $fragmentsListeArchiveTarBz2) {
 }
 
 # exécution des jobs d'extraction des .tar.bz2
-Executer-Jobs -parametresJobs $parametresJobs -afficherSortieJobs $false
+Executer-Jobs -parametresJobs $parametresJobs -nombreJobs (2 * ($env:NUMBER_OF_PROCESSORS - 1)) -afficherSortieJobs $false
