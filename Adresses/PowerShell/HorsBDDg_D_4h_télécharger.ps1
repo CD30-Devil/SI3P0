@@ -27,7 +27,12 @@ foreach ($departement in $departements) {
 # exécution des jobs de téléchargement
 Executer-Jobs -parametresJobs $parametresJobs
 
-# décompression des archives
+# paramétrage des jobs de décompression des archives
+$parametresJobs = [Collections.ArrayList]::new()
+
 foreach ($gz in Get-ChildItem "$dossierDonnees\*.gz") {
-    7Z-Decompresser-Ici $gz -supprimer $true
+    [void]$parametresJobs.Add((Parametrer-Job-7Z-Decompresser-Ici -archive $gz -supprimer $true))
 }
+
+# exécution des jobs de décompression des archives
+Executer-Jobs -parametresJobs $parametresJobs
