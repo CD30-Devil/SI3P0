@@ -56,9 +56,10 @@ function QGisProcess-Imprimer-MiseEnPage {
         [parameter(Mandatory=$true)] [string] $projet,
         [parameter(Mandatory=$true)] [string] $miseEnPage,
         [parameter(Mandatory=$true)] [string] $pdf,
+        [bool] $forcerRaster = $true,
         [string] $sortie = $null,
         [bool] $erreur = $true
     )
 
-    Executer-QGisProcess -parametres "run", "native:printlayouttopdf", "project_path=`"$projet`"", "LAYOUT=`"$miseEnPage`"", "OUTPUT=`"$pdf`"" -sortie $sortie -erreur $erreur
+    Executer-QGisProcess -parametres "run", "native:printlayouttopdf", "project_path=`"$projet`"", "LAYOUT=`"$miseEnPage`"", "OUTPUT=`"$pdf`"", "FORCE_RASTER=$forcerRaster" -sortie $sortie -erreur $erreur
 }

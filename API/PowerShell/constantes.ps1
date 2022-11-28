@@ -19,7 +19,7 @@ $Env:GDAL_DATA = "$racineOSGeo4W\apps\gdal\share\gdal\"
 $dossierTravailTemp = "$env:TEMP\si3p0"
 
 # chemins vers les outils QGis
-$qgisProcess = "$racineQGis\bin\qgis_process-qgis-ltr.bat"
+$qgisProcess = "$racineQGis\bin\qgis_process-qgis.bat"
 
 # chemins vers les outils PostgreSQL
 $psql = "$racinePostgreSQL\bin\psql.exe"
