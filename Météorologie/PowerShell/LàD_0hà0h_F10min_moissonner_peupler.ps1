@@ -7,7 +7,7 @@ $dossierRapports = "$PSScriptRoot\..\Rapports\LàD_0hà0h_F10min_moissonner_peup
 # liste des stations à moissonner
 $stationsInfoClimat = @(
     '000UJ' # Chusclan
-    'ME132' # Collège Paul Valéry - Roquemaure
+    #'ME132' # Collège Paul Valéry - Roquemaure
     '000WD' # Concoules
     '000ZN' # Galargues
     '000OZ' # Gallargues-le-Montueux
