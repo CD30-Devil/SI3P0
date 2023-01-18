@@ -1,7 +1,10 @@
-﻿start transaction;
+﻿-- schémas spécifiques SI3P0 (tmp = temporaire, m = modèle, f = fonctions)
+set search_path to tmp, m, f, public;
+
+start transaction;
 
 -- insertion des alertes depuis le schéma tmp
-insert into m.HistoAlerteWaze(IdHistoAlerteWaze, DateCreation, IdTypeAlerteWaze, IdSousTypeAlerteWaze, Fiabilite, Geom)
+insert into HistoAlerteWaze(IdHistoAlerteWaze, DateCreation, IdTypeAlerteWaze, IdSousTypeAlerteWaze, Fiabilite, Geom)
 select
     distinct
     h.uuid,
@@ -10,8 +13,8 @@ select
     subtype,
     reliability::integer,
     TransformerEnL93(FabriquerPointWGS84(x::numeric, y::numeric))
-from tmp.HistoAlerteWaze h
-inner join (select uuid,  max(ts) as ts from tmp.histoalertewaze group by uuid) hmax -- présence de doublons d'uuid, on ne conserve que le plus récent
+from source_histoalertewaze h
+inner join (select uuid,  max(ts) as ts from source_histoalertewaze group by uuid) hmax -- présence de doublons d'uuid, on ne conserve que le plus récent
 on h.uuid = hmax.uuid and h.ts = hmax.ts
 order by date
 on conflict (IdHistoAlerteWaze) do
@@ -24,3 +27,5 @@ set
     Geom = EXCLUDED.Geom;
 
 commit;
+
+analyze HistoAlerteWaze;

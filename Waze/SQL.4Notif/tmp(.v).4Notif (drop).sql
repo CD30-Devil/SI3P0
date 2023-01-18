@@ -1,1 +1,0 @@
-﻿drop view if exists tmp.Waze_4Notif;

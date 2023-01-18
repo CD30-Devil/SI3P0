@@ -1,4 +1,7 @@
-﻿create view tmp.Waze_4Notif as
+﻿-- schémas spécifiques SI3P0 (tmp = temporaire, m = modèle, f = fonctions)
+set search_path to tmp, m, f, public;
+
+create view Waze_4Notif as
 with Alerte2hProcheRD as (
     select
         IdAlerteWaze,
@@ -25,9 +28,9 @@ with Alerte2hProcheRD as (
             when IdTypeAlerteWaze = 'ACCIDENT' then 0
         end as Gravite,
         Geom
-    from m.AlerteWaze a
+    from AlerteWaze a
     where Age(Now(), DateCreation) < '2 hour'::interval
-    and exists (select t.IdTroncon from m.Troncon t where not Fictif and ST_DWithin(a.Geom, t.Geom, 25) limit 1)
+    and exists (select t.IdTroncon from Troncon t where not Fictif and ST_DWithin(a.Geom, t.Geom, 25) limit 1)
 ),
 HistoAlerte2hProcheRD as (
     select
@@ -55,9 +58,9 @@ HistoAlerte2hProcheRD as (
             when IdTypeAlerteWaze = 'ACCIDENT' then 0
         end as Gravite,
         Geom
-    from m.HistoAlerteWaze ah
+    from HistoAlerteWaze ah
     where Age(Now(), DateCreation) < '2 hour'::interval
-    and exists (select t.IdTroncon from m.Troncon t where not Fictif and ST_DWithin(ah.Geom, t.Geom, 25) limit 1)
+    and exists (select t.IdTroncon from Troncon t where not Fictif and ST_DWithin(ah.Geom, t.Geom, 25) limit 1)
 ),
 Cluster as (
     select TypeAlerte, ST_CollectionExtract(unnest(ST_ClusterWithin(Geom, 500)), 1) as GeomCluster
@@ -87,7 +90,7 @@ DetailsNouveauCluster as (
         r.Geom as GeomRalentissement
     from NouveauCluster c
     inner join Alerte2hProcheRD a on c.TypeAlerte = a.TypeAlerte and ST_Intersects(c.GeomCluster, a.Geom)
-    left join m.RalentissementWaze r on ST_DWithin(c.GeomCluster, r.Geom, 100)
+    left join RalentissementWaze r on ST_DWithin(c.GeomCluster, r.Geom, 100)
 )
 select
     c.TypeAlerte,
@@ -106,7 +109,7 @@ select
     'https://embed.waze.com/fr/iframe?zoom=15&lat=' || round(ST_Y(TransformerEnWGS84(ST_Centroid(c.GeomCluster)))::numeric, 6) || '&lon=' || round(ST_X(TransformerEnWGS84(ST_Centroid(c.GeomCluster)))::numeric, 6) as LienWazeEmbed,
     'https://www.waze.com/live-map?lat=' || round(ST_Y(TransformerEnWGS84(ST_Centroid(c.GeomCluster)))::numeric, 6) || '&lon=' || round(ST_X(TransformerEnWGS84(ST_Centroid(c.GeomCluster)))::numeric, 6) as LienWazeLiveMap
 from DetailsNouveauCluster c
-left join m.Commune co on ST_Intersects(co.Geom, c.GeomCluster)
+left join Commune co on ST_Intersects(co.Geom, c.GeomCluster)
 left join v.LimiteGestionPER per on ST_Intersects(per.Geom, c.GeomCluster)
 left join v.Organigramme o on o.CodeStructureRH = per.CodeStructureRH
 where c.TypeAlerte <> '...'

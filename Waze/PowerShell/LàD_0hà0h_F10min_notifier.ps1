@@ -1,20 +1,19 @@
 ﻿. ("$PSScriptRoot\..\..\API\PowerShell\api_complète.ps1")
 . ("$PSScriptRoot\..\..\API\PowerShell\constantes_privées.ps1")
 
-$dossierRapports = "$PSScriptRoot\..\Rapports\notifier"
+$dossierRapports = "$PSScriptRoot\..\Rapports\LàD_0hà0h_F10min_notifier"
 $dossierSQL4Notif = "$PSScriptRoot\..\SQL.4Notif"
 
 # nettoyage préalable
-Remove-Item -Path "$dossierRapports\*.txt"
-Remove-Item -Path "$dossierRapports\*.err"
-Remove-Item -Path "$dossierRapports\*.csv"
-Remove-Item -Path "$dossierTravailTemp\waze_notifier\*.png"
+Remove-Item "$dossierRapports\*"
+Remove-Item "$dossierTravailTemp\waze_notifier\*"
 
-# création des vues pour la production des cartes
-SIg-Executer-Fichier -fichier "$dossierSQL4Notif\tmp(.v).4Notif (drop).sql" -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - tmp(.v).4Notif (drop).txt"
-SIg-Executer-Fichier -fichier "$dossierSQL4Notif\tmp(.v).4Notif (create).sql" -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - tmp(.v).4Notif (create).txt"
+SIg-Executer-Fichier -fichier "$dossierSQL4Notif\4Notif (drop).sql" -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - 4Notif (drop).txt"
 
-# envoi de la notifiation
+# création des vues pour la rédaction des tweets
+SIg-Executer-Fichier -fichier "$dossierSQL4Notif\4Notif (create).sql" -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - 4Notif (create).txt"
+
+# envoi des tweets
 SIg-Exporter-CSV -requete 'select * from tmp.Waze_4Notif' -csv "$dossierRapports\notification.csv"
 
 $alertes = Import-Csv -Delimiter ';' -Path "$dossierRapports\notification.csv"
@@ -68,7 +67,7 @@ if (($alertes | Measure-Object).Count -gt 0) {
                 [void]$statut.Append("Fortes #pluies signalées ")
             }
             'HAZARD_WEATHER_HEAVY_SNOW' {
-                [void]$statut.Append("Fortes chutes de #neige signalées ")
+                [void]$statut.Append("Chutes de #neige signalées ")
             }
         }
         
@@ -105,5 +104,6 @@ if (($alertes | Measure-Object).Count -gt 0) {
 }
 
 # nettoyage final
-SIg-Executer-Fichier -fichier "$dossierSQL4Notif\tmp(.v).4Notif (drop).sql" -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - tmp(.v).4Notif (drop).txt"
-Remove-Item -Path "$dossierTravailTemp\waze_notifier\*.png"
+Remove-Item "$dossierTravailTemp\waze_notifier\*"
+
+SIg-Executer-Fichier -fichier "$dossierSQL4Notif\4Notif (drop).sql" -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - 4Notif (drop).txt"

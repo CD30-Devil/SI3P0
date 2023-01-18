@@ -1,7 +1,7 @@
 ﻿. ("$PSScriptRoot\..\..\API\PowerShell\api_complète.ps1")
 
 $dossierDonnees = "$PSScriptRoot\..\Données"
-$dossierRapports = "$PSScriptRoot\..\Rapports\peupler"
+$dossierRapports = "$PSScriptRoot\..\Rapports\LàD_0hà0h_F10min_peupler"
 
 if (!(Test-Path "$dossierDonnees\alertes*.json")) {
     # s'il n'y a aucun fichier d'alertes, sortie
@@ -9,13 +9,12 @@ if (!(Test-Path "$dossierDonnees\alertes*.json")) {
 }
 
 # nettoyage préalable
-Remove-Item "$dossierRapports\*.txt"
-Remove-Item "$dossierRapports\*.err"
+Remove-Item "$dossierRapports\*"
 
-# construction d'un fichier SQL à partir des données des fichiers JSON Waze
-New-Item -ItemType Directory -Force -Path "$dossierTravailTemp\waze_peupler\"
+# construction d'un script SQL à partir des données des fichiers JSON Waze
+New-Item -ItemType Directory -Force -Path "$dossierRapports\"
 
-$fichierSQL = "$dossierTravailTemp\waze_peupler\$(New-Guid).sql"
+$fichierSQL = "$dossierRapports\_peupler.sql"
 $ecriture = [System.IO.StreamWriter] $fichierSQL
 
 $ecriture.WriteLine("start transaction;")
@@ -140,5 +139,5 @@ $ecriture.WriteLine("")
 $ecriture.Close() 
 $ecriture = $null
 
+# exécution du script
 SIg-Executer-Fichier -fichier $fichierSQL -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - import des données Waze.txt"
-Remove-Item $fichierSQL
