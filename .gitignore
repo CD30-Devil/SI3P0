@@ -1,16 +1,6 @@
 ﻿# règles de base
 constantes_privées.ps1
 
-cartographier.ps1
-créer vues 4Qlik.ps1
-
-HorsBDDg_D_4h.ps1
-HorsBDDg_LàD_0hà0h_F10min.ps1
-D_4h.ps1
-LàS_4h.ps1
-LàD_0hà0h_F10min.ps1
-lancement manuel.ps1
-
 Documents/
 Données/
 QGis/
@@ -32,7 +22,7 @@ SQL.4Qlik/
 /Référentiel routier/PowerShell/préparer construction qualif.ps1
 
 # Vaisala
-!/Vaisala/Données/
+!/Vaisala/Données/Liste des rapports Vaisala.csv
 
 # Waze
 /Waze/Ressources/Icones
