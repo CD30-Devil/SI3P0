@@ -5,7 +5,7 @@ $dossierRapports = "$PSScriptRoot\..\Rapports\manuel_peupler"
 $dossierSQL = "$PSScriptRoot\..\SQL"
 
 # détermine l'archive de la BDTopo la plus récente
-$archiveBDTopo = Get-ChildItem "$dossierDonnees\BDTOPO_3-0_TOUSTHEMES_SQL_LAMB93_FXX_*.7z.001" | sort -Property Name -Descending | select -First 1
+$archiveBDTopo = Get-ChildItem "$dossierDonnees\BDTOPO*.7z.001" | sort -Property Name -Descending | select -First 1
 
 # liste des thèmes à importer
 $themes = @(

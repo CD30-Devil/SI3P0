@@ -1,4 +1,4 @@
-﻿-- schémas spécifiques SI3P0 (tmp = temporaire, m = données)
+﻿-- schémas spécifiques SI3P0 (tmp = temporaire, d = données)
 set search_path to tmp, d, public;
 
 create view Autoroute_4Layer as
