@@ -2,7 +2,7 @@
 . ("$PSScriptRoot\..\..\API\PowerShell\constantes_privées.ps1")
 
 # constantes
-$dossierRapports = "$PSScriptRoot\..\Rapports\LàS_4h_notifier"
+$dossierRapports = "$PSScriptRoot\..\Rapports\LàD_4h_notifier"
 
 # nettoyage préalable
 Remove-Item -Path "$dossierRapports\*.*"
