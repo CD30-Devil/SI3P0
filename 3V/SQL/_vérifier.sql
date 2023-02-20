@@ -1,22 +1,25 @@
-﻿select '***************************************************************************************************';
+﻿-- schémas spécifiques SI3P0 (m = modèle, d = données)
+set search_path to m, d, public;
+
+select '***************************************************************************************************';
 select 'Métriques';
 select '***************************************************************************************************';
 select '';
 
 select 'Nombre d''itinéraires : ' || count(*)
-from m.ItineraireCyclable;
+from ItineraireCyclable;
 
 select 'Nombre de portions : ' || count(*)
-from m.PortionCyclable;
+from PortionCyclable;
 
 select 'Nombre de segments : ' || count(*)
-from m.SegmentCyclable;
+from SegmentCyclable;
 
 select '';
 
 select 'Nombre de segments par source : ';
 select SourceGeometrie, count(*)
-from m.SegmentCyclable
+from SegmentCyclable
 group by SourceGeometrie
 order by SourceGeometrie;
 select '';
@@ -29,9 +32,9 @@ select '';
 
 select 'Liste des itinéraires (NumeroItineraireCyclable | NomOfficiel | NomUsage) sans portion :';
 select NumeroItineraireCyclable, NomOfficiel, NomUsage
-from m.ItineraireCyclable
+from ItineraireCyclable
 where NumeroItineraireCyclable not in (
-    select NumeroItineraireCyclable from m.PortionCyclable_ItineraireCyclable
+    select NumeroItineraireCyclable from PortionCyclable_ItineraireCyclable
 );
 select 'Remarque : cette liste devrait être vide.';
 select '';
@@ -44,18 +47,18 @@ select '';
 
 select 'Liste des portions (IdPortionCyclable | Nom) sans segment :';
 select IdPortionCyclable, Nom
-from m.PortionCyclable
+from PortionCyclable
 where IdPortionCyclable not in (
-    select IdPortionCyclable from m.SegmentCyclable_PortionCyclable
+    select IdPortionCyclable from SegmentCyclable_PortionCyclable
 );
 select 'Remarque : cette liste devrait être vide.';
 select '';
 
 select 'Liste des portions (Nom | Nombre de morceaux) présentant des discontinuités :';
 select pc.Nom, array_length((st_ClusterWithin(sc.Geom, 1)), 1) as NbClusters
-from m.SegmentCyclable sc
-left join m.SegmentCyclable_PortionCyclable sp on sp.IdSegmentCyclable = sc.IdSegmentCyclable
-left join m.PortionCyclable pc on pc.IdPortionCyclable = sp.IdPortionCyclable
+from SegmentCyclable sc
+left join SegmentCyclable_PortionCyclable sp on sp.IdSegmentCyclable = sc.IdSegmentCyclable
+left join PortionCyclable pc on pc.IdPortionCyclable = sp.IdPortionCyclable
 group by pc.Nom
 having array_length((st_ClusterWithin(sc.Geom, 1)), 1) > 1;
 select 'Remarque : cette liste devrait être vide.';
@@ -69,8 +72,7 @@ select '';
 
 select 'Liste des segments (IdSegmentCyclable | SourceGeometrie | IdGeometrie) ouverts mais dont la géographie n''est pas issue des tronçons de route de la BDTOPO :';
 select IdSegmentCyclable, SourceGeometrie, IdGeometrie
-from
-m.SegmentCyclable
+from SegmentCyclable
 where CodeEtatAvancement3V = 4
 and SourceGeometrie <> 'bdtopo.troncon_de_route'
 order by SourceGeometrie, IdGeometrie;
@@ -79,23 +81,23 @@ select '';
 
 select 'Liste des segments (IdSegmentCyclable | SourceGeometrie | IdGeometrie) non rattachés à une portion :';
 select IdSegmentCyclable, SourceGeometrie, IdGeometrie
-from m.SegmentCyclable
+from SegmentCyclable
 where IdSegmentCyclable not in (
-    select IdSegmentCyclable from m.SegmentCyclable_PortionCyclable
+    select IdSegmentCyclable from SegmentCyclable_PortionCyclable
 );
 select 'Remarque : cette liste devrait être vide.';
 select '';
 
 select 'Liste des segments (IdSegmentCyclable | SourceGeometrie | IdGeometrie) ayant une géographie nulle :';
 select IdSegmentCyclable, SourceGeometrie, IdGeometrie
-from m.SegmentCyclable
+from SegmentCyclable
 where Geom is null;
 select 'Remarque : cette liste devrait être vide.';
 select '';
 
 select 'Liste des segments (IdSegmentCyclable | SourceGeometrie | IdGeometrie) non-ouverts mais avec une date d''ouverture non nulle :';
 select IdSegmentCyclable, SourceGeometrie, IdGeometrie
-from m.SegmentCyclable
+from SegmentCyclable
 where CodeEtatAvancement3V < 4 and AnneeOuverture is not null
 and SourceGeometrie <> 'bdtopo.troncon_de_route'
 order by SourceGeometrie, IdGeometrie;
@@ -104,7 +106,7 @@ select '';
 
 select 'Liste des segments (IdSegmentCyclable | SourceGeometrie | IdGeometrie) ouverts et fictifs :';
 select IdSegmentCyclable, SourceGeometrie, IdGeometrie
-from m.SegmentCyclable
+from SegmentCyclable
 where CodeEtatAvancement3V = 4 and Fictif;
 select 'Remarque : cette liste devrait être vide.';
 select '';
@@ -119,23 +121,23 @@ select
     sc2.Fictif as "Fictif_2",
     st2.Description as "Statut_2",
     ea2.Description as "EtatAvancement_2"
-from m.SegmentCyclable sc1
-inner join m.Statut3V st1 on st1.CodeStatut3V = sc1.CodeStatut3V
-inner join m.EtatAvancement3V ea1 on ea1.CodeEtatAvancement3V = sc1.CodeEtatAvancement3V
-inner join m.SegmentCyclable sc2 on ST_Equals(sc1.Geom, sc2.Geom)
-inner join m.Statut3V st2 on st2.CodeStatut3V = sc2.CodeStatut3V
-inner join m.EtatAvancement3V ea2 on ea2.CodeEtatAvancement3V = sc2.CodeEtatAvancement3V
+from SegmentCyclable sc1
+inner join Statut3V st1 on st1.CodeStatut3V = sc1.CodeStatut3V
+inner join EtatAvancement3V ea1 on ea1.CodeEtatAvancement3V = sc1.CodeEtatAvancement3V
+inner join SegmentCyclable sc2 on ST_Equals(sc1.Geom, sc2.Geom)
+inner join Statut3V st2 on st2.CodeStatut3V = sc2.CodeStatut3V
+inner join EtatAvancement3V ea2 on ea2.CodeEtatAvancement3V = sc2.CodeEtatAvancement3V
 where sc1.IdSegmentCyclable > sc2.IdSegmentCyclable;
 select 'Remarque : vérifier attentivement que ces différences sont souhaitées.';
 select '';
 
 select 'Liste des segments cyclables (IdSegmentCyclable | IdGeometrie) RTE et non fictifs dont le Gard est (co-)propriétaire mais qui ne sont pas dans le référentiel routier :';
 select sc.IdSegmentCyclable, sc.IdGeometrie
-from m.SegmentCyclable sc
+from SegmentCyclable sc
 where not sc.Fictif
 and sc.CodeStatut3V = 'RTE'
-and exists (select * from m.SegmentCyclable_Proprietaire sp where sp.IdSegmentCyclable = sc.IdSegmentCyclable and sp.Siren = '223000019' limit 1)
-and not exists (select * from m.Troncon where IdIGN = sc.IdGeometrie limit 1);
+and exists (select * from SegmentCyclable_Proprietaire sp where sp.IdSegmentCyclable = sc.IdSegmentCyclable and sp.Siren = '223000019' limit 1)
+and not exists (select * from Troncon where IdIGN = sc.IdGeometrie limit 1);
 select 'Remarque : cette liste devrait être vide.';
 select '';
 
@@ -145,16 +147,16 @@ from SegmentCyclable sc
 where not sc.Fictif
 and sc.CodeStatut3V = 'RTE'
 and not exists (select * from SegmentCyclable_Proprietaire sp where sp.IdSegmentCyclable = sc.IdSegmentCyclable and sp.Siren = '223000019' limit 1)
-and exists (select * from m.Troncon where IdIGN = sc.IdGeometrie and SirenProprietaire = '223000019' limit 1);
+and exists (select * from Troncon where IdIGN = sc.IdGeometrie and SirenProprietaire = '223000019' limit 1);
 select 'Remarque : cette liste devrait être vide.';
 select '';
 
 select 'Liste des segments cyclables (IdSegmentCyclable | IdGeometrie | CodeInsee) dont le propriétaire défini ne correspond pas à la BDTOPO :';
 with CodeInseeSegmentViaProprio as (
     select sc.IdSegmentCyclable, sc.IdGeometrie, es.COGCommune
-    from m.SegmentCyclable sc
-    inner join m.SegmentCyclable_Proprietaire scp on sc.IdSegmentCyclable = scp.IdSegmentCyclable
-    inner join m.EtablissementSirene es on scp.Siren = es.siren
+    from SegmentCyclable sc
+    inner join SegmentCyclable_Proprietaire scp on sc.IdSegmentCyclable = scp.IdSegmentCyclable
+    inner join EtablissementSirene es on scp.Siren = es.siren
     where sc.SourceGeometrie = 'bdtopo.troncon_de_route'
     and es.siege
     and scp.Siren <> '223000019' -- Département du Gard
@@ -166,12 +168,12 @@ with CodeInseeSegmentViaProprio as (
 ),
 CodeInseeSegmentViaTroncon as (
     select sc.IdSegmentCyclable, sc.IdGeometrie, tr.insee_commune_gauche
-    from m.SegmentCyclable sc
-    inner join d.bdtopo_troncon_de_route tr on sc.IdGeometrie = tr.cleabs
+    from SegmentCyclable sc
+    inner join bdtopo_troncon_de_route tr on sc.IdGeometrie = tr.cleabs
     union
     select sc.IdSegmentCyclable, sc.IdGeometrie, tr.insee_commune_droite
-    from m.SegmentCyclable sc
-    inner join d.bdtopo_troncon_de_route tr on sc.IdGeometrie = tr.cleabs
+    from SegmentCyclable sc
+    inner join bdtopo_troncon_de_route tr on sc.IdGeometrie = tr.cleabs
 )
 select *
 from CodeInseeSegmentViaProprio
@@ -192,8 +194,8 @@ select
         when (sc.SensUnique and t.sens_de_circulation = 'Sens direct' and not ST_OrderingEquals(sc.Geom, t.Geometrie)) then 'Incohérence de sens de circulation (direct)'
         when (sc.SensUnique and t.sens_de_circulation = 'Sens inverse' and not ST_OrderingEquals(sc.Geom, ST_Reverse(t.Geometrie))) then 'Incohérence de sens de circulation (indirect)'
     end as Description
-from m.SegmentCyclable sc
-inner join d.bdtopo_troncon_de_route t on sc.SourceGeometrie = 'bdtopo.troncon_de_route' and sc.IdGeometrie = t.cleabs
+from SegmentCyclable sc
+inner join bdtopo_troncon_de_route t on sc.SourceGeometrie = 'bdtopo.troncon_de_route' and sc.IdGeometrie = t.cleabs
 where (sc.SensUnique and t.sens_de_circulation = 'Double sens')
 or (not sc.SensUnique and t.sens_de_circulation in ('Sens direct', 'Sens inverse'))
 or (sc.SensUnique and t.sens_de_circulation = 'Sens direct' and not ST_OrderingEquals(sc.Geom, t.Geometrie))
@@ -205,15 +207,19 @@ select '';
 select 'Comparaison des natures de segments/tronçons (IdGeometrie | Statut | Revêtement | nature | nature_de_la_restriction | bande_cyclable) :';
 select
     sc.IdGeometrie,
+    pc.Nom,
     s3v.Description,
     r3v.Description,
     tr.nature,
     tr.nature_de_la_restriction,
-    tr.bande_cyclable
-from m.SegmentCyclable sc
-inner join m.Statut3V s3v on s3v.CodeStatut3V = sc.CodeStatut3V
-inner join m.Revetement3V r3v on r3v.CodeRevetement3V = sc.CodeRevetement3V
-inner join d.bdtopo_troncon_de_route tr on sc.IdGeometrie = tr.cleabs
+    tr.amenagement_cyclable_gauche,
+    tr.amenagement_cyclable_droit
+from SegmentCyclable sc
+inner join Statut3V s3v on s3v.CodeStatut3V = sc.CodeStatut3V
+inner join Revetement3V r3v on r3v.CodeRevetement3V = sc.CodeRevetement3V
+inner join SegmentCyclable_PortionCyclable sp ON sp.IdSegmentCyclable = sc.IdSegmentCyclable
+inner join PortionCyclable pc on pc.IdPortionCyclable = sp.IdPortionCyclable
+inner join bdtopo_troncon_de_route tr on sc.IdGeometrie = tr.cleabs
 and sc.CodeEtatAvancement3v = 4
 and (
     (
@@ -227,12 +233,13 @@ and (
     or
     (
         s3v.Description = 'Piste cyclable' and
-        tr.nature <> 'Piste cyclable'
+        tr.nature_de_la_restriction <> 'Piste cyclable'
     )
     or
     (
         s3v.Description = 'Bande cyclable' and
-        tr.bande_cyclable not in ('Sens direct', 'Sens inverse', 'Double sens')
+        tr.amenagement_cyclable_gauche <> 'Bande cyclable' and
+        tr.amenagement_cyclable_droit <> 'Bande cyclable'
     )
     or
     (
@@ -247,15 +254,4 @@ and (
         tr.nature not in ('Route à 2 chaussées', 'Route à 1 chaussée', 'Rond-point')
     )
 )
-order by 2, 4, 1;
-
--- TODO voir s'il est utile d'activer cette requête de vérification qui recherche les couples de segments d'une même portion qui ont un même début ou une même fin
--- select sc1.IdSegmentCyclable, sc2.IdSegmentCyclable, pc1.Nom
--- from m.SegmentCyclable sc1, m.SegmentCyclable sc2, m.SegmentCyclable_PortionCyclable sp1, m.SegmentCyclable_PortionCyclable sp2, m.PortionCyclable pc1
--- where sc1.IdSegmentCyclable > sc2.IdSegmentCyclable
--- and sc1.IdSegmentCyclable = sp1.IdSegmentCyclable
--- and sp1.IdPortionCyclable = pc1.IdPortionCyclable
--- and sc2.IdSegmentCyclable = sp2.IdSegmentCyclable
--- and sp1.IdPortionCyclable = sp2.IdPortionCyclable
--- and (ST_Equals(ST_StartPoint(sc1.Geom), ST_StartPoint(sc2.Geom)) or ST_Equals(ST_EndPoint(sc1.Geom), ST_EndPoint(sc2.Geom)))
--- order by pc1.Nom
+order by 2, 3, 4, 1;

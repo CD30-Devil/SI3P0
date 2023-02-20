@@ -1,6 +1,6 @@
 ﻿. ("$PSScriptRoot\..\..\API\PowerShell\api_complète.ps1")
 
-$dossierRapports = "$PSScriptRoot\..\Rapports\D_4h_vérifier"
+$dossierRapports = "$PSScriptRoot\..\Rapports\manuel_vérifier"
 $dossierSQL = "$PSScriptRoot\..\SQL"
 
 # nettoyage préalable

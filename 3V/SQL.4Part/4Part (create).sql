@@ -1,5 +1,8 @@
-﻿-- Vélo et Territoires
-create view tmp.VetT_Segment_4Layer as
+﻿-- schémas spécifiques SI3P0 (tmp = temporaire, m = modèle)
+set search_path to tmp, m, public;
+
+-- Vélo et Territoires
+create view D30_VetT_3VSegment_4Layer as
 select
     distinct
     sc.IdSegmentCyclable as "ID_LOCAL",
@@ -22,36 +25,36 @@ select
     string_agg(distinct dep.COGDepartement, ', ' order by dep.COGDepartement) as "COG_DEPARTEMENTS",
     string_agg(distinct dep.COGRegion, ', ' order by dep.COGRegion) as "COG_REGIONS",
     sc.Geom
-from m.SegmentCyclable sc
-left join m.SegmentCyclable_Gestionnaire scg on scg.IdsegmentCyclable = sc.IdSegmentCyclable
-left join m.UniteLegale gest on gest.Siren = scg.Siren
-left join m.SegmentCyclable_Proprietaire scp on scp.IdsegmentCyclable = sc.IdSegmentCyclable
-left join m.UniteLegale prop on prop.Siren = scp.Siren
-left join m.SegmentCyclable_PortionCyclable sp on sp.IdSegmentCyclable = sc.IdSegmentCyclable
-left join m.PortionCyclable pc on pc.IdPortionCyclable = sp.IdPortionCyclable
-left join m.PortionCyclable_ItineraireCyclable pi on pi.IdPortionCyclable = pc.IdPortionCyclable
-inner join m.Commune com on ST_Intersects(sc.Geom, com.Geom)
-inner join m.EPCIFederative epci on com.SirenEPCI = epci.Siren
-inner join m.Departement dep on com.COGDepartement = dep.COGDepartement
-inner join m.Region reg on dep.COGRegion = reg.COGRegion
+from SegmentCyclable sc
+left join SegmentCyclable_Gestionnaire scg on scg.IdsegmentCyclable = sc.IdSegmentCyclable
+left join UniteLegale gest on gest.Siren = scg.Siren
+left join SegmentCyclable_Proprietaire scp on scp.IdsegmentCyclable = sc.IdSegmentCyclable
+left join UniteLegale prop on prop.Siren = scp.Siren
+left join SegmentCyclable_PortionCyclable sp on sp.IdSegmentCyclable = sc.IdSegmentCyclable
+left join PortionCyclable pc on pc.IdPortionCyclable = sp.IdPortionCyclable
+left join PortionCyclable_ItineraireCyclable pi on pi.IdPortionCyclable = pc.IdPortionCyclable
+inner join Commune com on ST_Intersects(sc.Geom, com.Geom)
+inner join EPCIFederative epci on com.SirenEPCI = epci.Siren
+inner join Departement dep on com.COGDepartement = dep.COGDepartement
+inner join Region reg on dep.COGRegion = reg.COGRegion
 where pi.NumeroItineraireCyclable not like 'B%'
 group by sc.IdSegmentCyclable
 order by "ID_LOCAL";
 
-create view tmp.VetT_RTronconSegment_4Sheet as
+create view D30_VetT_3VRTronconSegment_4Sheet as
 select
     distinct
     sc.IdSegmentCyclable as "ID_LOCAL",
     sc.IdGeometrie as "ID_SI_EXT",
     sc.SourceGeometrie as "NOM_SI_EXT"
-from m.SegmentCyclable sc
-left join m.SegmentCyclable_PortionCyclable sp on sp.IdSegmentCyclable = sc.IdSegmentCyclable
-left join m.PortionCyclable pc on pc.IdPortionCyclable = sp.IdPortionCyclable
-left join m.PortionCyclable_ItineraireCyclable pi on pi.IdPortionCyclable = pc.IdPortionCyclable
+from SegmentCyclable sc
+left join SegmentCyclable_PortionCyclable sp on sp.IdSegmentCyclable = sc.IdSegmentCyclable
+left join PortionCyclable pc on pc.IdPortionCyclable = sp.IdPortionCyclable
+left join PortionCyclable_ItineraireCyclable pi on pi.IdPortionCyclable = pc.IdPortionCyclable
 where pi.NumeroItineraireCyclable not like 'B%'
 order by "ID_LOCAL";
 
-create view tmp.VetT_Portion_4Layer as
+create view D30_VetT_3VPortion_4Layer as
 select
     pc.IdPortionCyclable as "ID_LOCAL",
     null::varchar as "ID_ON3V",
@@ -69,22 +72,22 @@ select
         else pi.Ordre
     end as "ORDRE_ETAP",
     ST_LineMerge(ST_Collect(sc.Geom)) as Geom
-from m.SegmentCyclable sc
-left join m.SegmentCyclable_PortionCyclable sp on sp.IdSegmentCyclable = sc.IdSegmentCyclable
-left join m.PortionCyclable pc on pc.IdPortionCyclable = sp.IdPortionCyclable
-left join m.PortionCyclable_ItineraireCyclable pi on pi.IdPortionCyclable = pc.IdPortionCyclable
+from SegmentCyclable sc
+left join SegmentCyclable_PortionCyclable sp on sp.IdSegmentCyclable = sc.IdSegmentCyclable
+left join PortionCyclable pc on pc.IdPortionCyclable = sp.IdPortionCyclable
+left join PortionCyclable_ItineraireCyclable pi on pi.IdPortionCyclable = pc.IdPortionCyclable
 where pi.NumeroItineraireCyclable not like 'B%'
 group by pc.IdPortionCyclable, pi.NumeroItineraireCyclable, pi.Ordre
 order by "ID_ITI", "ORDRE_ETAP";
 
-create view tmp.VetT_RElementPortion_4Sheet as
+create view D30_VetT_3VRElementPortion_4Sheet as
 select sp.IdPortionCyclable as "ID_PORTION", sp.IdSegmentCyclable as "ID_ELEMENT"
-from m.SegmentCyclable_PortionCyclable sp
-left join m.PortionCyclable_ItineraireCyclable pi on pi.IdPortionCyclable = sp.IdPortionCyclable
+from SegmentCyclable_PortionCyclable sp
+left join PortionCyclable_ItineraireCyclable pi on pi.IdPortionCyclable = sp.IdPortionCyclable
 where pi.NumeroItineraireCyclable not like 'B%'
 order by "ID_PORTION", "ID_ELEMENT";
 
-create view tmp.VetT_Itineraire_4Sheet as
+create view D30_VetT_3VItineraire_4Sheet as
 select
     NumeroItineraireCyclable as "ID_ITI",
     NumeroItineraireCyclable as "NUMERO",
@@ -92,7 +95,7 @@ select
     NomUsage as "NOM_USAGE",
     Depart as "DEPART",
     case NumeroItineraireCyclable
-        when 'EV17' then (select string_agg(Arrivee, ', ' order by Arrivee) from m.ItineraireCyclable where NumeroItineraireCyclable in ('EV17a', 'EV17b'))
+        when 'EV17' then (select string_agg(Arrivee, ', ' order by Arrivee) from ItineraireCyclable where NumeroItineraireCyclable in ('EV17a', 'EV17b'))
         else Arrivee
     end as "ARRIVEE",
     EstInscrit as "EST_INSCRI",
@@ -100,28 +103,28 @@ select
     AnneeInscription as "AN_INSCRI",
     SiteWeb as "SITE_WEB",
     AnneeOuverture as "AN_OUVERT"
-from m.ItineraireCyclable
+from ItineraireCyclable
 where NumeroItineraireCyclable not like 'B%'
 and NumeroItineraireCyclable not in ('EV17a', 'EV17b')
 order by "ID_ITI";
 
-create view tmp.VetT_BoucleCyclo_4Layer as
+create view D30_VetT_3VBoucleCyclo_4Layer as
 with ItineraireCyclableCommune as (
     select distinct ic.NumeroItineraireCyclable, c.Nom
-    from m.ItineraireCyclable ic
-    inner join m.PortionCyclable_ItineraireCyclable pi on pi.NumeroItineraireCyclable = ic.NumeroItineraireCyclable
-    inner join m.PortionCyclable pc on pc.IdPortionCyclable = pi.IdPortionCyclable
-    inner join m.SegmentCyclable_PortionCyclable ps on ps.IdPortionCyclable = pc.IdPortionCyclable
-    inner join m.SegmentCyclable sc on sc.IdSegmentCyclable = ps.IdSegmentCyclable
-    inner join m.Commune c on ST_Intersects(sc.Geom, c.Geom)
+    from ItineraireCyclable ic
+    inner join PortionCyclable_ItineraireCyclable pi on pi.NumeroItineraireCyclable = ic.NumeroItineraireCyclable
+    inner join PortionCyclable pc on pc.IdPortionCyclable = pi.IdPortionCyclable
+    inner join SegmentCyclable_PortionCyclable ps on ps.IdPortionCyclable = pc.IdPortionCyclable
+    inner join SegmentCyclable sc on sc.IdSegmentCyclable = ps.IdSegmentCyclable
+    inner join Commune c on ST_Intersects(sc.Geom, c.Geom)
 ),
 DistancesItineraireParEtat as (
     select ic.NumeroItineraireCyclable, sc.CodeEtatAvancement3V, round(sum(ST_Length(geom))::numeric / 1000, 2) as Distance
-    from m.ItineraireCyclable ic
-    inner join m.PortionCyclable_ItineraireCyclable pi on pi.NumeroItineraireCyclable = ic.NumeroItineraireCyclable
-    inner join m.PortionCyclable pc on pc.IdPortionCyclable = pi.IdPortionCyclable
-    inner join m.SegmentCyclable_PortionCyclable ps on ps.IdPortionCyclable = pc.IdPortionCyclable
-    inner join m.SegmentCyclable sc on sc.IdSegmentCyclable = ps.IdSegmentCyclable
+    from ItineraireCyclable ic
+    inner join PortionCyclable_ItineraireCyclable pi on pi.NumeroItineraireCyclable = ic.NumeroItineraireCyclable
+    inner join PortionCyclable pc on pc.IdPortionCyclable = pi.IdPortionCyclable
+    inner join SegmentCyclable_PortionCyclable ps on ps.IdPortionCyclable = pc.IdPortionCyclable
+    inner join SegmentCyclable sc on sc.IdSegmentCyclable = ps.IdSegmentCyclable
     group by ic.NumeroItineraireCyclable, sc.CodeEtatAvancement3V
 )
 select
@@ -141,11 +144,11 @@ select
     coalesce(tarr.Distance, 0) as "KM_TR_ARR",
     coalesce(proj.Distance, 0) as "KM_PROJ",
     ST_LineMerge(ST_Collect(sc.Geom)) as Geom
-from m.SegmentCyclable sc
-left join m.SegmentCyclable_PortionCyclable sp on sp.IdSegmentCyclable = sc.IdSegmentCyclable
-left join m.PortionCyclable pc on pc.IdPortionCyclable = sp.IdPortionCyclable
-left join m.PortionCyclable_ItineraireCyclable pi on pi.IdPortionCyclable = pc.IdPortionCyclable
-left join m.ItineraireCyclable ic on ic.NumeroItineraireCyclable = pi.NumeroItineraireCyclable
+from SegmentCyclable sc
+left join SegmentCyclable_PortionCyclable sp on sp.IdSegmentCyclable = sc.IdSegmentCyclable
+left join PortionCyclable pc on pc.IdPortionCyclable = sp.IdPortionCyclable
+left join PortionCyclable_ItineraireCyclable pi on pi.IdPortionCyclable = pc.IdPortionCyclable
+left join ItineraireCyclable ic on ic.NumeroItineraireCyclable = pi.NumeroItineraireCyclable
 inner join ItineraireCyclableCommune icc on icc.NumeroItineraireCyclable = ic.NumeroItineraireCyclable
 left join (select NumeroItineraireCyclable, sum(Distance) as Distance from DistancesItineraireParEtat group by NumeroItineraireCyclable) total on total.NumeroItineraireCyclable = ic.NumeroItineraireCyclable
 left join DistancesItineraireParEtat ouve on ouve.NumeroItineraireCyclable = ic.NumeroItineraireCyclable and ouve.CodeEtatAvancement3V = 4
@@ -157,13 +160,13 @@ group by ic.NumeroItineraireCyclable, total.Distance, ouve.Distance, trvx.Distan
 order by "ID_ITI";
 
 -- OpenData
-create view tmp.OpenData_3V_4Part as
+create view D30_OpenData_3V_4Part as
 with PointSegment as (
     select
         IdSegmentCyclable,
         (ST_DumpPoints(geom)).path[1] as NumPoint,
         ST_Z((ST_DumpPoints(geom)).geom) as AltiPoint
-    from m.SegmentCyclable
+    from SegmentCyclable
 ),
 DeniveleSegment as (
     select
@@ -191,15 +194,15 @@ select
     sc.SourceGeometrie as "SourceGeometrieSegment",
     sc.IdGeometrie as "IdGeometrieSegment",
     sc.Geom
-from m.SegmentCyclable sc
+from SegmentCyclable sc
 inner join DeniveleSegment dc on dc.IdSegmentCyclable = sc.IdSegmentCyclable
-left join m.Statut3V s on s.CodeStatut3V = sc.CodeStatut3V
-left join m.Revetement3V r on r.CodeRevetement3V = sc.CodeRevetement3V
-left join m.SegmentCyclable_PortionCyclable sp on sp.IdSegmentCyclable = sc.IdSegmentCyclable
-left join m.PortionCyclable pc on pc.IdPortionCyclable = sp.IdPortionCyclable
-left join m.TypePortionCyclable tpc on tpc.CodeTypePortionCyclable = pc.CodeTypePortionCyclable
-left join m.PortionCyclable_ItineraireCyclable pi on pi.IdPortionCyclable = pc.IdPortionCyclable
-inner join m.ItineraireCyclable ic on ic.NumeroItineraireCyclable = pi.NumeroItineraireCyclable
+left join Statut3V s on s.CodeStatut3V = sc.CodeStatut3V
+left join Revetement3V r on r.CodeRevetement3V = sc.CodeRevetement3V
+left join SegmentCyclable_PortionCyclable sp on sp.IdSegmentCyclable = sc.IdSegmentCyclable
+left join PortionCyclable pc on pc.IdPortionCyclable = sp.IdPortionCyclable
+left join TypePortionCyclable tpc on tpc.CodeTypePortionCyclable = pc.CodeTypePortionCyclable
+left join PortionCyclable_ItineraireCyclable pi on pi.IdPortionCyclable = pc.IdPortionCyclable
+inner join ItineraireCyclable ic on ic.NumeroItineraireCyclable = pi.NumeroItineraireCyclable
 where sc.CodeEtatAvancement3V = '4' and not sc.Fictif
 group by ic.NumeroItineraireCyclable, pc.IdPortionCyclable, sc.IdSegmentCyclable, tpc.CodeTypePortionCyclable, r.CodeRevetement3V, s.CodeStatut3V, pi.Ordre
 order by ic.NumeroItineraireCyclable, pi.Ordre;
