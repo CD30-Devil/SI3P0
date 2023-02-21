@@ -1,13 +1,19 @@
-﻿-- schémas spécifiques SI3P0 (f = fonctions, m = modèle)
+﻿-- NDLR : schémas spécifiques SI3P0 (f = fonctions, m = modèle)
+-- TODO : adapter le search_path en fonction de la structure de la BDD cible
 set search_path to f, m, public;
 
--- Conversion d'un PR+Abs en texte (ex: 10+354).
+-- Conversion d'un PR+Abs en texte.
+-- Lorsque la valeur _PRA est négative, le texte retourné est de la forme 0-_PRA
+-- Exemples :
+-- - 10134 -> 1+354
+-- - 220450 -> 22+450
+-- - -143 -> 0-143
 -- Paramètres :
 -- - _PRA : Le PR+Abs sous la forme 10000 * PR + Abscisse.
 -- Résultats :
 -- - Retourne le PR+Abs en texte.
 create or replace function PRAEnTexte(_PRA integer) returns character varying as $$
-    select (_PRA / 10000) || '+' || (_PRA % 10000);
+    select case when _PRA >= 0 then (_PRA / 10000) || '+' || (_PRA % 10000) else '0' || _PRA::character varying end;
 $$ language sql;
 
 -- Conversion d'une distance cumulée depuis le début de la route en PR+Abs sous la forme 10000 * PR + Abscisse.
@@ -17,7 +23,7 @@ $$ language sql;
 -- Résultats :
 -- - Retourne le PR+Abs sous la forme 10000 * PR + Abscisse.
 create or replace function CumulDistVersPRA(_NumeroRoute character varying, _CumulDist numeric) returns integer as $$
-
+    
     with PRAvant as (
         select PRA, CumulDist
         from PR
@@ -26,8 +32,14 @@ create or replace function CumulDistVersPRA(_NumeroRoute character varying, _Cum
         order by PRA desc
         limit 1
     )
-    select PRA + round(_CumulDist - CumulDist)::integer
-    from PRAvant;
+    select
+        case
+            when _CumulDist < 0 then round(_CumulDist)::integer
+            else pr.PRA + round(_CumulDist - pr.CumulDist)::integer
+        end
+    from Route r
+    left join PRAvant pr on true
+    where r.NumeroRoute = _NumeroRoute;
 
 $$ language sql;
 
@@ -38,7 +50,7 @@ $$ language sql;
 -- Résultats :
 -- - Retourne la distance cumulée depuis le début de la route.
 create or replace function PRAVersCumulDist(_NumeroRoute character varying, _PRA integer) returns numeric as $$
-
+    
     with PRAvant as (
         select PRA, CumulDist
         from PR
@@ -48,8 +60,14 @@ create or replace function PRAVersCumulDist(_NumeroRoute character varying, _PRA
         order by PRA desc
         limit 1
     )
-    select CumulDist + (_PRA - PRA)::numeric
-    from PRAvant;
+    select
+        case
+            when _PRA < 0 then _PRA::numeric
+            else CumulDist + (_PRA - PRA)::numeric
+        end
+    from Route r
+    left join PRAvant on true
+    where r.NumeroRoute = _NumeroRoute
     
 $$ language sql;
 
@@ -61,7 +79,7 @@ $$ language sql;
 -- - Retourne le numéro de route et la distance cumulée du point le plus proche du point donnée.
 create or replace function PointVersCumulDist(_Point geometry, _RayonRecherche integer default 100) returns table (_NumeroRoute character varying, _CumulDist numeric) as $$
     
-    select NumeroRoute, (ST_3DLength(Geom) * ST_LineLocatePoint(Geom, TransformerEnL93(_Point)))::numeric + CumulDistD
+    select NumeroRoute, ST_M(ST_LineInterpolatePoint(Geom, ST_LineLocatePoint(Geom, TransformerEnL93(_Point))))::numeric
     from Troncon
     where not Fictif
     and IdGiratoire is null -- ignore les giratoires pour les calculs de distances et les fonctions de géocodage
@@ -80,7 +98,7 @@ $$ language sql;
 -- - Retourne la distance cumulée du point le plus proche du point donnée sur la route concernée.
 create or replace function PointVersCumulDist(_Point geometry, _NumeroRoute character varying, _RayonRecherche integer default 100) returns numeric as $$
 
-    select (ST_3DLength(Geom) * ST_LineLocatePoint(Geom, TransformerEnL93(_Point)))::numeric + CumulDistD
+    select ST_M(ST_LineInterpolatePoint(Geom, ST_LineLocatePoint(Geom, TransformerEnL93(_Point))))::numeric
     from Troncon
     where NumeroRoute = _NumeroRoute
     and not Fictif
@@ -135,7 +153,13 @@ create or replace function CumulDistVersPoint(_NumeroRoute character varying, _C
                 when _CumulDist > ST_M(ST_EndPoint(Geom))::numeric then ST_EndPoint(Geom)
                 else ST_GeometryN(ST_LocateAlong(Geom, _CumulDist), 1)
             end as Geom,
-            SensCirculation, CumulDistD
+            case SensCirculation
+                when 3 then 1 -- double sens prioritaire pour le géocodage
+                when 1 then 2 -- sinon voie droite
+                when 2 then 3 -- sinon voie gauche
+                else 4
+            end as Priorite,
+            CumulDistD
         from Troncon
         where not Fictif
         and IdGiratoire is null -- ignore les giratoires pour les calculs de distances et les fonctions de géocodage
@@ -144,7 +168,7 @@ create or replace function CumulDistVersPoint(_NumeroRoute character varying, _C
     )
     select Geom
     from Point
-    order by SensCirculation, CumulDistD
+    order by Priorite, CumulDistD
     limit _Limit;
     
 $$ language sql;
@@ -174,7 +198,7 @@ $$ language sql;
 -- - Retourne le point recalé si celui-ci se trouve dans le rayon de recherche.
 create or replace function RecalerPointSurRoute(_Point geometry, _InclureGiratoire boolean default false, _RayonRecherche integer default 100) returns geometry as $$
 
-    select ST_ClosestPoint(t.Geom, _Point)
+    select ST_ClosestPoint(t.Geom, TransformerEnL93(_Point))
     from Troncon t
     left join Giratoire g on t.IdGiratoire = g.IdGiratoire and t.NumeroRoute = g.NumeroRoute
     where not t.Fictif
@@ -195,7 +219,7 @@ $$ language sql;
 -- - Retourne le point recalé si celui-ci se trouve dans le rayon de recherche.
 create or replace function RecalerPointSurRoute(_Point geometry, _NumeroRoute character varying, _InclureGiratoire boolean default false, _RayonRecherche integer default 100) returns geometry as $$
 
-    select ST_ClosestPoint(t.Geom, _Point)
+    select ST_ClosestPoint(t.Geom, TransformerEnL93(_Point))
     from Troncon t
     left join Giratoire g on t.IdGiratoire = g.IdGiratoire and t.NumeroRoute = g.NumeroRoute
     where t.NumeroRoute = _NumeroRoute

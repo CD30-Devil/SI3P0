@@ -1,22 +1,26 @@
-﻿-- Au Département du Gard, lorsque plusieurs routes départementales se rencontrent à un giratoire,
+﻿-- NDLR :
+-- Au département du Gard, lorsque plusieurs routes départementales se rencontrent à un giratoire,
 -- le giratoire est affecté à la route de plus haut niveau de service ou, si les niveaux sont égaux, à la route ayant le plus petit numéro.
 -- 
 -- Si cette requête n'est pas lancée, l'affectation par défaut est celle de la BDTopo.
+--
+-- TODO :
+-- Commenter ou adapter cette requête en fonction des règles d'affectation propres au département.
 
 with Critere as (
     select distinct
         IdGiratoire,
         NumeroRoute,
         min(Niveau) as Critere1,
-        (regexp_replace(substring(NumeroRoute from 2), '\D.*', ''))::integer as Critere2,
-        (regexp_replace(substring(NumeroRoute from 2), '^\d*', '')) as Critere3
+        (regexp_replace(substring(NumeroRoute from position('D' in NumeroRoute) + 1), '\D.*', ''))::integer as Critere2,
+        (regexp_replace(substring(NumeroRoute from position('D' in NumeroRoute) + 1), '^\d*', '')) as Critere3
     from Troncon
     where IdGiratoire is not null
     group by IdGiratoire, NumeroRoute
     order by IdGiratoire, Critere1, Critere2, Critere3
 ),
 Classement as (
-    select row_number() over(partition by IdGiratoire order by Critere1, Critere2) as Classement, *
+    select row_number() over(partition by IdGiratoire order by Critere1, Critere2, Critere3) as Classement, *
     from Critere
 ),
 NumeroRouteGiratoire as (

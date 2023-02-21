@@ -1,6 +1,9 @@
-﻿-- A l'issue de la construction, les tronçons ont comme niveau la valeur de priorité définie dans la BDTopo.
--- Au Département du Gard, les tronçons sont classés en 4 niveaux de service, de 1 (le plus important) à 4 (le plus bas).
--- Ce script repositionne les niveaux de chaque tronçons en fonction de la politique propre au Département.
+﻿-- NDLR :
+-- Au département du Gard, les tronçons sont classés en 4 niveaux de service, de 1 (le plus important) à 4 (le plus bas).
+-- Ce script permet le remplissage de l'attribut métier correspondant "Niveau".
+--
+-- TODO :
+-- Adapter ce script de sorte à renseigner la classification des routes du département.
 --
 -- Syntaxe pour une RD complète :
 -- update Troncon
@@ -19,13 +22,24 @@
 --         array['<Tronçon 1 de fin de section>', '<Tronçon 2 de fin de section>', ..., '<Tronçon N de fin de section>']
 --     )
 -- );
---
--- A faire :
--- - Mettre préalablement tous les tronçons à une valeur aberrante pour identifier plus facilement les oublis.
--- - Mettre, en fin de script, à null le niveau des tronçons fictifs.
 
-update Troncon
-set Niveau = 0;
+-- mise à zéro préalable pour tous les tronçons
+update Troncon set Niveau = 0;
+
+-- RD non gardoises
+update Troncon set Niveau = 4 where NumeroRoute = ('34D107');
+update Troncon set Niveau = 4 where NumeroRoute = ('34D107E1');
+update Troncon set Niveau = 3 where NumeroRoute = ('34D107E4');
+update Troncon set Niveau = 4 where NumeroRoute = ('34D130E7');
+update Troncon set Niveau = 3 where NumeroRoute = ('34D17E6');
+update Troncon set Niveau = 4 where NumeroRoute = ('34D1E6');
+update Troncon set Niveau = 3 where NumeroRoute = ('34D25');
+update Troncon set Niveau = 3 where NumeroRoute = ('34D4');
+update Troncon set Niveau = 3 where NumeroRoute = ('34D4E13');
+update Troncon set Niveau = 1 where NumeroRoute = ('34D61');
+
+update Troncon set Niveau = 3 where NumeroRoute = ('48D118');
+update Troncon set Niveau = 2 where NumeroRoute = ('48D9');
 
 -- RD multi-niveaux
 -- D1
@@ -37,7 +51,7 @@ and IdIGN in (
     from RechercherTronconsEntreIdIGN(
         'D1',
         array['TRONROUT0000000027900538'],
-        array['TRONROUT0000000027952851', 'TRONROUT0000000027952852']
+        array['TRONROUT0000000242505458', 'TRONROUT0000000357996161', 'TRONROUT0000000357996162', 'TRONROUT0000000357996163', 'TRONROUT0000000357996164']
     )
 );
 
@@ -48,7 +62,7 @@ and IdIGN in (
     select _IdIGN
     from RechercherTronconsEntreIdIGN(
         'D1',
-        array['TRONROUT0000000027952867', 'TRONROUT0000000027952853', 'TRONROUT0000000027952870', 'TRONROUT0000000027952865', 'TRONROUT0000000027952855', 'TRONROUT0000000027952864', 'TRONROUT0000000027952876', 'TRONROUT0000000027952866'],
+        array['TRONROUT0000000027952854', 'TRONROUT0000000027952868', 'TRONROUT0000000027952865', 'TRONROUT0000000027952855', 'TRONROUT0000000027952864', 'TRONROUT0000000027952876', 'TRONROUT0000000027952866', 'TRONROUT0000000027952867', 'TRONROUT0000000027952853', 'TRONROUT0000000027952870'],
         array['TRONROUT0000000027966937', 'TRONROUT0000000027966914']
     )
 );
@@ -184,7 +198,7 @@ and IdIGN in (
     select _IdIGN
     from RechercherTronconsEntreIdIGN(
         'D138',
-        array['TRONROUT0000000027802374'],
+        array['TRONROUT0000002287731795', 'TRONROUT0000002287731793', 'TRONROUT0000002287731796', 'TRONROUT0000002287731794'],
         array['TRONROUT0000000027808861']
     )
 );
@@ -377,7 +391,6 @@ and IdIGN in (
 );
 
 
--- TODO en attente du retour de l'UT sollicité par mail le 10/01 (sujet : D51 - Limite de gestion Gard / Lozère)
 update Troncon
 set Niveau = 3
 where NumeroRoute = 'D51'
@@ -386,7 +399,7 @@ and IdIGN in (
     from RechercherTronconsEntreIdIGN(
         'D51',
         array['TRONROUT0000000027772787', 'TRONROUT0000000027772764'],
-        array['TRONROUT0000000027765523']
+        array['TRONROUT0000000027765380']
     )
 );
 
@@ -448,7 +461,7 @@ and IdIGN in (
     select _IdIGN
     from RechercherTronconsEntreIdIGN(
         'D979',
-        array['TRONROUT0000000027767112'],
+        array['TRONROUT0000000005729468'],
         array['TRONROUT0000000027972352', 'TRONROUT0000000027972358', 'TRONROUT0000000027972317', 'TRONROUT0000000027972303', 'TRONROUT0000000027972308', 'TRONROUT0000000027972300', 'TRONROUT0000000027972315', 'TRONROUT0000000027972353']
     )
 );
@@ -544,6 +557,7 @@ update Troncon set Niveau = 1 where NumeroRoute = ('D62C');
 update Troncon set Niveau = 1 where NumeroRoute = ('D6313'); 
 update Troncon set Niveau = 1 where NumeroRoute = ('D640'); 
 update Troncon set Niveau = 1 where NumeroRoute = ('D6572'); 
+update Troncon set Niveau = 1 where NumeroRoute = ('D6572A'); 
 update Troncon set Niveau = 1 where NumeroRoute = ('D6580'); 
 update Troncon set Niveau = 1 where NumeroRoute = ('D90'); 
 update Troncon set Niveau = 1 where NumeroRoute = ('D904'); 
@@ -704,8 +718,6 @@ update Troncon set Niveau = 4 where NumeroRoute = ('D106');
 update Troncon set Niveau = 4 where NumeroRoute = ('D106A'); 
 update Troncon set Niveau = 4 where NumeroRoute = ('D107'); 
 update Troncon set Niveau = 4 where NumeroRoute = ('D107A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D107E'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D107E1'); 
 update Troncon set Niveau = 4 where NumeroRoute = ('D108'); 
 update Troncon set Niveau = 4 where NumeroRoute = ('D109'); 
 update Troncon set Niveau = 4 where NumeroRoute = ('D10A'); 
@@ -729,7 +741,6 @@ update Troncon set Niveau = 4 where NumeroRoute = ('D118');
 update Troncon set Niveau = 4 where NumeroRoute = ('D118A'); 
 update Troncon set Niveau = 4 where NumeroRoute = ('D12'); 
 update Troncon set Niveau = 4 where NumeroRoute = ('D120'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D120A'); 
 update Troncon set Niveau = 4 where NumeroRoute = ('D120B'); 
 update Troncon set Niveau = 4 where NumeroRoute = ('D120C'); 
 update Troncon set Niveau = 4 where NumeroRoute = ('D121'); 
@@ -813,7 +824,6 @@ update Troncon set Niveau = 4 where NumeroRoute = ('D167A');
 update Troncon set Niveau = 4 where NumeroRoute = ('D168'); 
 update Troncon set Niveau = 4 where NumeroRoute = ('D169'); 
 update Troncon set Niveau = 4 where NumeroRoute = ('D169A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D16A'); 
 update Troncon set Niveau = 4 where NumeroRoute = ('D16B'); 
 update Troncon set Niveau = 4 where NumeroRoute = ('D17'); 
 update Troncon set Niveau = 4 where NumeroRoute = ('D170'); 
@@ -901,7 +911,6 @@ update Troncon set Niveau = 4 where NumeroRoute = ('D220');
 update Troncon set Niveau = 4 where NumeroRoute = ('D221'); 
 update Troncon set Niveau = 4 where NumeroRoute = ('D222'); 
 update Troncon set Niveau = 4 where NumeroRoute = ('D223'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D224'); 
 update Troncon set Niveau = 4 where NumeroRoute = ('D226'); 
 update Troncon set Niveau = 4 where NumeroRoute = ('D227'); 
 update Troncon set Niveau = 4 where NumeroRoute = ('D228'); 
@@ -940,7 +949,6 @@ update Troncon set Niveau = 4 where NumeroRoute = ('D256');
 update Troncon set Niveau = 4 where NumeroRoute = ('D257'); 
 update Troncon set Niveau = 4 where NumeroRoute = ('D258'); 
 update Troncon set Niveau = 4 where NumeroRoute = ('D259'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D25C'); -- TODO : Pompignan - La D25C n'existe manifestement plus (D107 de l'Hérault à la place), à confirmer car il existe une autre D107 sur l'UT de Vauvert.
 update Troncon set Niveau = 4 where NumeroRoute = ('D261'); 
 update Troncon set Niveau = 4 where NumeroRoute = ('D264'); 
 update Troncon set Niveau = 4 where NumeroRoute = ('D265'); 
@@ -983,7 +991,6 @@ update Troncon set Niveau = 4 where NumeroRoute = ('D283');
 update Troncon set Niveau = 4 where NumeroRoute = ('D283A'); 
 update Troncon set Niveau = 4 where NumeroRoute = ('D283B'); 
 update Troncon set Niveau = 4 where NumeroRoute = ('D283C'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D283D'); 
 update Troncon set Niveau = 4 where NumeroRoute = ('D284'); 
 update Troncon set Niveau = 4 where NumeroRoute = ('D284A'); 
 update Troncon set Niveau = 4 where NumeroRoute = ('D284B'); 
@@ -1133,7 +1140,6 @@ update Troncon set Niveau = 4 where NumeroRoute = ('D420');
 update Troncon set Niveau = 4 where NumeroRoute = ('D420A'); 
 update Troncon set Niveau = 4 where NumeroRoute = ('D422'); 
 update Troncon set Niveau = 4 where NumeroRoute = ('D424'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D425'); 
 update Troncon set Niveau = 4 where NumeroRoute = ('D430'); 
 update Troncon set Niveau = 4 where NumeroRoute = ('D432'); 
 update Troncon set Niveau = 4 where NumeroRoute = ('D432A'); 
@@ -1240,7 +1246,7 @@ update Troncon set Niveau = 4 where NumeroRoute = ('D901A');
 update Troncon set Niveau = 4 where NumeroRoute = ('D986A'); 
 update Troncon set Niveau = 4 where NumeroRoute = ('D999B');
 
--- Remise à null pour les tronçons fictifs.
+-- remise à null pour les tronçons fictifs
 update Troncon
 set Niveau = null
 where Fictif;

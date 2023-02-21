@@ -39,14 +39,33 @@ group by Niveau
 order by Niveau;
 select '';
 
+select 'Nombre de km (3D) de routes par niveau dont le département est propriétaire :';
+select Niveau, round(sum(ST_3DLength(t.Geom))::numeric / 1000, 2)
+from TronconReel t
+inner join BDT2RR_Departement d on t.SirenProprietaire = d.Siren
+group by Niveau
+order by Niveau;
+select '';
+
+select 'Nombre de km (3D) de routes par niveau dont le département assure la gestion courante :';
+select Niveau, round(sum(ST_3DLength(t.Geom))::numeric / 1000, 2)
+from TronconReel t
+inner join BDT2RR_Departement d on t.SirenGestionCourante = d.Siren
+group by Niveau
+order by Niveau;
+select '';
+
+select 'Nombre de km (3D) de routes par niveau dont le département assure la VH :';
+select Niveau, round(sum(ST_3DLength(t.Geom))::numeric / 1000, 2)
+from TronconReel t
+inner join BDT2RR_Departement d on t.SirenVH = d.Siren
+group by Niveau
+order by Niveau;
+select '';
+
 select 'Nombre de km (3D) de routes à grande circulation : ' || round(sum(ST_3DLength(Geom))::numeric / 1000, 2)
 from TronconReel
 where RGC;
-select '';
-
-select 'Nombre de km (3D) de voies gauches : ' || round(sum(ST_3DLength(Geom))::numeric / 1000, 2)
-from TronconReel
-where Gauche;
 select '';
 
 select 'Nombre de km (3D) de routes départementales par nature de RRIR :';
@@ -55,6 +74,19 @@ from TronconReel
 where RRIR is not null
 group by RRIR
 order by RRIR;
+select '';
+
+select 'Nombre de km (3D) de routes départementales par tonnage de RTE :';
+select RTE, round(sum(ST_3DLength(Geom))::numeric / 1000, 2)
+from TronconReel
+where RTE is not null
+group by RTE
+order by RTE;
+select '';
+
+select 'Nombre de km (3D) de voies gauches : ' || round(sum(ST_3DLength(Geom))::numeric / 1000, 2)
+from TronconReel
+where Gauche;
 select '';
 
 select 'Nombre de tronçons (tous compris) : ' || count(*)
@@ -68,7 +100,7 @@ select '';
 
 select 'Nombre de tronçons réels : ' || count(*)
 from TronconReel;
-select 'Remarque : La somme des tronçons réels + fictifs est différente du nombre tout compris du fait de la présence de tronçons en doublon lorsque un giratoire est commun à plusieurs routes départementales.';
+select 'Remarque : La somme des tronçons réels + fictifs est différent du nombre tout compris du fait de la présence de tronçons en doublon lorsque un giratoire est commun à plusieurs routes départementales.';
 select '';
 
 select 'Taille min, max, moyenne en mètres des tronçons réels : ' || round(min(ST_3DLength(Geom))::numeric, 2) || ', ' || round(max(ST_3DLength(Geom))::numeric, 2) || ', ' || round(avg(ST_3DLength(Geom))::numeric, 2)
@@ -99,14 +131,29 @@ select 'Remarque : Après vérification de l''exactitude de la détection des gi
 select '';
 
 select '***************************************************************************************************';
+select 'Détection d''erreurs concernant les routes.';
+select '***************************************************************************************************';
+select '';
+
+select 'Liste des routes (NumeroRoute | min(CumulDistD)) ayant des distances cumulées négatives :';
+select NumeroRoute, min(CumulDistD)
+from Troncon
+group by NumeroRoute
+having min(CumulDistD) < 0
+order by 1;
+select 'Remarque : Vérifier manuellement que ces routes disposent bien de tronçons placés avant le PR de début.';
+select '';
+
+select '***************************************************************************************************';
 select 'Détection d''erreurs concernant les tronçons.';
 select '***************************************************************************************************';
 select '';
 
 select 'Liste des tronçons (NumeroRoute | IdIGN) présents dans la BDTopo mais absents du référentiel routier construit :';
-select NumeroRoute, IdIGN
-from BDT2RR_Troncon
-where ClasseAdmin = 'Départementale'
+select t.NumeroRoute, t.IdIGN
+from BDT2RR_Troncon t
+inner join Route r on r.NumeroRoute = t.NumeroRoute
+where t.ClasseAdmin = 'Départementale'
 except
 select NumeroRoute, IdIGN
 from Troncon
@@ -114,12 +161,32 @@ order by NumeroRoute, IdIGN;
 select 'Remarque : Cette liste devrait être vide.';
 select '';
 
-select 'Liste des tronçons (NumeroRoute | IdIGN | PrecisionAlti | Longueur 3D | Longueur 2D | Pente ) ayant une pente moyenne incohérente :';
-select NumeroRoute, IdIGN, PrecisionAlti, round(ST_3DLength(Geom)::numeric, 2), round(ST_Length(Geom)::numeric, 2), round(CalculerPenteMoyenne(Geom)::numeric, 2) || '%'
-from BDT2RR_Troncon
+select 'Liste des tronçons (NumeroRoute | IdIGN | PrecisionAlti | Longueur 3D | Longueur 2D | Pente) ayant une pente moyenne incohérente :';
+select t.NumeroRoute, t.IdIGN, t.PrecisionAlti, round(ST_3DLength(t.Geom)::numeric, 2), round(ST_Length(t.Geom)::numeric, 2), round(CalculerPenteMoyenne(t.Geom)::numeric, 2) || '%'
+from BDT2RR_Troncon t
+inner join Route r on r.NumeroRoute = t.NumeroRoute
 where CalculerPenteMoyenne(Geom) > 50
 order by PrecisionAlti asc, CalculerPenteMoyenne(Geom) desc;
 select 'Remarque : Cette liste est à notifier à l''IGN.';
+select '';
+
+select 'Liste des tronçons (NumeroRoute | IdTroncon | IdIGN | SirenProprietaire) majoritairement sur le département mais dont le département n''est pas propriétaire :';
+select t.NumeroRoute, t.IdTroncon, t.IdIGN, t.SirenProprietaire
+from TronconReel t
+inner join BDT2RR_Departement d on ST_Intersects(t.Geom, d.Geom) and ST_Length(ST_Intersection(d.Geom, t.Geom)) >= ST_Length(t.Geom) / 2
+where t.SirenProprietaire <> d.Siren
+order by t.NumeroRoute, t.IdIGN;
+select 'Remarque : A priori, tout tronçon qui se trouve majoritairement sur l''emprise du département doit appartenir au département.';
+select '';
+
+select 'Liste des tronçons (NumeroRoute | IdTroncon | IdIGN | SirenProprietaire) pas majoritairement sur le département mais dont le département est propriétaire :';
+select t.NumeroRoute, t.IdTroncon, t.IdIGN, t.SirenProprietaire
+from TronconReel t
+inner join BDT2RR_Departement d on t.SirenProprietaire = d.Siren
+where not(ST_Covers(d.Geom, t.Geom))
+and ST_Length(ST_Intersection(d.Geom, t.Geom)) < ST_Length(t.Geom) / 2
+order by t.NumeroRoute, t.IdIGN;
+select 'Remarque : A priori, tout tronçon qui ne se trouve pas majoritairement sur l''emprise du département ne doit pas appartenir au département.';
 select '';
 
 select 'Liste des tronçons (NumeroRoute | IdIGN | Nature) sans sens de circulation :';
@@ -135,18 +202,18 @@ select distinct t1.NumeroRoute, t1.IdIGN
 from Troncon t1
 inner join Troncon t2 on t1.IdTroncon <> t2.IdTroncon and t1.NumeroRoute = t2.NumeroRoute and ST_Equals(ST_EndPoint(t1.Geom), ST_StartPoint(t2.Geom))
 inner join Troncon t3 on t1.IdTroncon <> t3.IdTroncon and t1.NumeroRoute = t3.NumeroRoute and ST_Equals(ST_EndPoint(t1.Geom), ST_StartPoint(t3.Geom))
-where t1.SensCirculation = 0
-and t2.SensCirculation = 0
-and t3.SensCirculation = 0
+where t1.SensCirculation = 3
+and t2.SensCirculation = 3
+and t3.SensCirculation = 3
 and t2.IdTroncon <> t3.IdTroncon
 union
 select distinct t1.NumeroRoute, t1.IdIGN
 from Troncon t1
 inner join Troncon t2 on t1.IdTroncon <> t2.IdTroncon and t1.NumeroRoute = t2.NumeroRoute and ST_Equals(ST_StartPoint(t1.Geom), ST_EndPoint(t2.Geom))
 inner join Troncon t3 on t1.IdTroncon <> t3.IdTroncon and t1.NumeroRoute = t3.NumeroRoute and ST_Equals(ST_StartPoint(t1.Geom), ST_EndPoint(t3.Geom))
-where t1.SensCirculation = 0
-and t2.SensCirculation = 0
-and t3.SensCirculation = 0
+where t1.SensCirculation = 3
+and t2.SensCirculation = 3
+and t3.SensCirculation = 3
 and t2.IdTroncon <> t3.IdTroncon
 order by 1, 2;
 select 'Remarque : Une route ne se divise généralement pas en deux branches à double sens. Vérifier manuellement cette liste.';
@@ -200,6 +267,7 @@ from PR pr
 inner join Troncon t on t.NumeroRoute = pr.NumeroRoute and ST_DWithin(pr.Geom, t.Geom, 1)
 where pr.CumulDist = 0
 and t.IdGiratoire is null
+and t.CumulDistD >= 0 -- ne tient pas compte des tronçons à distances cumulées négatives
 group by pr.IdPR, pr.NumeroRoute
 having count(IdTroncon) > 1
 order by NumeroRoute;

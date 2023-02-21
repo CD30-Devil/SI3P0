@@ -1,4 +1,5 @@
-﻿-- schémas spécifiques SI3P0 (f = fonctions, m = modèle)
+﻿-- NDLR : schémas spécifiques SI3P0 (f = fonctions, m = modèle)
+-- TODO : adapter le search_path en fonction de la structure de la BDD cible
 set search_path to f, m, public;
 
 drop function if exists PRAEnTexte(_PRA integer);

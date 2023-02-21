@@ -1,7 +1,8 @@
-﻿-- schémas spécifiques SI3P0 (v = vues, m = modèle)
-set search_path to v, m, public;
+﻿-- NDLR : schémas spécifiques SI3P0 (m = modèle)
+-- TODO : adapter le search_path en fonction de la structure de la BDD cible
+set search_path to m, public;
 
-create or replace view TronconReel as
+create view TronconReel as
 select t.*
 from Troncon t
 left join Giratoire g on g.IdGiratoire = t.IdGiratoire and t.NumeroRoute = g.NumeroRoute

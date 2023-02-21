@@ -1,4 +1,10 @@
-﻿-- Ce script est utile pour définir le Réseau Routier d'Intérêt Régional (RIRR) fixées par délibération de la région.
+﻿-- NDLR :
+-- La région Occitanie a identifier un Réseau Routier dit d'Intêret Régional (RRIR).
+-- Le département du Gard peut obtenir des subventions de la région lorsqu'il réalise des travaux sur ce réseau.
+-- Ce script permet le remplissage de l'attribut métier correspondant "RRIR".
+--
+-- TODO :
+-- Adapter ce script de sorte à renseigner le RRIR du département s'il existe.
 --
 -- Syntaxe pour une RD complète :
 -- update Troncon
@@ -17,13 +23,9 @@
 --         array['<Tronçon 1 de fin de section>', '<Tronçon 2 de fin de section>', ..., '<Tronçon N de fin de section>']
 --     )
 -- );
---
--- A faire :
--- - Mettre préalablement les attributs RRIR de tous les tronçons à null.
--- - Mettre, en fin de script, à null l'attribut RRIR des tronçons fictifs.
 
-update Troncon
-set RRIR = null;
+-- mise à null préalable pour tous les tronçons
+update Troncon set RRIR = null;
 
 update Troncon
 set RRIR = 'Connexion pôle urbain économique'
@@ -121,7 +123,7 @@ and IdIGN in (
     )
 );
 
--- Remise à null pour des tronçons fictifs.
-update Troncon
+-- remise à null pour des tronçons qui ne sont pas "réels"
+update Troncon t
 set RRIR = null
-where Fictif;
+where t.IdTroncon not in (select IdTroncon from TronconReel);

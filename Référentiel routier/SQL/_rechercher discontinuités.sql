@@ -1,12 +1,14 @@
 ﻿-- Recherche des discontinuités pouvant nécessiter la création de tronçons fictifs.
 with Giratoire as (
-    select ST_CollectionExtract(unnest(ST_ClusterIntersecting(Geom)), 2) as Geom
-    from BDT2RR_Troncon
-    where Nature = 'Rond-point'
+    select ST_CollectionExtract(unnest(ST_ClusterIntersecting(t.Geom)), 2) as Geom
+    from Route r
+    inner join BDT2RR_Troncon t on t.NumeroRoute = r.NumeroRoute
+    where t.nature = 'Rond-point'
 ),
-UnionTronconEtGiratoire as (
-    select NumeroRoute, ClasseAdmin, Geom
-    from BDT2RR_Troncon
+UnionTronconEtGiratoire as materialized (
+    select r.NumeroRoute, t.ClasseAdmin, t.Geom
+    from Route r
+    inner join BDT2RR_Troncon t on t.NumeroRoute = r.NumeroRoute
     union
     select distinct t.NumeroRoute, t.ClasseAdmin, g.Geom
     from Giratoire g

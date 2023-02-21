@@ -1,5 +1,12 @@
-﻿-- Ce script permet de positionner les voies gauches.
--- Celles-ci se définissent comme les voies dont le sens de circulation est décroissant par rapport aux PR et qui sont séparées (mur, glissière, surlargeur) de la voie croissante correspondante.
+﻿-- NDLR :
+-- Au département du Gard, les voies gauches suivent les voies droites correspondantes.
+-- De fait, il n'y a pas de PR spécifiques pour les voies gauches.
+-- 
+-- Il a donc été choisi de ne pas traiter spécifiquement les voies gauches, par exemple par l'ajout d'un suffixe _G, mais simplement d'ajouter un attribut "Gauche" aux tronçons.
+-- Ce script renseigne cet attribut.
+--
+-- TODO :
+-- Adapter ce script de sorte à renseigner les voies gauches du département ou modifier la procédure pour créer des voies gauches spéficiques si celles-ci sont éloignées de leur voie droite correspondante.
 --
 -- Syntaxe pour une RD complète :
 -- update Troncon
@@ -20,13 +27,9 @@
 --         array['<Tronçon 1 de fin de section>', '<Tronçon 2 de fin de section>', ..., '<Tronçon N de fin de section>']
 --     )
 -- );
---
--- A faire :
--- - Mettre préalablement les attributs Gauche de tous les tronçons à false.
--- - Mettre, en fin de script, à null l'attribut Gauche des tronçons fictifs.
 
-update Troncon
-set Gauche = false;
+-- mise à false préalable pour tous les tronçons
+update Troncon set Gauche = false;
 
 update Troncon
 set Gauche = true
@@ -37,7 +40,7 @@ and IdIGN in (
     from RechercherTronconsEntreIdIGN(
         'D16',
         array['TRONROUT0000000027805829', 'TRONROUT0000000027805847'],
-        array['TRONROUT0000000027803668', 'TRONROUT0000000358006828']
+        array['TRONROUT0000002275645640', 'TRONROUT0000002275645626']
     )
 );
 
@@ -366,7 +369,7 @@ and IdIGN in (
     )
 );
 
--- Remise à null pour les tronçons fictifs.
-update Troncon
+-- remise à null pour des tronçons qui ne sont pas "réels"
+update Troncon t
 set Gauche = null
-where Fictif;
+where t.IdTroncon not in (select IdTroncon from TronconReel);

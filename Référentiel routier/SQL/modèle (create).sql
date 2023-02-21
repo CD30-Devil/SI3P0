@@ -1,10 +1,11 @@
-﻿/*==============================================================*/
+/*==============================================================*/
 /* Nom de SGBD :  PostgreSQL SI3P0                              */
-/* Date de création :  01/12/2021 08:44:04                      */
+/* Date de création :  02/02/2023 17:02:40                      */
 /*==============================================================*/
 
 
--- schémas spécifiques SI3P0 (m = modèle)
+-- NDLR : schémas spécifiques SI3P0 (m = modèle)
+-- TODO : adapter le search_path en fonction de la structure de la BDD cible
 set search_path to m, public;
 
 
@@ -85,33 +86,51 @@ create table troncon (
    idtroncon            SERIAL not null,
    numeroroute          VARCHAR              not null,
    idgiratoire          VARCHAR              null,
-   codeinseegauche      VARCHAR              null,
-   codeinseedroite      VARCHAR              null,
-   cumuldistd           NUMERIC(10,2)        null,
-   cumuldistf           NUMERIC(10,2)        null,
+   cogcommunegauche     VARCHAR              null,
+   cogcommunedroite     VARCHAR              null,
+   sirenproprietaire    VARCHAR              null,
+   sirengestioncourante VARCHAR              null,
+   sirenvh              VARCHAR              null,
    idign                VARCHAR              null,
    idignprec            VARCHAR              null,
-   etat                 VARCHAR              null,
-   niveau               INT4                 null,
-   rgc                  BOOL                 null,
-   rrir                 VARCHAR              null,
-   itinerairevert       BOOL                 null,
+   idignroute           VARCHAR              null,
+   cumuldistd           NUMERIC(10,2)        null,
+   cumuldistf           NUMERIC(10,2)        null,
    fictif               BOOL                 null,
+   niveau               INT4                 null,
+   importance           VARCHAR              null,
    nature               VARCHAR              null,
    nbvoies              INT4                 null,
-   senscirculation      INT4                 null,
-   gauche               BOOL                 null,
    largeur              NUMERIC              null,
    positionsol          INT4                 null,
-   accesvl              VARCHAR              null,
-   reservebus           VARCHAR              null,
-   bandecyclable        VARCHAR              null,
-   accespieton          VARCHAR              null,
-   prive                BOOL                 null,
+   gueouradier          BOOL                 null,
    urbain               BOOL                 null,
+   prive                BOOL                 null,
+   senscirculation      INT4                 null,
+   gauche               BOOL                 null,
+   rgc                  BOOL                 null,
+   rrir                 VARCHAR              null,
+   rte                  INT4                 null,
+   itinerairevert       BOOL                 null,
+   delestage            BOOL                 null,
+   matdangereusesinterdites BOOL                 null,
+   restrictionlongueur  NUMERIC              null,
+   restrictionlargeur   NUMERIC              null,
+   restrictionpoidsparessieu NUMERIC              null,
+   restrictionpoidstotal NUMERIC              null,
+   restrictionhauteur   NUMERIC              null,
+   naturerestriction    VARCHAR              null,
+   periodefermeture     VARCHAR              null,
+   accespieton          VARCHAR              null,
+   accesvl              VARCHAR              null,
    vitessemoyennevl     INT4                 null,
-   precisionplani       DECIMAL              null,
-   precisionalti        DECIMAL              null,
+   reservebus           VARCHAR              null,
+   sensamngtcyclablegauche VARCHAR              null,
+   sensamngtcyclabledroit VARCHAR              null,
+   amngtcyclablegauche  VARCHAR              null,
+   amngtcyclabledroit   VARCHAR              null,
+   precisionplani       NUMERIC              null,
+   precisionalti        NUMERIC              null,
    constraint pktroncon primary key (idtroncon)
 );
 
@@ -136,14 +155,14 @@ numeroroute
 /* Index : troncon_commune_gauche_fk                            */
 /*==============================================================*/
 create  index troncon_commune_gauche_fk on troncon (
-codeinseedroite
+cogcommunedroite
 );
 
 /*==============================================================*/
 /* Index : troncon_commune_droite_fk                            */
 /*==============================================================*/
 create  index troncon_commune_droite_fk on troncon (
-codeinseegauche
+cogcommunegauche
 );
 
 /*==============================================================*/
@@ -151,6 +170,27 @@ codeinseegauche
 /*==============================================================*/
 create  index troncon_giratoire_fk on troncon (
 idgiratoire
+);
+
+/*==============================================================*/
+/* Index : troncon_proprietaire_fk                              */
+/*==============================================================*/
+create  index troncon_proprietaire_fk on troncon (
+sirenproprietaire
+);
+
+/*==============================================================*/
+/* Index : troncon_gestionnaire_fk                              */
+/*==============================================================*/
+create  index troncon_gestionnaire_fk on troncon (
+sirengestioncourante
+);
+
+/*==============================================================*/
+/* Index : troncon_vh_fk                                        */
+/*==============================================================*/
+create  index troncon_vh_fk on troncon (
+sirenvh
 );
 
 /*==============================================================*/
@@ -178,5 +218,10 @@ alter table troncon
 alter table troncon
    add constraint fk_troncon_route foreign key (numeroroute)
       references route (numeroroute)
+      on delete restrict on update restrict;
+
+alter table troncon
+   add constraint fk_troncon_vh foreign key (sirenvh)
+      references unitelegale (siren)
       on delete restrict on update restrict;
 

@@ -1,7 +1,10 @@
-﻿-- Ce script est utile pour définir les Routes à Grande Circulation (RGC) fixées par décret.
+﻿-- Ce script permet le remplissage de l'attribut métier "RGC" utile pour identifier les Routes à Grande Circulation (RGC) fixées par décret.
 --
--- Lien vers le décret pour le Gard :
--- https://www.legifrance.gouv.fr/affichTexteArticle.do;jsessionid=F64B9771F7A0F0D9BECCE74EF9A1F829.tplgfr24s_3?cidTexte=JORFTEXT000020692049&idArticle=LEGIARTI000022296568&dateTexte=20181103&categorieLien=id#LEGIARTI000022296568
+-- NDLR :
+-- Lien vers le décret pour le département du Gard : https://www.legifrance.gouv.fr/affichTexteArticle.do;jsessionid=F64B9771F7A0F0D9BECCE74EF9A1F829.tplgfr24s_3?cidTexte=JORFTEXT000020692049&idArticle=LEGIARTI000022296568&dateTexte=20181103&categorieLien=id#LEGIARTI000022296568
+--
+-- TODO :
+-- Adapter ce script de sorte à renseigner les RGC du département.
 --
 -- Syntaxe pour une RD complète :
 -- update Troncon
@@ -20,13 +23,9 @@
 --         array['<Tronçon 1 de fin de section>', '<Tronçon 2 de fin de section>', ..., '<Tronçon N de fin de section>']
 --     )
 -- );
---
--- A faire :
--- - Mettre préalablement les attributs RGC de tous les tronçons à false.
--- - Mettre, en fin de script, à null l'attribut RGC des tronçons fictifs.
 
-update Troncon
-set RGC = false;
+-- mise à false préalable pour tous les tronçons
+update Troncon set RGC = false;
 
 -- 30; D127; D135; NIMES; D135; POULX
 update Troncon
@@ -135,7 +134,7 @@ and IdIGN in (
     from RechercherTronconsEntreIdIGN(
         'D6086',
         array['TRONROUT0000000027771728'],
-        array['TRONROUT0000000027779308', 'TRONROUT0000000027779292', 'TRONROUT0000000027779310', 'TRONROUT0000000242619636', 'TRONROUT0000000242619635', 'TRONROUT0000000027779312', 'TRONROUT0000000027780489', 'TRONROUT0000000027780490', 'TRONROUT0000000027780491', 'TRONROUT0000000027779309', 'TRONROUT0000000027779311']
+        array['TRONROUT0000000027775904', 'TRONROUT0000000027775902', 'TRONROUT0000000027775895', 'TRONROUT0000000027775907', 'TRONROUT0000000027775896', 'TRONROUT0000000027775906', 'TRONROUT0000000027775901', 'TRONROUT0000000027775867', 'TRONROUT0000000027775894']
     )
 );
 
@@ -245,7 +244,7 @@ and IdIGN in (
     )
 );
 
--- Remise à null pour les tronçons fictifs.
-update Troncon
+-- remise à null pour des tronçons qui ne sont pas "réels"
+update Troncon t
 set RGC = null
-where Fictif;
+where t.IdTroncon not in (select IdTroncon from TronconReel);

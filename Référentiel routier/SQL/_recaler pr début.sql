@@ -7,5 +7,5 @@
 -- Il convient de vérifier/corriger manuellement le résultat obtenu.
 
 select * from RecalerPRDeb(
-    25 -- Le rayon de recherche d'une extrémité de route autour du premier PR.
+    25 -- TODO : Adapter le rayon de recherche d'une extrémité de route autour du premier PR en fonction de la qualité des données d'entrée.
 );
