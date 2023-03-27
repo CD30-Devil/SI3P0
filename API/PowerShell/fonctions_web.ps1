@@ -7,12 +7,14 @@
 # $url : L'adresse url du fichier à télécharger.
 # $enregistrerSous : L'emplacement de sauvegarde.
 # $entetes : Les entêtes à ajouter lors de l'appel.
+# $identite : L'identité à utiliser pour une requête authentifiée.
 # -----------------------------------------------------------------------------
 function Telecharger {
     param (
         [parameter(Mandatory=$true)] [string] $url,
         [parameter(Mandatory=$true)] [string] $enregistrerSous,
-        [hashtable] $entetes = $null
+        [hashtable] $entetes = $null,
+        [Net.NetworkCredential] $identite = $null
     )
     
     Afficher-Message-Date -message "Téléchargement de $url vers $enregistrerSous."
@@ -25,6 +27,10 @@ function Telecharger {
         foreach ($cle in $entetes.Keys) {
             $client.Headers.Add($cle, $entetes[$cle])
         }
+    }
+
+    if ($identite) {
+        $client.Credentials = $identite
     }
 
     $client.DownloadFile($url, $enregistrerSous)

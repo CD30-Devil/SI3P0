@@ -253,6 +253,52 @@ function SIg-Importer-CSV {
 }
 
 # -----------------------------------------------------------------------------
+# Import d'un fichier JSON.
+# Le JSON doit être encodé en UTF8.
+#
+# Si elle n'existe pas, la table d'import est créée.
+# Sinon, le JSON y est ajouté.
+#
+# Les valeurs pré-établies des paramètres font que le SIg par défaut est ciblé.
+#
+# $json : Le chemin vers le fichier JSON à importer.
+# $serveur : Le serveur de base de données.
+# $port : Le port du serveur de base de données.
+# $bdd : Le nom de la base de données.
+# $utilisateur : L'utilisateur pour la connexion à la base de données.
+# $table : Le nom de la table, éventuellement préfixé d'un schéma, à remplir.
+# $delimiteur : Le delimiteur utilisé dans le fichier CSV.
+# $sortie : Chemin de redirection de la sortie standard, $null pour ne pas
+#           activer la redirection.
+# $erreur : Pour demander, lorsque la redirection de la sortie standard est
+#           activée, la redirection de la sortie erreur. Le fichier de sortie
+#           porte le même nom que celui de la sortie standard avec ajout de
+#           l'extension .err.
+# -----------------------------------------------------------------------------
+function SIg-Importer-JSON {
+    param (
+        [parameter(Mandatory=$true)] [string] $json,
+        [string] $serveur = $sigServeur,
+        [string] $port = $sigPort,
+        [string] $bdd = $sigBDD,
+        [string] $utilisateur = $sigUtilisateur,
+        [parameter(Mandatory=$true)] [string] $table,
+        [string] $sortie = $null,
+        [bool] $erreur = $true
+    )
+
+    Importer-JSON-PostgreSQL `
+        -json $json `
+        -serveur $serveur `
+        -port $port `
+        -bdd $bdd `
+        -utilisateur $utilisateur `
+        -table $table `
+        -sortie $sortie `
+        -erreur $erreur
+}
+
+# -----------------------------------------------------------------------------
 # Import d'un GeoJSON (par appel à Ogr2Ogr).
 # Les valeurs pré-établies des paramètres font que le SIg par défaut est ciblé.
 #
@@ -681,7 +727,7 @@ function SIg-Exporter-GPKG {
         [parameter(Mandatory=$true)] [string[]] $requetes,
         [parameter(Mandatory=$true)] [string] $gpkg,
         [parameter(Mandatory=$true)] [string[]] $couches,
-        [bool] $ecraserGPKG = $false,
+        [bool] $ecraserGPKG = $true,
         [bool] $ecraserCouche = $true,
         [string] $sridSource = $sridDefaut,
         [string] $sridCible = $sridDefaut,
@@ -1046,6 +1092,54 @@ function Parametrer-Job-SIG-Importer-CSV {
         -utilisateur $utilisateur `
         -table $table `
         -delimiteur $delimiteur `
+        -sortie $sortie `
+        -erreur $erreur
+}
+
+# -----------------------------------------------------------------------------
+# Paramétrage d'un job d'import d'un fichier JSON.
+# Le JSON doit être encodé en UTF8.
+#
+# Si elle n'existe pas, la table d'import est créée.
+# Sinon, le JSON y est ajouté.
+#
+# Les valeurs pré-établies des paramètres font que le SIg par défaut est ciblé.
+#
+# $racineAPI : Le chemin vers le dossier racine de l'API PowerShell.
+# $json : Le chemin vers le fichier JSON à importer.
+# $serveur : Le serveur de base de données.
+# $port : Le port du serveur de base de données.
+# $bdd : Le nom de la base de données.
+# $utilisateur : L'utilisateur pour la connexion à la base de données.
+# $table : Le nom de la table, éventuellement préfixé d'un schéma, à remplir.
+# $sortie : Chemin de redirection de la sortie standard, $null pour ne pas
+#           activer la redirection.
+# $erreur : Pour demander, lorsque la redirection de la sortie standard est
+#           activée, la redirection de la sortie erreur. Le fichier de sortie
+#           porte le même nom que celui de la sortie standard avec ajout de
+#           l'extension .err.
+# -----------------------------------------------------------------------------
+function Parametrer-Job-SIG-Importer-JSON {
+    param (
+        [string] $racineAPI = $PSScriptRoot,
+        [parameter(Mandatory=$true)] [string] $json,
+        [string] $serveur = $sigServeur,
+        [string] $port = $sigPort,
+        [string] $bdd = $sigBDD,
+        [string] $utilisateur = $sigUtilisateur,
+        [parameter(Mandatory=$true)] [string] $table,
+        [string] $sortie = $null,
+        [bool] $erreur = $true
+    )
+
+    Parametrer-Job-Importer-JSON-PostgreSQL `
+        -racineAPI $racineAPI `
+        -json $json `
+        -serveur $serveur `
+        -port $port `
+        -bdd $bdd `
+        -utilisateur $utilisateur `
+        -table $table `
         -sortie $sortie `
         -erreur $erreur
 }
@@ -1538,7 +1632,7 @@ function Parametrer-Job-SIg-Exporter-GPKG {
         [parameter(Mandatory=$true)] [string[]] $requetes,
         [parameter(Mandatory=$true)] [string] $gpkg,
         [parameter(Mandatory=$true)] [string[]] $couches,
-        [bool] $ecraserGPKG = $false,
+        [bool] $ecraserGPKG = $true,
         [bool] $ecraserCouche = $true,
         [string] $sridSource = $sridDefaut,
         [string] $sridCible = $sridDefaut,

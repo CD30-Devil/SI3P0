@@ -31,7 +31,7 @@ function Calculer-Isochrone {
     Afficher-Message-Date -message "Calcul d'un isochrone autour de $x, $y" -couleur green
     Afficher-Message-Date -message $url -couleur gray
 
-    $reponse = Invoke-WebRequest -Uri $url
+    $reponse = Invoke-WebRequest -UseBasicParsing -Uri $url
 
     $geom = ''
 
@@ -73,6 +73,7 @@ function Calculer-Isodistance {
     )
 
     $url = "https://wxs.ign.fr/calcul/geoportail/isochrone/rest/1.0.0/isochrone?point=$x,$y&resource=bdtopo-iso&costType=distance&distanceUnit=$unite&costValue=$distance&profile=$profil&direction=$direction"
+
     if ($contraintes) {
         $url += "&constraints=$contraintes"
     }
@@ -80,7 +81,7 @@ function Calculer-Isodistance {
     Afficher-Message-Date -message "Calcul d'une isodistance autour de $x, $y" -couleur green
     Afficher-Message-Date -message $url -couleur gray
     
-    $reponse = Invoke-WebRequest -Uri $url
+    $reponse = Invoke-WebRequest -UseBasicParsing -Uri $url
 
     $geom = ''
 
@@ -114,17 +115,22 @@ function Calculer-Itineraire {
         [parameter(Mandatory=$true)] [double] $yDepart,
         [parameter(Mandatory=$true)] [double] $xArrivee,
         [parameter(Mandatory=$true)] [double] $yArrivee,
-        [string] $ressource = 'bdtopo-osrm',
+        [string] $ressource = 'bdtopo-pgr',
         [string] $profil = 'car',
-        [string] $parcours = 'fastest'
+        [string] $parcours = 'fastest',
+        [string] $contraintes = $null
     )
 
     $url = "https://wxs.ign.fr/calcul/geoportail/itineraire/rest/1.0.0/route?resource=$ressource&start=$xDepart,$yDepart&end=$xArrivee,$yArrivee&profile=$profil&optimization=$parcours&getSteps=false"
 
+    if ($contraintes) {
+        $url += "&constraints=$contraintes"
+    }
+
     Afficher-Message-Date -message "Calcul d'une itinéraire entre $xDepart, $yDepart et $xArrivee, $yArrivee" -couleur green
     Afficher-Message-Date -message $url -couleur gray
     
-    $reponse = Invoke-WebRequest -Uri $url
+    $reponse = Invoke-WebRequest -UseBasicParsing -Uri $url
 
     $geom = ''
 

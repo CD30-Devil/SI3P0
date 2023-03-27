@@ -337,6 +337,93 @@ function Parametrer-Job-Importer-CSV-PostgreSQL {
 }
 
 # -----------------------------------------------------------------------------
+# Job d'import d'un fichier JSON.
+# Le JSON doit être encodé en UTF8.
+#
+# Si elle n'existe pas, la table d'import est créée.
+# Sinon, le JSON y est ajouté.
+#
+# Format attendu de $parametres :
+# .racineAPI : Le chemin vers le dossier racine de l'API PowerShell.
+# .json : Le chemin vers le fichier JSON à importer.
+# .serveur : Le serveur de base de données.
+# .port : Le port du serveur de base de données.
+# .bdd : Le nom de la base de données.
+# .utilisateur : L'utilisateur pour la connexion à la base de données.
+# .table : Le nom de la table, éventuellement préfixé d'un schéma, à remplir.
+# .sortie : Chemin de redirection de la sortie standard, $null pour ne pas
+#           activer la redirection.
+# .erreur : Pour demander, lorsque la redirection de la sortie standard est
+#           activée, la redirection de la sortie erreur. Le fichier de sortie
+#           porte le même nom que celui de la sortie standard avec ajout de
+#           l'extension .err.
+# -----------------------------------------------------------------------------
+$Job_Importer_JSON_PostgreSQL = {
+    param (
+        [object] $parametres
+    )
+
+    . ("$($parametres.racineAPI)\fonctions_postgresql.ps1")
+
+    Importer-JSON-PostgreSQL `
+        -json $parametres.json `
+        -serveur $parametres.serveur `
+        -port $parametres.port `
+        -bdd $parametres.bdd `
+        -utilisateur $parametres.utilisateur `
+        -table $parametres.table `
+        -sortie $parametres.sortie `        -erreur $parametres.erreur
+}
+
+# -----------------------------------------------------------------------------
+# Paramétrage d'un job d'import d'un fichier JSON.
+# Le JSON doit être encodé en UTF8.
+#
+# Si elle n'existe pas, la table d'import est créée.
+# Sinon, le JSON y est ajouté.
+#
+# $racineAPI : Le chemin vers le dossier racine de l'API PowerShell.
+# $json : Le chemin vers le fichier JSON à importer.
+# $serveur : Le serveur de base de données.
+# $port : Le port du serveur de base de données.
+# $bdd : Le nom de la base de données.
+# $utilisateur : L'utilisateur pour la connexion à la base de données.
+# $table : Le nom de la table, éventuellement préfixé d'un schéma, à remplir.
+# $sortie : Chemin de redirection de la sortie standard, $null pour ne pas
+#           activer la redirection.
+# $erreur : Pour demander, lorsque la redirection de la sortie standard est
+#           activée, la redirection de la sortie erreur. Le fichier de sortie
+#           porte le même nom que celui de la sortie standard avec ajout de
+#           l'extension .err.# Le CSV doit être encodé en UTF8.
+# -----------------------------------------------------------------------------
+function Parametrer-Job-Importer-JSON-PostgreSQL {
+    param (
+        [string] $racineAPI = $PSScriptRoot,
+        [parameter(Mandatory=$true)] [string] $json,
+        [parameter(Mandatory=$true)] [string] $serveur,
+        [parameter(Mandatory=$true)] [string] $port,
+        [parameter(Mandatory=$true)] [string] $bdd,
+        [parameter(Mandatory=$true)] [string] $utilisateur,
+        [parameter(Mandatory=$true)] [string] $table,
+        [string] $sortie = $null,
+        [bool] $erreur = $true
+    )
+
+    @{
+        script = $Job_Importer_JSON_PostgreSQL
+        racineAPI = $racineAPI
+        json = $json
+        serveur = $serveur
+        port = $port
+        bdd = $bdd
+        utilisateur = $utilisateur
+        table = $table
+        sortie = $sortie
+        erreur = $erreur
+    }
+}
+
+# -----------------------------------------------------------------------------
 # Job d'export d'un CSV.
 #
 # Format attendu de $parametres :

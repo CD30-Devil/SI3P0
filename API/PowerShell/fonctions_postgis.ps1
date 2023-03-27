@@ -487,7 +487,7 @@ function Exporter-GPKG-Postgis {
         [parameter(Mandatory=$true)] [string[]] $requetes,
         [parameter(Mandatory=$true)] [string] $gpkg,
         [parameter(Mandatory=$true)] [string[]] $couches,
-        [bool] $ecraserGPKG = $false,
+        [bool] $ecraserGPKG = $true,
         [bool] $ecraserCouche = $true,
         [string] $sridSource = $sridDefaut,
         [string] $sridCible = $sridDefaut,
@@ -505,6 +505,10 @@ function Exporter-GPKG-Postgis {
     
     New-Item -ItemType Directory -Force -Path (Split-Path -Path $gpkg)
 
+    if ($ecraserGPKG -and (Test-Path $gpkg)) {
+        Remove-Item $gpkg
+    }
+
     for ($n = 0; $n -lt $requetes.Count; $n++) {
 
         $parametres = [Collections.ArrayList]::new()
@@ -513,7 +517,7 @@ function Exporter-GPKG-Postgis {
         [void]$parametres.Add("-sql `"$($requetes[$n])`"")
         [void]$parametres.Add("-nln $($couches[$n])")
 
-        if (!($ecraserGPKG) -and (Test-Path $gpkg)) {
+        if (Test-Path $gpkg) {
             [void]$parametres.Add("-update")
         }
 

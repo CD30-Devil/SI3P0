@@ -10,6 +10,7 @@
 . ("$PSScriptRoot\fonctions_géodonnées.ps1")
 . ("$PSScriptRoot\fonctions_qgis.ps1")
 . ("$PSScriptRoot\fonctions_ign.ps1")
+. ("$PSScriptRoot\fonctions_overpass.ps1")
 
 . ("$PSScriptRoot\fonctions_oledb.ps1")
 . ("$PSScriptRoot\fonctions_excel.ps1")

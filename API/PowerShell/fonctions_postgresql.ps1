@@ -278,6 +278,50 @@ function Importer-CSV-PostgreSQL {
 }
 
 # -----------------------------------------------------------------------------
+# Import d'un fichier JSON.
+# Le JSON doit être encodé en UTF8.
+#
+# Si elle n'existe pas, la table d'import est créée.
+# Sinon, le JSON y est ajouté.
+#
+# $json : Le chemin vers le fichier JSON à importer.
+# $serveur : Le serveur de base de données.
+# $port : Le port du serveur de base de données.
+# $bdd : Le nom de la base de données.
+# $utilisateur : L'utilisateur pour la connexion à la base de données.
+# $table : Le nom de la table, éventuellement préfixé d'un schéma, à remplir.
+# $sortie : Chemin de redirection de la sortie standard, $null pour ne pas
+#           activer la redirection.
+# $erreur : Pour demander, lorsque la redirection de la sortie standard est
+#           activée, la redirection de la sortie erreur. Le fichier de sortie
+#           porte le même nom que celui de la sortie standard avec ajout de
+#           l'extension .err.
+# -----------------------------------------------------------------------------
+function Importer-JSON-PostgreSQL {
+    param (
+        [parameter(Mandatory=$true)] [string] $json,
+        [parameter(Mandatory=$true)] [string] $serveur,
+        [parameter(Mandatory=$true)] [string] $port,
+        [parameter(Mandatory=$true)] [string] $bdd,
+        [parameter(Mandatory=$true)] [string] $utilisateur,
+        [parameter(Mandatory=$true)] [string] $table,
+        [string] $sortie = $null,
+        [bool] $erreur = $true
+    )
+
+    Afficher-Message-Date -message "Import de $json vers $serveur\$bdd."
+
+    $contenu = Get-Content $json -Encoding UTF8
+
+    $commande = @"
+        create table if not exists $table (json jsonb);
+        insert into $table (json) values ('$($contenu -replace "'", "''")');
+"@
+
+    Executer-PSQL-Commande -serveur $serveur -port $port -bdd $bdd -utilisateur $utilisateur -commande $commande -sortie $sortie -erreur $erreur
+}
+
+# -----------------------------------------------------------------------------
 # Export d'un CSV.
 #
 # $serveur : Le serveur de base de données.

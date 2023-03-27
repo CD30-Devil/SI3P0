@@ -762,7 +762,7 @@ function Parametrer-Job-Exporter-GPKG-Postgis {
         [parameter(Mandatory=$true)] [string[]] $requetes,
         [parameter(Mandatory=$true)] [string] $gpkg,
         [parameter(Mandatory=$true)] [string[]] $couches,
-        [bool] $ecraserGPKG = $false,
+        [bool] $ecraserGPKG = $true,
         [bool] $ecraserCouche = $true,
         [string] $sridSource = $sridDefaut,
         [string] $sridCible = $sridDefaut,
