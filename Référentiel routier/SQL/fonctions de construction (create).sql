@@ -1261,7 +1261,7 @@ $$ language plpgsql;
 -- - COGCommuneDroite prend la valeur de COGCommuneGauche
 -- - Inverse la géométrie des tronçons (ST_Reverse).
 -- - Repositionne les valeurs M en conséquence (ST_AddMeasure).
-create or replace function InverserTroncons(_IdIGN varchar[]) returns void as $$
+create or replace function InverserTroncons(_IdIGN varchar[]) returns table (NumeroRoute varchar, IdIGN varchar, Longueur float) as $$
 
     with recursive TronconAInverser as (
         
@@ -1282,6 +1282,7 @@ create or replace function InverserTroncons(_IdIGN varchar[]) returns void as $$
         COGCommuneGauche = COGCommuneDroite,
         COGCommuneDroite = COGCommuneGauche,
         Geom = ST_AddMeasure(ST_Reverse(Geom), -CumulDistF, -CumulDistD)
-    where IdTroncon in (select IdTroncon from TronconAInverser);
+    where IdTroncon in (select IdTroncon from TronconAInverser)
+    returning NumeroRoute, IdIGN, ST_Length(Geom);
     
 $$ language sql;
