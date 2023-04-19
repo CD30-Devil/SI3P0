@@ -29,7 +29,7 @@ begin
                 when 'fd' then ST_MakeLine(ST_EndPoint(t1.geometrie), ST_StartPoint(t2.geometrie))
             end as geometrie
         from source_troncon_de_route t1
-        inner join source_troncon_de_route t2 on t1.cpx_numero = t2.cpx_numero -- pour ne pas relier deux routes distinctes
+        inner join source_troncon_de_route t2 on string_to_array(t1.liens_vers_route_nommee, '/') && string_to_array(t2.liens_vers_route_nommee, '/') -- pour ne pas relier deux routes distinctes
         where t1.cleabs = _CleAbs1
         and t2.cleabs = _CleAbs2
     )
