@@ -247,13 +247,10 @@ insert into PR (NumeroRoute, PRA, CumulDist, Geom) select 'D118A'::character var
 insert into PR (NumeroRoute, PRA, CumulDist, Geom) select 'D11A'::character varying, 0::integer, 0::numeric, ST_StartPoint(Geom) from BDT2RR_Troncon where NumeroRoute = 'D11A' and IdIGN = 'TRONROUT0000000356420948';
 
 -- D12
-insert into PR (NumeroRoute, PRA, CumulDist, Geom) select 'D12'::character varying, 0::integer, 0::numeric, ST_StartPoint(Geom) from BDT2RR_Troncon where NumeroRoute = 'D12' and IdIGN = 'TRONROUT0000000027972512';
+insert into PR (NumeroRoute, PRA, CumulDist, Geom) select 'D12'::character varying, 0::integer, 0::numeric, ST_EndPoint(Geom) from BDT2RR_Troncon where NumeroRoute = 'D12' and IdIGN = 'TRONROUT0000002330385763';
 
 -- D12
-insert into PR (NumeroRoute, PRA, CumulDist, Geom) select 'D12'::character varying, 0::integer, 0::numeric, ST_StartPoint(Geom) from BDT2RR_Troncon where NumeroRoute = 'D12' and IdIGN = 'TRONROUT0000000027972525';
-
--- D12
-insert into PR (NumeroRoute, PRA, CumulDist, Geom) select 'D12'::character varying, 0::integer, 0::numeric, ST_StartPoint(Geom) from BDT2RR_Troncon where NumeroRoute = 'D12' and IdIGN = 'TRONROUT0000000027972548';
+insert into PR (NumeroRoute, PRA, CumulDist, Geom) select 'D12'::character varying, 0::integer, 0::numeric, ST_StartPoint(Geom) from BDT2RR_Troncon where NumeroRoute = 'D12' and IdIGN = 'TRONROUT0000002330385776';
 
 -- D120
 insert into PR (NumeroRoute, PRA, CumulDist, Geom) select 'D120'::character varying, 0::integer, 0::numeric, ST_EndPoint(Geom) from BDT2RR_Troncon where NumeroRoute = 'D120' and IdIGN = 'TRONROUT0000000027844983';
@@ -1586,7 +1583,7 @@ insert into PR (NumeroRoute, PRA, CumulDist, Geom) select 'D309'::character vary
 insert into PR (NumeroRoute, PRA, CumulDist, Geom) select 'D31'::character varying, 0::integer, 0::numeric, ST_StartPoint(Geom) from BDT2RR_Troncon where NumeroRoute = 'D31' and IdIGN = 'TRONROUT0000000027790159';
 
 -- D310
-insert into PR (NumeroRoute, PRA, CumulDist, Geom) select 'D310'::character varying, 0::integer, 0::numeric, ST_StartPoint(Geom) from BDT2RR_Troncon where NumeroRoute = 'D310' and IdIGN = 'TRONROUT0000000353120381';
+insert into PR (NumeroRoute, PRA, CumulDist, Geom) select 'D310'::character varying, 0::integer, 0::numeric, ST_StartPoint(Geom) from BDT2RR_Troncon where NumeroRoute = 'D310' and IdIGN = 'TRONROUT0000002330481039';
 
 -- D311
 insert into PR (NumeroRoute, PRA, CumulDist, Geom) select 'D311'::character varying, 0::integer, 0::numeric, ST_EndPoint(Geom) from BDT2RR_Troncon where NumeroRoute = 'D311' and IdIGN = 'TRONROUT0000000119281124';
@@ -2563,18 +2560,10 @@ insert into PR (NumeroRoute, PRA, CumulDist, Geom) select 'D650'::character vary
 insert into PR (NumeroRoute, PRA, CumulDist, Geom) select 'D650'::character varying, 0::integer, 0::numeric, ST_EndPoint(Geom) from BDT2RR_Troncon where NumeroRoute = 'D650' and IdIGN = 'TRONROUT0000002005263840';
 
 -- D6572
--- tronçons de continuité topo
-insert into PR (NumeroRoute, PRA, CumulDist, Geom) select 'D6572'::character varying, 0::integer, 0::numeric, ST_StartPoint(Geom) from BDT2RR_Troncon where NumeroRoute = 'D6572' and IdIGN = 'TRONROUT0000000027972517';
+insert into PR (NumeroRoute, PRA, CumulDist, Geom) select 'D6572'::character varying, 0::integer, 0::numeric, ST_EndPoint(Geom) from BDT2RR_Troncon where NumeroRoute = 'D6572' and IdIGN = 'TRONROUT0000002330385765';
 
 -- D6572
--- tronçons de continuité topo
-insert into PR (NumeroRoute, PRA, CumulDist, Geom) select 'D6572'::character varying, 0::integer, 0::numeric, ST_StartPoint(Geom) from BDT2RR_Troncon where NumeroRoute = 'D6572' and IdIGN = 'TRONROUT0000000027972518';
-
--- D6572
-insert into PR (NumeroRoute, PRA, CumulDist, Geom) select 'D6572'::character varying, 0::integer, 0::numeric, ST_StartPoint(Geom) from BDT2RR_Troncon where NumeroRoute = 'D6572' and IdIGN = 'TRONROUT0000000027972516';
-
--- D6572
-insert into PR (NumeroRoute, PRA, CumulDist, Geom) select 'D6572'::character varying, 0::integer, 0::numeric, ST_StartPoint(Geom) from BDT2RR_Troncon where NumeroRoute = 'D6572' and IdIGN = 'TRONROUT0000000027972546';
+insert into PR (NumeroRoute, PRA, CumulDist, Geom) select 'D6572'::character varying, 0::integer, 0::numeric, ST_StartPoint(Geom) from BDT2RR_Troncon where NumeroRoute = 'D6572' and IdIGN = 'TRONROUT0000002330385761';
 
 -- D6572A
 insert into PR (NumeroRoute, PRA, CumulDist, Geom) select 'D6572A'::character varying, 0::integer, 0::numeric, ST_StartPoint(Geom) from BDT2RR_Troncon where NumeroRoute = 'D6572A' and IdIGN = 'TRONROUT0000002007706328';

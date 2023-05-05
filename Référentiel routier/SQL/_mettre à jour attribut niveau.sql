@@ -1,9 +1,6 @@
 ﻿-- NDLR :
--- Au département du Gard, les tronçons sont classés en 4 niveaux de service, de 1 (le plus important) à 4 (le plus bas).
+-- Au Département du Gard, les tronçons sont classés en 3 niveaux de service, de 1 (le plus important) à 3 (le plus bas).
 -- Ce script permet le remplissage de l'attribut métier correspondant "Niveau".
---
--- TODO :
--- Adapter ce script de sorte à renseigner la classification des routes du département.
 --
 -- Syntaxe pour une RD complète :
 -- update Troncon
@@ -23,16 +20,16 @@
 --     )
 -- );
 
--- mise à zéro préalable pour tous les tronçons
+-- mise à zéro préalable de tous les niveaux
 update Troncon set Niveau = 0;
 
 -- RD non gardoises
-update Troncon set Niveau = 4 where NumeroRoute = ('34D107');
-update Troncon set Niveau = 4 where NumeroRoute = ('34D107E1');
+update Troncon set Niveau = 3 where NumeroRoute = ('34D107');
+update Troncon set Niveau = 3 where NumeroRoute = ('34D107E1');
 update Troncon set Niveau = 3 where NumeroRoute = ('34D107E4');
-update Troncon set Niveau = 4 where NumeroRoute = ('34D130E7');
+update Troncon set Niveau = 3 where NumeroRoute = ('34D130E7');
 update Troncon set Niveau = 3 where NumeroRoute = ('34D17E6');
-update Troncon set Niveau = 4 where NumeroRoute = ('34D1E6');
+update Troncon set Niveau = 3 where NumeroRoute = ('34D1E6');
 update Troncon set Niveau = 3 where NumeroRoute = ('34D25');
 update Troncon set Niveau = 3 where NumeroRoute = ('34D4');
 update Troncon set Niveau = 3 where NumeroRoute = ('34D4E13');
@@ -79,9 +76,47 @@ and IdIGN in (
     )
 );
 
--- D127
+-- D101
 update Troncon
 set Niveau = 3
+where NumeroRoute = 'D101'
+and IdIGN in (
+    select _IdIGN
+    from RechercherTronconsEntreIdIGN(
+        'D101',
+        array['TRONROUT0000000027843926'],
+        array['TRONROUT0000000027834315']
+    )
+);
+
+update Troncon
+set Niveau = 2
+where NumeroRoute = 'D101'
+and IdIGN in (
+    select _IdIGN
+    from RechercherTronconsEntreIdIGN(
+        'D101',
+        array['TRONROUT0000000309686802', 'TRONROUT0000000329973792', 'TRONROUT0000000119160077', 'TRONROUT0000000119160095', 'TRONROUT0000000119160096', 'TRONROUT0000000119160093', 'TRONROUT0000000119160097', 'TRONROUT0000000119160094', 'TRONROUT0000000119160090', 'TRONROUT0000000119160091'],
+        array['TRONROUT0000000027831482']
+    )
+);
+
+update Troncon
+set Niveau = 3
+where NumeroRoute = 'D101'
+and IdIGN in (
+    select _IdIGN
+    from RechercherTronconsEntreIdIGN(
+        'D101',
+        array['TRONROUT0000000308613629', 'TRONROUT0000000308613628', 'TRONROUT0000000308613626', 'TRONROUT0000000308613625'],
+        array['TRONROUT0000000119280991', 'TRONROUT0000000119280986', 'TRONROUT0000000119280990', 'TRONROUT0000000119280989', 'TRONROUT0000000119280975', 'TRONROUT0000000119280988', 'TRONROUT0000000119280985']
+    )
+);
+
+-- D127
+-- TODO : l'UT de Bagnols propose un passage de N3 à N2, la limite de passage du N3 au N2 (dans Poulx) est peut-être à revoir
+update Troncon
+set Niveau = 2
 where NumeroRoute = 'D127'
 and IdIGN in (
     select _IdIGN
@@ -93,7 +128,7 @@ and IdIGN in (
 );
 
 update Troncon
-set Niveau = 4
+set Niveau = 3
 where NumeroRoute = 'D127'
 and IdIGN in (
     select _IdIGN
@@ -143,7 +178,7 @@ and IdIGN in (
 
 -- D135
 update Troncon
-set Niveau = 4
+set Niveau = 3
 where NumeroRoute = 'D135'
 and IdIGN in (
     select _IdIGN
@@ -167,7 +202,7 @@ and IdIGN in (
 );
 
 update Troncon
-set Niveau = 4
+set Niveau = 3
 where NumeroRoute = 'D135'
 and IdIGN in (
     select _IdIGN
@@ -192,7 +227,7 @@ and IdIGN in (
 );
 
 update Troncon
-set Niveau = 4
+set Niveau = 3
 where NumeroRoute = 'D138'
 and IdIGN in (
     select _IdIGN
@@ -223,19 +258,7 @@ and IdIGN in (
     select _IdIGN
     from RechercherTronconsEntreIdIGN(
         'D139',
-        array['TRONROUT0000000027963513', 'TRONROUT0000000027963539', 'TRONROUT0000000027963544', 'TRONROUT0000000027963510', 'TRONROUT0000000027963500', 'TRONROUT0000000220058427', 'TRONROUT0000000027963506', 'TRONROUT0000000027963511', 'TRONROUT0000000027963521'],
-        array['TRONROUT0000000027968225', 'TRONROUT0000000027968234', 'TRONROUT0000000027968226', 'TRONROUT0000000027968231', 'TRONROUT0000000027968238', 'TRONROUT0000000027968230']
-    )
-);
-
-update Troncon
-set Niveau = 3
-where NumeroRoute = 'D139'
-and IdIGN in (
-    select _IdIGN
-    from RechercherTronconsEntreIdIGN(
-        'D139',
-        array['TRONROUT0000000027968237', 'TRONROUT0000000027968236'],
+        array['TRONROUT0000000027963521', 'TRONROUT0000000027963513', 'TRONROUT0000000027963539', 'TRONROUT0000000027963544', 'TRONROUT0000000027963510', 'TRONROUT0000000027963500', 'TRONROUT0000000220058427', 'TRONROUT0000000027963506', 'TRONROUT0000000027963511'],
         array['TRONROUT0000002216222427']
     )
 );
@@ -249,7 +272,7 @@ and IdIGN in (
     from RechercherTronconsEntreIdIGN(
         'D14',
         array['TRONROUT0000000217470676'],
-        array['TRONROUT0000002216941607', 'TRONROUT0000002216941608', 'TRONROUT0000002216941611', 'TRONROUT0000002216941612', 'TRONROUT0000000027958419', 'TRONROUT0000002216941605', 'TRONROUT0000000027958417']
+        array['TRONROUT0000002216222429']
     )
 );
 
@@ -260,70 +283,33 @@ and IdIGN in (
     select _IdIGN
     from RechercherTronconsEntreIdIGN(
         'D14',
-        array['TRONROUT0000000027958430', 'TRONROUT0000002216941610'],
+        array['TRONROUT0000000027961538', 'TRONROUT0000000027961557', 'TRONROUT0000002216253975', 'TRONROUT0000000027961556', 'TRONROUT0000002216253974'],
         array['TRONROUT0000000027937998']
     )
 );
 
--- D142
-update Troncon
-set Niveau = 4
-where NumeroRoute = 'D142'
-and IdIGN in (
-    select _IdIGN
-    from RechercherTronconsEntreIdIGN(
-        'D142',
-        array['TRONROUT0000000027966998', 'TRONROUT0000000027966993'],
-        array['TRONROUT0000000120834962', 'TRONROUT0000002005292237']
-    )
-);
-
+-- D177
 update Troncon
 set Niveau = 3
-where NumeroRoute = 'D142'
+where NumeroRoute = 'D177'
 and IdIGN in (
     select _IdIGN
     from RechercherTronconsEntreIdIGN(
-        'D142',
-        array['TRONROUT0000000120834974', 'TRONROUT0000000120834958', 'TRONROUT0000000120834979', 'TRONROUT0000000356958695', 'TRONROUT0000000120834977', 'TRONROUT0000000120834980', 'TRONROUT0000000120834976', 'TRONROUT0000000120834978', 'TRONROUT0000000120834973', 'TRONROUT0000002005292238'],
-        array['TRONROUT0000000027960872']
-    )
-);
-
--- D16
-update Troncon
-set Niveau = 1
-where NumeroRoute = 'D16'
-and IdIGN in (
-    select _IdIGN
-    from RechercherTronconsEntreIdIGN(
-        'D16',
-        array['TRONROUT0000000027805847', 'TRONROUT0000000027805829', 'TRONROUT0000000027805837', 'TRONROUT0000000027805849', 'TRONROUT0000000027805836', 'TRONROUT0000000027805835', 'TRONROUT0000000312696331', 'TRONROUT0000000027805848', 'TRONROUT0000000027805831', 'TRONROUT0000000027805828', 'TRONROUT0000000027805838', 'TRONROUT0000000027805830'],
-        array['TRONROUT0000000027796766']
-    )
-);
-
-update Troncon
-set Niveau = 3
-where NumeroRoute = 'D16'
-and IdIGN in (
-    select _IdIGN
-    from RechercherTronconsEntreIdIGN(
-        'D16',
-        array['TRONROUT0000000027796681'],
-        array['TRONROUT0000000027789477']
+        'D177',
+        array['TRONROUT0000000119280796', 'TRONROUT0000000119280785', 'TRONROUT0000000121502837', 'TRONROUT0000000121502836', 'TRONROUT0000000119280801', 'TRONROUT0000000119280798', 'TRONROUT0000000119280786', 'TRONROUT0000000119280802', 'TRONROUT0000000119280797'],
+        array['TRONROUT0000000130407685', 'TRONROUT0000000130407678']
     )
 );
 
 update Troncon
 set Niveau = 2
-where NumeroRoute = 'D16'
+where NumeroRoute = 'D177'
 and IdIGN in (
     select _IdIGN
     from RechercherTronconsEntreIdIGN(
-        'D16',
-        array['TRONROUT0000000027789462', 'TRONROUT0000000027789483', 'TRONROUT0000000027789469', 'TRONROUT0000000027789467', 'TRONROUT0000000027789461', 'TRONROUT0000000027789488', 'TRONROUT0000000027789468', 'TRONROUT0000000027789471', 'TRONROUT0000000027789466'],
-        array['TRONROUT0000000248372431']
+        'D177',
+        array['TRONROUT0000000130407673', 'TRONROUT0000000130407682', 'TRONROUT0000000130407694', 'TRONROUT0000000130407687', 'TRONROUT0000000130407688', 'TRONROUT0000000130407689', 'TRONROUT0000000130407668', 'TRONROUT0000000130407691', 'TRONROUT0000000130407692', 'TRONROUT0000000130407690'],
+        array['TRONROUT0000000217276919', 'TRONROUT0000000217276871', 'TRONROUT0000000027871519']
     )
 );
 
@@ -341,7 +327,7 @@ and IdIGN in (
 );
 
 update Troncon
-set Niveau = 4
+set Niveau = 3
 where NumeroRoute = 'D19'
 and IdIGN in (
     select _IdIGN
@@ -349,6 +335,57 @@ and IdIGN in (
         'D19',
         array['TRONROUT0000000027883458', 'TRONROUT0000000027883447'],
         array['TRONROUT0000000027904610']
+    )
+);
+
+-- D37
+-- TODO : attente retour Roch Nicolas sur nommage de cette section (Pont d'Auzon) en D16 ou D37
+update Troncon
+set Niveau = 3
+where NumeroRoute = 'D37'
+and IdIGN in (
+    select _IdIGN
+    from RechercherTronconsEntreIdIGN(
+        'D37',
+        array['TRONROUT0000000027803220'],
+        array['TRONROUT0000000027789482']
+    )
+);
+
+update Troncon
+set Niveau = 2
+where NumeroRoute = 'D37'
+and IdIGN in (
+    select _IdIGN
+    from RechercherTronconsEntreIdIGN(
+        'D37',
+        array['TRONROUT0000000027789481'],
+        array['TRONROUT0000000027778690', 'TRONROUT0000000027778668', 'TRONROUT0000000027778672']
+    )
+);
+
+-- D377
+update Troncon
+set Niveau = 2
+where NumeroRoute = 'D377'
+and IdIGN in (
+    select _IdIGN
+    from RechercherTronconsEntreIdIGN(
+        'D377',
+        array['TRONROUT0000000130407684', 'TRONROUT0000000130407672', 'TRONROUT0000000130407692', 'TRONROUT0000000130407690', 'TRONROUT0000000130407694', 'TRONROUT0000000130407687', 'TRONROUT0000000130407688', 'TRONROUT0000000130407689', 'TRONROUT0000000130407668', 'TRONROUT0000000130407691'],
+        array['TRONROUT0000000119279951', 'TRONROUT0000000119279946', 'TRONROUT0000000119279947', 'TRONROUT0000000119279949', 'TRONROUT0000000119279956', 'TRONROUT0000000119279950', 'TRONROUT0000000119279948', 'TRONROUT0000000119279945']
+    )
+);
+
+update Troncon
+set Niveau = 3
+where NumeroRoute = 'D377'
+and IdIGN in (
+    select _IdIGN
+    from RechercherTronconsEntreIdIGN(
+        'D377',
+        array['TRONROUT0000000119279936', 'TRONROUT0000000119279938'],
+        array['TRONROUT0000000353881909']
     )
 );
 
@@ -377,6 +414,31 @@ and IdIGN in (
     )
 );
 
+-- D40
+update Troncon
+set Niveau = 2
+where NumeroRoute = 'D40'
+and IdIGN in (
+    select _IdIGN
+    from RechercherTronconsEntreIdIGN(
+        'D40',
+        array['TRONROUT0000000216766946'],
+        array['TRONROUT0000000027940932', 'TRONROUT0000000027940930']
+    )
+);
+
+update Troncon
+set Niveau = 1
+where NumeroRoute = 'D40'
+and IdIGN in (
+    select _IdIGN
+    from RechercherTronconsEntreIdIGN(
+        'D40',
+        array['TRONROUT0000000027940935', 'TRONROUT0000000027940933', 'TRONROUT0000000027940949', 'TRONROUT0000000027940934', 'TRONROUT0000000027940927', 'TRONROUT0000000027940941'],
+        array['TRONROUT0000000027951445', 'TRONROUT0000000027951442', 'TRONROUT0000000027951450', 'TRONROUT0000000027951446', 'TRONROUT0000000027951449', 'TRONROUT0000000027951452', 'TRONROUT0000000027951448']
+    )
+);
+
 -- D51
 update Troncon
 set Niveau = 2
@@ -400,6 +462,56 @@ and IdIGN in (
         'D51',
         array['TRONROUT0000000027772787', 'TRONROUT0000000027772764'],
         array['TRONROUT0000000027765380']
+    )
+);
+
+-- D56
+update Troncon
+set Niveau = 3
+where NumeroRoute = 'D56'
+and IdIGN in (
+    select _IdIGN
+    from RechercherTronconsEntreIdIGN(
+        'D56',
+        array['TRONROUT0000000027961709', 'TRONROUT0000000027961727', 'TRONROUT0000000027960253', 'TRONROUT0000000027960256', 'TRONROUT0000000027960254', 'TRONROUT0000000027960252', 'TRONROUT0000000027960251', 'TRONROUT0000000027960255', 'TRONROUT0000000027960250', 'TRONROUT0000000027960249'],
+        array['TRONROUT0000000348281065', 'TRONROUT0000000348280847']
+    )
+);
+
+update Troncon
+set Niveau = 2
+where NumeroRoute = 'D56'
+and IdIGN in (
+    select _IdIGN
+    from RechercherTronconsEntreIdIGN(
+        'D56',
+        array['TRONROUT0000000348281061', 'TRONROUT0000000348281066', 'TRONROUT0000000348281063', 'TRONROUT0000000348281067', 'TRONROUT0000000348281068', 'TRONROUT0000000348281064', 'TRONROUT0000000348280849'],
+        array['TRONROUT0000002215972117', 'TRONROUT0000000027972016', 'TRONROUT0000002215972118', 'TRONROUT0000000027972019']
+    )
+);
+
+-- D6086
+update Troncon
+set Niveau = 1
+where NumeroRoute = 'D6086'
+and IdIGN in (
+    select _IdIGN
+    from RechercherTronconsEntreIdIGN(
+        'D6086',
+        array['TRONROUT0000000027771726', 'TRONROUT0000000027771728'],
+        array['TRONROUT0000000027886638', 'TRONROUT0000000027886635', 'TRONROUT0000000027886645', 'TRONROUT0000000027886647', 'TRONROUT0000000027886643', 'TRONROUT0000000027886646', 'TRONROUT0000000027886651', 'TRONROUT0000000027886653', 'TRONROUT0000000027886649', 'TRONROUT0000000027886652', 'TRONROUT0000000027886650']
+    )
+);
+
+update Troncon
+set Niveau = 2
+where NumeroRoute = 'D6086'
+and IdIGN in (
+    select _IdIGN
+    from RechercherTronconsEntreIdIGN(
+        'D6086',
+        array['TRONROUT0000000027889180'],
+        array['TRONROUT0000000274512348', 'TRONROUT0000000274512347', 'TRONROUT0000000027919224', 'TRONROUT0000000274512298', 'TRONROUT0000000258780556', 'TRONROUT0000000274512295', 'TRONROUT0000000027919186', 'TRONROUT0000000027919220', 'TRONROUT0000000274512299', 'TRONROUT0000000274512296']
     )
 );
 
@@ -453,6 +565,43 @@ and IdIGN in (
     )
 );
 
+-- D936
+update Troncon
+set Niveau = 2
+where NumeroRoute = 'D936'
+and IdIGN in (
+    select _IdIGN
+    from RechercherTronconsEntreIdIGN(
+        'D936',
+        array['TRONROUT0000000356723026', 'TRONROUT0000000356723060'],
+        array['TRONROUT0000002000681156']
+    )
+);
+
+update Troncon
+set Niveau = 3
+where NumeroRoute = 'D936'
+and IdIGN in (
+    select _IdIGN
+    from RechercherTronconsEntreIdIGN(
+        'D936',
+        array['TRONROUT0000000027863440'],
+        array['TRONROUT0000000121877980']
+    )
+);
+
+update Troncon
+set Niveau = 2
+where NumeroRoute = 'D936'
+and IdIGN in (
+    select _IdIGN
+    from RechercherTronconsEntreIdIGN(
+        'D936',
+        array['TRONROUT0000000027857302'],
+        array['TRONROUT0000000119653391', 'TRONROUT0000000119653390', 'TRONROUT0000000119653398', 'TRONROUT0000000119653397', 'TRONROUT0000000119653395', 'TRONROUT0000000119653396', 'TRONROUT0000000119653399', 'TRONROUT0000000119653393']
+    )
+);
+
 -- D979
 update Troncon
 set Niveau = 2
@@ -462,7 +611,7 @@ and IdIGN in (
     from RechercherTronconsEntreIdIGN(
         'D979',
         array['TRONROUT0000000005729468'],
-        array['TRONROUT0000000027972352', 'TRONROUT0000000027972358', 'TRONROUT0000000027972317', 'TRONROUT0000000027972303', 'TRONROUT0000000027972308', 'TRONROUT0000000027972300', 'TRONROUT0000000027972315', 'TRONROUT0000000027972353']
+        array['TRONROUT0000000027972314', 'TRONROUT0000000027972312', 'TRONROUT0000000027972352', 'TRONROUT0000000027972358', 'TRONROUT0000000027972317', 'TRONROUT0000000027972303', 'TRONROUT0000000027972308', 'TRONROUT0000000027972300', 'TRONROUT0000000027972315', 'TRONROUT0000000027972353']
     )
 );
 
@@ -474,23 +623,60 @@ and IdIGN in (
     from RechercherTronconsEntreIdIGN(
         'D979',
         array['TRONROUT0000000027973705', 'TRONROUT0000000027973706', 'TRONROUT0000000027973721', 'TRONROUT0000000027973707', 'TRONROUT0000000027973693', 'TRONROUT0000000027973692', 'TRONROUT0000000027973709', 'TRONROUT0000000027973754', 'TRONROUT0000000027973700', 'TRONROUT0000000027973701'],
+        array['TRONROUT0000000027980152', 'TRONROUT0000000027980134', 'TRONROUT0000000027980153', 'TRONROUT0000000027980149', 'TRONROUT0000000027980121', 'TRONROUT0000000027980144', 'TRONROUT0000000027980141', 'TRONROUT0000000027980133', 'TRONROUT0000000027980150']
+    )
+);
+
+update Troncon
+set Niveau = 2
+where NumeroRoute = 'D979'
+and IdIGN in (
+    select _IdIGN
+    from RechercherTronconsEntreIdIGN(
+        'D979',
+        array['TRONROUT0000000027980115', 'TRONROUT0000000027980113'],
         array['TRONROUT0000000027983007', 'TRONROUT0000000027983009', 'TRONROUT0000000027983006', 'TRONROUT0000000027983008', 'TRONROUT0000000214230349', 'TRONROUT0000000214230353', 'TRONROUT0000000027982985']
     )
 );
 
--- D981
+-- D980
 update Troncon
-set Niveau = 1
-where NumeroRoute = 'D981'
+set Niveau = 2
+where NumeroRoute = 'D980'
 and IdIGN in (
     select _IdIGN
     from RechercherTronconsEntreIdIGN(
-        'D981',
-        array['TRONROUT0000000027818736', 'TRONROUT0000000027818753', 'TRONROUT0000000027818726', 'TRONROUT0000000027818727', 'TRONROUT0000000027818731', 'TRONROUT0000000027818722', 'TRONROUT0000000027818728', 'TRONROUT0000000027818758', 'TRONROUT0000000027818759', 'TRONROUT0000000027818760'],
-        array['TRONROUT0000000027824660', 'TRONROUT0000000027824642', 'TRONROUT0000000027824644', 'TRONROUT0000000027824645', 'TRONROUT0000000027824658', 'TRONROUT0000000027824659']
+        'D980',
+        array['TRONROUT0000000027774975', 'TRONROUT0000000353719880'],
+        array['TRONROUT0000000334850350', 'TRONROUT0000000334850345', 'TRONROUT0000000334850351', 'TRONROUT0000000334850369', 'TRONROUT0000000334850368', 'TRONROUT0000000334850366', 'TRONROUT0000000334850367']
     )
 );
 
+update Troncon
+set Niveau = 3
+where NumeroRoute = 'D980'
+and IdIGN in (
+    select _IdIGN
+    from RechercherTronconsEntreIdIGN(
+        'D980',
+        array['TRONROUT0000000027826159', 'TRONROUT0000000309946791', 'TRONROUT0000000309946787', 'TRONROUT0000000309946780'],
+        array['TRONROUT0000000027831478']
+    )
+);
+
+update Troncon
+set Niveau = 2
+where NumeroRoute = 'D980'
+and IdIGN in (
+    select _IdIGN
+    from RechercherTronconsEntreIdIGN(
+        'D980',
+        array['TRONROUT0000000222901823'],
+        array['TRONROUT0000002222392565']
+    )
+);
+
+-- D981
 update Troncon
 set Niveau = 2
 where NumeroRoute = 'D981'
@@ -498,7 +684,7 @@ and IdIGN in (
     select _IdIGN
     from RechercherTronconsEntreIdIGN(
         'D981',
-        array['TRONROUT0000000027824647', 'TRONROUT0000000027824653'],
+        array['TRONROUT0000000027818736', 'TRONROUT0000000027818753', 'TRONROUT0000000027818726', 'TRONROUT0000000027818727', 'TRONROUT0000000027818731', 'TRONROUT0000000027818722', 'TRONROUT0000000027818728', 'TRONROUT0000000027818758', 'TRONROUT0000000027818759', 'TRONROUT0000000027818760'],
         array['TRONROUT0000000123915335', 'TRONROUT0000000123915342', 'TRONROUT0000000123915339', 'TRONROUT0000000123915338', 'TRONROUT0000000123915333']
     )
 );
@@ -510,7 +696,7 @@ and IdIGN in (
     select _IdIGN
     from RechercherTronconsEntreIdIGN(
         'D981',
-        array['TRONROUT0000000118589809', 'TRONROUT0000000118589808', 'TRONROUT0000000118589800', 'TRONROUT0000000118589805', 'TRONROUT0000000118589803', 'TRONROUT0000000118589801', 'TRONROUT0000000118589802', 'TRONROUT0000000118589804'],
+        array['TRONROUT0000000118589809', 'TRONROUT0000000118589808', 'TRONROUT0000002100184334', 'TRONROUT0000000118589800', 'TRONROUT0000000118589805', 'TRONROUT0000000118589803', 'TRONROUT0000000118589801', 'TRONROUT0000000118589802', 'TRONROUT0000000118589804'],
         array['TRONROUT0000000027883511', 'TRONROUT0000000027883514', 'TRONROUT0000000027883522', 'TRONROUT0000000027883515', 'TRONROUT0000000027883513', 'TRONROUT0000000027883516']
     )
 );
@@ -527,726 +713,777 @@ and IdIGN in (
     )
 );
 
+-- D982
+update Troncon
+set Niveau = 2
+where NumeroRoute = 'D982'
+and IdIGN in (
+    select _IdIGN
+    from RechercherTronconsEntreIdIGN(
+        'D982',
+        array['TRONROUT0000000118229706', 'TRONROUT0000000118229716', 'TRONROUT0000000118229719', 'TRONROUT0000000118229717', 'TRONROUT0000000118229721', 'TRONROUT0000000118229718', 'TRONROUT0000000118229720', 'TRONROUT0000000118229722', 'TRONROUT0000000118229700', 'TRONROUT0000000118229724'],
+        array['TRONROUT0000000027857303']
+    )
+);
+
+update Troncon
+set Niveau = 3
+where NumeroRoute = 'D982'
+and IdIGN in (
+    select _IdIGN
+    from RechercherTronconsEntreIdIGN(
+        'D982',
+        array['TRONROUT0000000295443565', 'TRONROUT0000000295453317', 'TRONROUT0000002285691843'],
+        array['TRONROUT0000000320593024', 'TRONROUT0000000320593026']
+    )
+);
+
+update Troncon
+set Niveau = 2
+where NumeroRoute = 'D982'
+and IdIGN in (
+    select _IdIGN
+    from RechercherTronconsEntreIdIGN(
+        'D982',
+        array['TRONROUT0000000323927515', 'TRONROUT0000000320593019', 'TRONROUT0000000320593017', 'TRONROUT0000000323927517', 'TRONROUT0000000320593018', 'TRONROUT0000000323927514', 'TRONROUT0000000320593016', 'TRONROUT0000000320593021', 'TRONROUT0000000320593023'],
+        array['TRONROUT0000002206228809', 'TRONROUT0000002206228805', 'TRONROUT0000002206228810', 'TRONROUT0000002206228812']
+    )
+);
+
+-- D999
+update Troncon
+set Niveau = 2
+where NumeroRoute = 'D999'
+and IdIGN in (
+    select _IdIGN
+    from RechercherTronconsEntreIdIGN(
+        'D999',
+        array['TRONROUT0000000027942080'],
+        array['TRONROUT0000000027939103', 'TRONROUT0000000027939086', 'TRONROUT0000000298548500', 'TRONROUT0000000027939093', 'TRONROUT0000000027939087', 'TRONROUT0000000027939097', 'TRONROUT0000000027939102']
+    )
+);
+
+update Troncon
+set Niveau = 1
+where NumeroRoute = 'D999'
+and IdIGN in (
+    select _IdIGN
+    from RechercherTronconsEntreIdIGN(
+        'D999',
+        array['TRONROUT0000000027935382', 'TRONROUT0000000027935385', 'TRONROUT0000002215581936', 'TRONROUT0000000027935364', 'TRONROUT0000000027935381', 'TRONROUT0000000027935359', 'TRONROUT0000000027935371', 'TRONROUT0000000217274193', 'TRONROUT0000002002165044', 'TRONROUT0000000027935358', 'TRONROUT0000000027935380', 'TRONROUT0000000027935375'],
+        array['TRONROUT0000000027885966']
+    )
+);
+
 -- RD de niveau 1
-update Troncon set Niveau = 1 where NumeroRoute = ('D135B'); 
-update Troncon set Niveau = 1 where NumeroRoute = ('D135C'); 
-update Troncon set Niveau = 1 where NumeroRoute = ('D135D'); 
-update Troncon set Niveau = 1 where NumeroRoute = ('D19A'); 
-update Troncon set Niveau = 1 where NumeroRoute = ('D40'); 
-update Troncon set Niveau = 1 where NumeroRoute = ('D42'); 
-update Troncon set Niveau = 1 where NumeroRoute = ('D6'); 
-update Troncon set Niveau = 1 where NumeroRoute = ('D60'); 
-update Troncon set Niveau = 1 where NumeroRoute = ('D6086'); 
-update Troncon set Niveau = 1 where NumeroRoute = ('D60B'); 
-update Troncon set Niveau = 1 where NumeroRoute = ('D60C'); 
-update Troncon set Niveau = 1 where NumeroRoute = ('D60D'); 
-update Troncon set Niveau = 1 where NumeroRoute = ('D6100'); 
-update Troncon set Niveau = 1 where NumeroRoute = ('D6100A'); 
-update Troncon set Niveau = 1 where NumeroRoute = ('D6100B'); 
-update Troncon set Niveau = 1 where NumeroRoute = ('D6100C'); 
-update Troncon set Niveau = 1 where NumeroRoute = ('D6100D'); 
-update Troncon set Niveau = 1 where NumeroRoute = ('D6101'); 
-update Troncon set Niveau = 1 where NumeroRoute = ('D6110'); 
-update Troncon set Niveau = 1 where NumeroRoute = ('D6113'); 
-update Troncon set Niveau = 1 where NumeroRoute = ('D6113A'); 
-update Troncon set Niveau = 1 where NumeroRoute = ('D6113B'); 
-update Troncon set Niveau = 1 where NumeroRoute = ('D62'); 
-update Troncon set Niveau = 1 where NumeroRoute = ('D62A'); 
-update Troncon set Niveau = 1 where NumeroRoute = ('D62B'); 
-update Troncon set Niveau = 1 where NumeroRoute = ('D62C'); 
-update Troncon set Niveau = 1 where NumeroRoute = ('D6313'); 
-update Troncon set Niveau = 1 where NumeroRoute = ('D640'); 
-update Troncon set Niveau = 1 where NumeroRoute = ('D6572'); 
-update Troncon set Niveau = 1 where NumeroRoute = ('D6572A'); 
-update Troncon set Niveau = 1 where NumeroRoute = ('D6580'); 
-update Troncon set Niveau = 1 where NumeroRoute = ('D90'); 
-update Troncon set Niveau = 1 where NumeroRoute = ('D904'); 
-update Troncon set Niveau = 1 where NumeroRoute = ('D90A'); 
-update Troncon set Niveau = 1 where NumeroRoute = ('D90B'); 
-update Troncon set Niveau = 1 where NumeroRoute = ('D910A'); 
-update Troncon set Niveau = 1 where NumeroRoute = ('D979A'); 
-update Troncon set Niveau = 1 where NumeroRoute = ('D999');
+update Troncon set Niveau = 1 where NumeroRoute = ('D135B');
+update Troncon set Niveau = 1 where NumeroRoute = ('D135C');
+update Troncon set Niveau = 1 where NumeroRoute = ('D135D');
+update Troncon set Niveau = 1 where NumeroRoute = ('D19A');
+update Troncon set Niveau = 1 where NumeroRoute = ('D2');
+update Troncon set Niveau = 1 where NumeroRoute = ('D42');
+update Troncon set Niveau = 1 where NumeroRoute = ('D45');
+update Troncon set Niveau = 1 where NumeroRoute = ('D6');
+update Troncon set Niveau = 1 where NumeroRoute = ('D60');
+update Troncon set Niveau = 1 where NumeroRoute = ('D60B');
+update Troncon set Niveau = 1 where NumeroRoute = ('D60C');
+update Troncon set Niveau = 1 where NumeroRoute = ('D60D');
+update Troncon set Niveau = 1 where NumeroRoute = ('D6100');
+update Troncon set Niveau = 1 where NumeroRoute = ('D6100A');
+update Troncon set Niveau = 1 where NumeroRoute = ('D6100B');
+update Troncon set Niveau = 1 where NumeroRoute = ('D6100C');
+update Troncon set Niveau = 1 where NumeroRoute = ('D6100D');
+update Troncon set Niveau = 1 where NumeroRoute = ('D6101');
+update Troncon set Niveau = 1 where NumeroRoute = ('D6110');
+update Troncon set Niveau = 1 where NumeroRoute = ('D6113');
+update Troncon set Niveau = 1 where NumeroRoute = ('D6113A');
+update Troncon set Niveau = 1 where NumeroRoute = ('D6113B');
+update Troncon set Niveau = 1 where NumeroRoute = ('D62');
+update Troncon set Niveau = 1 where NumeroRoute = ('D62A');
+update Troncon set Niveau = 1 where NumeroRoute = ('D62B');
+update Troncon set Niveau = 1 where NumeroRoute = ('D6313');
+update Troncon set Niveau = 1 where NumeroRoute = ('D640');
+update Troncon set Niveau = 1 where NumeroRoute = ('D6572');
+update Troncon set Niveau = 1 where NumeroRoute = ('D6572A');
+update Troncon set Niveau = 1 where NumeroRoute = ('D6580');
+update Troncon set Niveau = 1 where NumeroRoute = ('D90');
+update Troncon set Niveau = 1 where NumeroRoute = ('D904');
+update Troncon set Niveau = 1 where NumeroRoute = ('D90A');
+update Troncon set Niveau = 1 where NumeroRoute = ('D90B');
+update Troncon set Niveau = 1 where NumeroRoute = ('D910A');
 
 -- RD de niveau 2
-update Troncon set Niveau = 2 where NumeroRoute = ('D128'); 
-update Troncon set Niveau = 2 where NumeroRoute = ('D129'); 
-update Troncon set Niveau = 2 where NumeroRoute = ('D131'); 
-update Troncon set Niveau = 2 where NumeroRoute = ('D15'); 
-update Troncon set Niveau = 2 where NumeroRoute = ('D177'); 
-update Troncon set Niveau = 2 where NumeroRoute = ('D2'); 
-update Troncon set Niveau = 2 where NumeroRoute = ('D22'); 
-update Troncon set Niveau = 2 where NumeroRoute = ('D225'); 
-update Troncon set Niveau = 2 where NumeroRoute = ('D24'); 
-update Troncon set Niveau = 2 where NumeroRoute = ('D255'); 
-update Troncon set Niveau = 2 where NumeroRoute = ('D260'); 
-update Troncon set Niveau = 2 where NumeroRoute = ('D262'); 
-update Troncon set Niveau = 2 where NumeroRoute = ('D2E'); 
-update Troncon set Niveau = 2 where NumeroRoute = ('D324A'); 
-update Troncon set Niveau = 2 where NumeroRoute = ('D35'); 
-update Troncon set Niveau = 2 where NumeroRoute = ('D38'); 
-update Troncon set Niveau = 2 where NumeroRoute = ('D385'); 
-update Troncon set Niveau = 2 where NumeroRoute = ('D385A'); 
-update Troncon set Niveau = 2 where NumeroRoute = ('D442'); 
-update Troncon set Niveau = 2 where NumeroRoute = ('D45'); 
-update Troncon set Niveau = 2 where NumeroRoute = ('D46'); 
-update Troncon set Niveau = 2 where NumeroRoute = ('D48N'); 
-update Troncon set Niveau = 2 where NumeroRoute = ('D540'); 
-update Troncon set Niveau = 2 where NumeroRoute = ('D56'); 
-update Troncon set Niveau = 2 where NumeroRoute = ('D57'); 
-update Troncon set Niveau = 2 where NumeroRoute = ('D58'); 
-update Troncon set Niveau = 2 where NumeroRoute = ('D59'); 
-update Troncon set Niveau = 2 where NumeroRoute = ('D613'); 
-update Troncon set Niveau = 2 where NumeroRoute = ('D7'); 
-update Troncon set Niveau = 2 where NumeroRoute = ('D765A'); 
-update Troncon set Niveau = 2 where NumeroRoute = ('D901'); 
-update Troncon set Niveau = 2 where NumeroRoute = ('D906'); 
-update Troncon set Niveau = 2 where NumeroRoute = ('D907'); 
-update Troncon set Niveau = 2 where NumeroRoute = ('D936'); 
-update Troncon set Niveau = 2 where NumeroRoute = ('D976'); 
-update Troncon set Niveau = 2 where NumeroRoute = ('D980'); 
-update Troncon set Niveau = 2 where NumeroRoute = ('D982'); 
-update Troncon set Niveau = 2 where NumeroRoute = ('D986'); 
-update Troncon set Niveau = 2 where NumeroRoute = ('D986L'); 
+update Troncon set Niveau = 2 where NumeroRoute = ('D128');
+update Troncon set Niveau = 2 where NumeroRoute = ('D129');
+update Troncon set Niveau = 2 where NumeroRoute = ('D131');
+update Troncon set Niveau = 2 where NumeroRoute = ('D15');
+update Troncon set Niveau = 2 where NumeroRoute = ('D16');
+update Troncon set Niveau = 2 where NumeroRoute = ('D22');
+update Troncon set Niveau = 2 where NumeroRoute = ('D225');
+update Troncon set Niveau = 2 where NumeroRoute = ('D24');
+update Troncon set Niveau = 2 where NumeroRoute = ('D25');
+update Troncon set Niveau = 2 where NumeroRoute = ('D255');
+update Troncon set Niveau = 2 where NumeroRoute = ('D260');
+update Troncon set Niveau = 2 where NumeroRoute = ('D262');
+update Troncon set Niveau = 2 where NumeroRoute = ('D27');
+update Troncon set Niveau = 2 where NumeroRoute = ('D2E');
+update Troncon set Niveau = 2 where NumeroRoute = ('D324A');
+update Troncon set Niveau = 2 where NumeroRoute = ('D35');
+update Troncon set Niveau = 2 where NumeroRoute = ('D38');
+update Troncon set Niveau = 2 where NumeroRoute = ('D385');
+update Troncon set Niveau = 2 where NumeroRoute = ('D385A');
+update Troncon set Niveau = 2 where NumeroRoute = ('D442');
+update Troncon set Niveau = 2 where NumeroRoute = ('D442A');
+update Troncon set Niveau = 2 where NumeroRoute = ('D57');
+update Troncon set Niveau = 2 where NumeroRoute = ('D58');
+update Troncon set Niveau = 2 where NumeroRoute = ('D59');
+update Troncon set Niveau = 2 where NumeroRoute = ('D613');
+update Troncon set Niveau = 2 where NumeroRoute = ('D62C');
+update Troncon set Niveau = 2 where NumeroRoute = ('D7');
+update Troncon set Niveau = 2 where NumeroRoute = ('D765A');
+update Troncon set Niveau = 2 where NumeroRoute = ('D901');
+update Troncon set Niveau = 2 where NumeroRoute = ('D906');
+update Troncon set Niveau = 2 where NumeroRoute = ('D907');
+update Troncon set Niveau = 2 where NumeroRoute = ('D976');
+update Troncon set Niveau = 2 where NumeroRoute = ('D979A');
+update Troncon set Niveau = 2 where NumeroRoute = ('D986');
+update Troncon set Niveau = 2 where NumeroRoute = ('D986L');
 update Troncon set Niveau = 2 where NumeroRoute = ('D994');
 
 -- RD de niveau 3
-update Troncon set Niveau = 3 where NumeroRoute = ('D10'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D101'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D101A'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D10B'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D10C'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D10D'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D11'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D113'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D113A'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D113B'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D114'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D11A'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D125'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D126'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D130'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D132'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D138A'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D145'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D157'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D158'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D15A'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D160'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D163'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D18'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D181'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D181A'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D181B'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D183'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D183A'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D192'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D19B'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D1A'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D202'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D22A'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D23'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D235'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D241'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D242'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D25'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D26'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D263'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D269'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D26A'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D27'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D279'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D28'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D2B'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D3'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D340'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D343'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D346'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D350'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D351'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D37'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D395'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D3B'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D4'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D402'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D404'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D405'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D407'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D40A'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D40C'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D40D'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D418'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D427'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D442A'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D47'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D47A'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D47B'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D47C'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D48S'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D49'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D5'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D50'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D502'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D50A'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D50B'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D50C'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D51A'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D51B'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D51C'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D51F'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D58E'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D6A'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D6C'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D6D'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D712'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D780'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D7A'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D8'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D814'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D900'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D916'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D926'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D926A'); 
-update Troncon set Niveau = 3 where NumeroRoute = ('D983'); 
+update Troncon set Niveau = 3 where NumeroRoute = ('D10');
+update Troncon set Niveau = 3 where NumeroRoute = ('D101A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D102');
+update Troncon set Niveau = 3 where NumeroRoute = ('D103');
+update Troncon set Niveau = 3 where NumeroRoute = ('D104');
+update Troncon set Niveau = 3 where NumeroRoute = ('D105');
+update Troncon set Niveau = 3 where NumeroRoute = ('D106');
+update Troncon set Niveau = 3 where NumeroRoute = ('D106A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D107');
+update Troncon set Niveau = 3 where NumeroRoute = ('D107A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D108');
+update Troncon set Niveau = 3 where NumeroRoute = ('D109');
+update Troncon set Niveau = 3 where NumeroRoute = ('D10A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D10B');
+update Troncon set Niveau = 3 where NumeroRoute = ('D10C');
+update Troncon set Niveau = 3 where NumeroRoute = ('D10D');
+update Troncon set Niveau = 3 where NumeroRoute = ('D11');
+update Troncon set Niveau = 3 where NumeroRoute = ('D110');
+update Troncon set Niveau = 3 where NumeroRoute = ('D110A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D110B');
+update Troncon set Niveau = 3 where NumeroRoute = ('D110C');
+update Troncon set Niveau = 3 where NumeroRoute = ('D110D');
+update Troncon set Niveau = 3 where NumeroRoute = ('D110E');
+update Troncon set Niveau = 3 where NumeroRoute = ('D110F');
+update Troncon set Niveau = 3 where NumeroRoute = ('D110G');
+update Troncon set Niveau = 3 where NumeroRoute = ('D111');
+update Troncon set Niveau = 3 where NumeroRoute = ('D112');
+update Troncon set Niveau = 3 where NumeroRoute = ('D113');
+update Troncon set Niveau = 3 where NumeroRoute = ('D113A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D113B');
+update Troncon set Niveau = 3 where NumeroRoute = ('D114');
+update Troncon set Niveau = 3 where NumeroRoute = ('D114A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D115');
+update Troncon set Niveau = 3 where NumeroRoute = ('D115A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D116');
+update Troncon set Niveau = 3 where NumeroRoute = ('D116A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D117');
+update Troncon set Niveau = 3 where NumeroRoute = ('D118');
+update Troncon set Niveau = 3 where NumeroRoute = ('D118A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D11A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D12');
+update Troncon set Niveau = 3 where NumeroRoute = ('D120');
+update Troncon set Niveau = 3 where NumeroRoute = ('D120B');
+update Troncon set Niveau = 3 where NumeroRoute = ('D120C');
+update Troncon set Niveau = 3 where NumeroRoute = ('D121');
+update Troncon set Niveau = 3 where NumeroRoute = ('D122');
+update Troncon set Niveau = 3 where NumeroRoute = ('D123');
+update Troncon set Niveau = 3 where NumeroRoute = ('D123A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D123B');
+update Troncon set Niveau = 3 where NumeroRoute = ('D123C');
+update Troncon set Niveau = 3 where NumeroRoute = ('D124');
+update Troncon set Niveau = 3 where NumeroRoute = ('D125');
+update Troncon set Niveau = 3 where NumeroRoute = ('D125A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D126');
+update Troncon set Niveau = 3 where NumeroRoute = ('D129A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D130');
+update Troncon set Niveau = 3 where NumeroRoute = ('D131B');
+update Troncon set Niveau = 3 where NumeroRoute = ('D131C');
+update Troncon set Niveau = 3 where NumeroRoute = ('D132');
+update Troncon set Niveau = 3 where NumeroRoute = ('D132A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D133');
+update Troncon set Niveau = 3 where NumeroRoute = ('D133A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D133B');
+update Troncon set Niveau = 3 where NumeroRoute = ('D134');
+update Troncon set Niveau = 3 where NumeroRoute = ('D134A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D135A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D136');
+update Troncon set Niveau = 3 where NumeroRoute = ('D136B');
+update Troncon set Niveau = 3 where NumeroRoute = ('D136D');
+update Troncon set Niveau = 3 where NumeroRoute = ('D137');
+update Troncon set Niveau = 3 where NumeroRoute = ('D138A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D138B');
+update Troncon set Niveau = 3 where NumeroRoute = ('D138C');
+update Troncon set Niveau = 3 where NumeroRoute = ('D140');
+update Troncon set Niveau = 3 where NumeroRoute = ('D141');
+update Troncon set Niveau = 3 where NumeroRoute = ('D142');
+update Troncon set Niveau = 3 where NumeroRoute = ('D142A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D143');
+update Troncon set Niveau = 3 where NumeroRoute = ('D143A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D143B');
+update Troncon set Niveau = 3 where NumeroRoute = ('D144');
+update Troncon set Niveau = 3 where NumeroRoute = ('D144A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D145');
+update Troncon set Niveau = 3 where NumeroRoute = ('D145A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D146');
+update Troncon set Niveau = 3 where NumeroRoute = ('D146A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D147');
+update Troncon set Niveau = 3 where NumeroRoute = ('D147A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D147B');
+update Troncon set Niveau = 3 where NumeroRoute = ('D148');
+update Troncon set Niveau = 3 where NumeroRoute = ('D148A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D149');
+update Troncon set Niveau = 3 where NumeroRoute = ('D151');
+update Troncon set Niveau = 3 where NumeroRoute = ('D151A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D151B');
+update Troncon set Niveau = 3 where NumeroRoute = ('D151C');
+update Troncon set Niveau = 3 where NumeroRoute = ('D152');
+update Troncon set Niveau = 3 where NumeroRoute = ('D152A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D152B');
+update Troncon set Niveau = 3 where NumeroRoute = ('D152C');
+update Troncon set Niveau = 3 where NumeroRoute = ('D153');
+update Troncon set Niveau = 3 where NumeroRoute = ('D153A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D153B');
+update Troncon set Niveau = 3 where NumeroRoute = ('D153C');
+update Troncon set Niveau = 3 where NumeroRoute = ('D153D');
+update Troncon set Niveau = 3 where NumeroRoute = ('D154');
+update Troncon set Niveau = 3 where NumeroRoute = ('D154A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D155');
+update Troncon set Niveau = 3 where NumeroRoute = ('D155A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D156');
+update Troncon set Niveau = 3 where NumeroRoute = ('D156A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D156B');
+update Troncon set Niveau = 3 where NumeroRoute = ('D157');
+update Troncon set Niveau = 3 where NumeroRoute = ('D158');
+update Troncon set Niveau = 3 where NumeroRoute = ('D158A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D158B');
+update Troncon set Niveau = 3 where NumeroRoute = ('D158C');
+update Troncon set Niveau = 3 where NumeroRoute = ('D159');
+update Troncon set Niveau = 3 where NumeroRoute = ('D159A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D159B');
+update Troncon set Niveau = 3 where NumeroRoute = ('D159C');
+update Troncon set Niveau = 3 where NumeroRoute = ('D15A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D160');
+update Troncon set Niveau = 3 where NumeroRoute = ('D161');
+update Troncon set Niveau = 3 where NumeroRoute = ('D162');
+update Troncon set Niveau = 3 where NumeroRoute = ('D163');
+update Troncon set Niveau = 3 where NumeroRoute = ('D164');
+update Troncon set Niveau = 3 where NumeroRoute = ('D165');
+update Troncon set Niveau = 3 where NumeroRoute = ('D166');
+update Troncon set Niveau = 3 where NumeroRoute = ('D166A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D166B');
+update Troncon set Niveau = 3 where NumeroRoute = ('D166C');
+update Troncon set Niveau = 3 where NumeroRoute = ('D167');
+update Troncon set Niveau = 3 where NumeroRoute = ('D167A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D168');
+update Troncon set Niveau = 3 where NumeroRoute = ('D169');
+update Troncon set Niveau = 3 where NumeroRoute = ('D169A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D16B');
+update Troncon set Niveau = 3 where NumeroRoute = ('D17');
+update Troncon set Niveau = 3 where NumeroRoute = ('D170');
+update Troncon set Niveau = 3 where NumeroRoute = ('D170B');
+update Troncon set Niveau = 3 where NumeroRoute = ('D170C');
+update Troncon set Niveau = 3 where NumeroRoute = ('D170D');
+update Troncon set Niveau = 3 where NumeroRoute = ('D170E');
+update Troncon set Niveau = 3 where NumeroRoute = ('D170F');
+update Troncon set Niveau = 3 where NumeroRoute = ('D171');
+update Troncon set Niveau = 3 where NumeroRoute = ('D171A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D172');
+update Troncon set Niveau = 3 where NumeroRoute = ('D174');
+update Troncon set Niveau = 3 where NumeroRoute = ('D175');
+update Troncon set Niveau = 3 where NumeroRoute = ('D176');
+update Troncon set Niveau = 3 where NumeroRoute = ('D178');
+update Troncon set Niveau = 3 where NumeroRoute = ('D179');
+update Troncon set Niveau = 3 where NumeroRoute = ('D18');
+update Troncon set Niveau = 3 where NumeroRoute = ('D180');
+update Troncon set Niveau = 3 where NumeroRoute = ('D181');
+update Troncon set Niveau = 3 where NumeroRoute = ('D181A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D181B');
+update Troncon set Niveau = 3 where NumeroRoute = ('D182');
+update Troncon set Niveau = 3 where NumeroRoute = ('D183');
+update Troncon set Niveau = 3 where NumeroRoute = ('D183A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D184');
+update Troncon set Niveau = 3 where NumeroRoute = ('D185');
+update Troncon set Niveau = 3 where NumeroRoute = ('D185A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D186');
+update Troncon set Niveau = 3 where NumeroRoute = ('D186A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D187');
+update Troncon set Niveau = 3 where NumeroRoute = ('D187A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D187C');
+update Troncon set Niveau = 3 where NumeroRoute = ('D188');
+update Troncon set Niveau = 3 where NumeroRoute = ('D188A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D188B');
+update Troncon set Niveau = 3 where NumeroRoute = ('D189');
+update Troncon set Niveau = 3 where NumeroRoute = ('D189A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D18C');
+update Troncon set Niveau = 3 where NumeroRoute = ('D18D');
+update Troncon set Niveau = 3 where NumeroRoute = ('D190');
+update Troncon set Niveau = 3 where NumeroRoute = ('D190A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D191');
+update Troncon set Niveau = 3 where NumeroRoute = ('D191A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D192');
+update Troncon set Niveau = 3 where NumeroRoute = ('D193');
+update Troncon set Niveau = 3 where NumeroRoute = ('D194');
+update Troncon set Niveau = 3 where NumeroRoute = ('D194A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D194B');
+update Troncon set Niveau = 3 where NumeroRoute = ('D194C');
+update Troncon set Niveau = 3 where NumeroRoute = ('D194D');
+update Troncon set Niveau = 3 where NumeroRoute = ('D195');
+update Troncon set Niveau = 3 where NumeroRoute = ('D196');
+update Troncon set Niveau = 3 where NumeroRoute = ('D196A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D197');
+update Troncon set Niveau = 3 where NumeroRoute = ('D198');
+update Troncon set Niveau = 3 where NumeroRoute = ('D199');
+update Troncon set Niveau = 3 where NumeroRoute = ('D19B');
+update Troncon set Niveau = 3 where NumeroRoute = ('D1A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D20');
+update Troncon set Niveau = 3 where NumeroRoute = ('D200');
+update Troncon set Niveau = 3 where NumeroRoute = ('D201');
+update Troncon set Niveau = 3 where NumeroRoute = ('D202');
+update Troncon set Niveau = 3 where NumeroRoute = ('D203');
+update Troncon set Niveau = 3 where NumeroRoute = ('D204');
+update Troncon set Niveau = 3 where NumeroRoute = ('D205');
+update Troncon set Niveau = 3 where NumeroRoute = ('D206');
+update Troncon set Niveau = 3 where NumeroRoute = ('D207');
+update Troncon set Niveau = 3 where NumeroRoute = ('D207A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D208');
+update Troncon set Niveau = 3 where NumeroRoute = ('D208A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D209');
+update Troncon set Niveau = 3 where NumeroRoute = ('D209A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D20A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D20B');
+update Troncon set Niveau = 3 where NumeroRoute = ('D20C');
+update Troncon set Niveau = 3 where NumeroRoute = ('D20D');
+update Troncon set Niveau = 3 where NumeroRoute = ('D21');
+update Troncon set Niveau = 3 where NumeroRoute = ('D210');
+update Troncon set Niveau = 3 where NumeroRoute = ('D210A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D211');
+update Troncon set Niveau = 3 where NumeroRoute = ('D212');
+update Troncon set Niveau = 3 where NumeroRoute = ('D213');
+update Troncon set Niveau = 3 where NumeroRoute = ('D215');
+update Troncon set Niveau = 3 where NumeroRoute = ('D215A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D215B');
+update Troncon set Niveau = 3 where NumeroRoute = ('D216');
+update Troncon set Niveau = 3 where NumeroRoute = ('D216A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D217');
+update Troncon set Niveau = 3 where NumeroRoute = ('D217A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D217B');
+update Troncon set Niveau = 3 where NumeroRoute = ('D218');
+update Troncon set Niveau = 3 where NumeroRoute = ('D218A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D219');
+update Troncon set Niveau = 3 where NumeroRoute = ('D220');
+update Troncon set Niveau = 3 where NumeroRoute = ('D221');
+update Troncon set Niveau = 3 where NumeroRoute = ('D222');
+update Troncon set Niveau = 3 where NumeroRoute = ('D223');
+update Troncon set Niveau = 3 where NumeroRoute = ('D226');
+update Troncon set Niveau = 3 where NumeroRoute = ('D227');
+update Troncon set Niveau = 3 where NumeroRoute = ('D228');
+update Troncon set Niveau = 3 where NumeroRoute = ('D229');
+update Troncon set Niveau = 3 where NumeroRoute = ('D22A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D23');
+update Troncon set Niveau = 3 where NumeroRoute = ('D230');
+update Troncon set Niveau = 3 where NumeroRoute = ('D231');
+update Troncon set Niveau = 3 where NumeroRoute = ('D232');
+update Troncon set Niveau = 3 where NumeroRoute = ('D233');
+update Troncon set Niveau = 3 where NumeroRoute = ('D234');
+update Troncon set Niveau = 3 where NumeroRoute = ('D235');
+update Troncon set Niveau = 3 where NumeroRoute = ('D236');
+update Troncon set Niveau = 3 where NumeroRoute = ('D237');
+update Troncon set Niveau = 3 where NumeroRoute = ('D238');
+update Troncon set Niveau = 3 where NumeroRoute = ('D238A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D239');
+update Troncon set Niveau = 3 where NumeroRoute = ('D239B');
+update Troncon set Niveau = 3 where NumeroRoute = ('D23A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D23B');
+update Troncon set Niveau = 3 where NumeroRoute = ('D240');
+update Troncon set Niveau = 3 where NumeroRoute = ('D241');
+update Troncon set Niveau = 3 where NumeroRoute = ('D242');
+update Troncon set Niveau = 3 where NumeroRoute = ('D243');
+update Troncon set Niveau = 3 where NumeroRoute = ('D243A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D244');
+update Troncon set Niveau = 3 where NumeroRoute = ('D245');
+update Troncon set Niveau = 3 where NumeroRoute = ('D245A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D246');
+update Troncon set Niveau = 3 where NumeroRoute = ('D246A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D247');
+update Troncon set Niveau = 3 where NumeroRoute = ('D248');
+update Troncon set Niveau = 3 where NumeroRoute = ('D249');
+update Troncon set Niveau = 3 where NumeroRoute = ('D250');
+update Troncon set Niveau = 3 where NumeroRoute = ('D251');
+update Troncon set Niveau = 3 where NumeroRoute = ('D252');
+update Troncon set Niveau = 3 where NumeroRoute = ('D253');
+update Troncon set Niveau = 3 where NumeroRoute = ('D254');
+update Troncon set Niveau = 3 where NumeroRoute = ('D255B');
+update Troncon set Niveau = 3 where NumeroRoute = ('D256');
+update Troncon set Niveau = 3 where NumeroRoute = ('D257');
+update Troncon set Niveau = 3 where NumeroRoute = ('D258');
+update Troncon set Niveau = 3 where NumeroRoute = ('D259');
+update Troncon set Niveau = 3 where NumeroRoute = ('D26');
+update Troncon set Niveau = 3 where NumeroRoute = ('D261');
+update Troncon set Niveau = 3 where NumeroRoute = ('D263');
+update Troncon set Niveau = 3 where NumeroRoute = ('D264');
+update Troncon set Niveau = 3 where NumeroRoute = ('D265');
+update Troncon set Niveau = 3 where NumeroRoute = ('D266');
+update Troncon set Niveau = 3 where NumeroRoute = ('D266A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D266B');
+update Troncon set Niveau = 3 where NumeroRoute = ('D266C');
+update Troncon set Niveau = 3 where NumeroRoute = ('D267');
+update Troncon set Niveau = 3 where NumeroRoute = ('D268');
+update Troncon set Niveau = 3 where NumeroRoute = ('D269');
+update Troncon set Niveau = 3 where NumeroRoute = ('D269B');
+update Troncon set Niveau = 3 where NumeroRoute = ('D269C');
+update Troncon set Niveau = 3 where NumeroRoute = ('D26A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D270');
+update Troncon set Niveau = 3 where NumeroRoute = ('D270A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D270B');
+update Troncon set Niveau = 3 where NumeroRoute = ('D271');
+update Troncon set Niveau = 3 where NumeroRoute = ('D272');
+update Troncon set Niveau = 3 where NumeroRoute = ('D272A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D272B');
+update Troncon set Niveau = 3 where NumeroRoute = ('D272C');
+update Troncon set Niveau = 3 where NumeroRoute = ('D272D');
+update Troncon set Niveau = 3 where NumeroRoute = ('D272E');
+update Troncon set Niveau = 3 where NumeroRoute = ('D272F');
+update Troncon set Niveau = 3 where NumeroRoute = ('D272G');
+update Troncon set Niveau = 3 where NumeroRoute = ('D272H');
+update Troncon set Niveau = 3 where NumeroRoute = ('D273');
+update Troncon set Niveau = 3 where NumeroRoute = ('D273A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D274');
+update Troncon set Niveau = 3 where NumeroRoute = ('D275');
+update Troncon set Niveau = 3 where NumeroRoute = ('D276');
+update Troncon set Niveau = 3 where NumeroRoute = ('D276A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D277');
+update Troncon set Niveau = 3 where NumeroRoute = ('D278');
+update Troncon set Niveau = 3 where NumeroRoute = ('D279');
+update Troncon set Niveau = 3 where NumeroRoute = ('D27A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D27B');
+update Troncon set Niveau = 3 where NumeroRoute = ('D27C');
+update Troncon set Niveau = 3 where NumeroRoute = ('D27D');
+update Troncon set Niveau = 3 where NumeroRoute = ('D28');
+update Troncon set Niveau = 3 where NumeroRoute = ('D280');
+update Troncon set Niveau = 3 where NumeroRoute = ('D282');
+update Troncon set Niveau = 3 where NumeroRoute = ('D283');
+update Troncon set Niveau = 3 where NumeroRoute = ('D283A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D283B');
+update Troncon set Niveau = 3 where NumeroRoute = ('D283C');
+update Troncon set Niveau = 3 where NumeroRoute = ('D284');
+update Troncon set Niveau = 3 where NumeroRoute = ('D284A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D284B');
+update Troncon set Niveau = 3 where NumeroRoute = ('D285');
+update Troncon set Niveau = 3 where NumeroRoute = ('D286');
+update Troncon set Niveau = 3 where NumeroRoute = ('D287');
+update Troncon set Niveau = 3 where NumeroRoute = ('D288');
+update Troncon set Niveau = 3 where NumeroRoute = ('D289');
+update Troncon set Niveau = 3 where NumeroRoute = ('D289A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D29');
+update Troncon set Niveau = 3 where NumeroRoute = ('D290');
+update Troncon set Niveau = 3 where NumeroRoute = ('D291');
+update Troncon set Niveau = 3 where NumeroRoute = ('D292');
+update Troncon set Niveau = 3 where NumeroRoute = ('D292A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D293');
+update Troncon set Niveau = 3 where NumeroRoute = ('D294');
+update Troncon set Niveau = 3 where NumeroRoute = ('D295');
+update Troncon set Niveau = 3 where NumeroRoute = ('D296');
+update Troncon set Niveau = 3 where NumeroRoute = ('D297');
+update Troncon set Niveau = 3 where NumeroRoute = ('D297A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D297B');
+update Troncon set Niveau = 3 where NumeroRoute = ('D297C');
+update Troncon set Niveau = 3 where NumeroRoute = ('D298');
+update Troncon set Niveau = 3 where NumeroRoute = ('D298A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D299A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D29A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D2A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D2B');
+update Troncon set Niveau = 3 where NumeroRoute = ('D3');
+update Troncon set Niveau = 3 where NumeroRoute = ('D300');
+update Troncon set Niveau = 3 where NumeroRoute = ('D301');
+update Troncon set Niveau = 3 where NumeroRoute = ('D302');
+update Troncon set Niveau = 3 where NumeroRoute = ('D303');
+update Troncon set Niveau = 3 where NumeroRoute = ('D304');
+update Troncon set Niveau = 3 where NumeroRoute = ('D305');
+update Troncon set Niveau = 3 where NumeroRoute = ('D306');
+update Troncon set Niveau = 3 where NumeroRoute = ('D307');
+update Troncon set Niveau = 3 where NumeroRoute = ('D308');
+update Troncon set Niveau = 3 where NumeroRoute = ('D309');
+update Troncon set Niveau = 3 where NumeroRoute = ('D31');
+update Troncon set Niveau = 3 where NumeroRoute = ('D310');
+update Troncon set Niveau = 3 where NumeroRoute = ('D311');
+update Troncon set Niveau = 3 where NumeroRoute = ('D312');
+update Troncon set Niveau = 3 where NumeroRoute = ('D313');
+update Troncon set Niveau = 3 where NumeroRoute = ('D314');
+update Troncon set Niveau = 3 where NumeroRoute = ('D315');
+update Troncon set Niveau = 3 where NumeroRoute = ('D315A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D316');
+update Troncon set Niveau = 3 where NumeroRoute = ('D317');
+update Troncon set Niveau = 3 where NumeroRoute = ('D318');
+update Troncon set Niveau = 3 where NumeroRoute = ('D318A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D318B');
+update Troncon set Niveau = 3 where NumeroRoute = ('D319');
+update Troncon set Niveau = 3 where NumeroRoute = ('D32');
+update Troncon set Niveau = 3 where NumeroRoute = ('D320');
+update Troncon set Niveau = 3 where NumeroRoute = ('D321');
+update Troncon set Niveau = 3 where NumeroRoute = ('D322');
+update Troncon set Niveau = 3 where NumeroRoute = ('D323');
+update Troncon set Niveau = 3 where NumeroRoute = ('D325');
+update Troncon set Niveau = 3 where NumeroRoute = ('D326');
+update Troncon set Niveau = 3 where NumeroRoute = ('D326A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D326B');
+update Troncon set Niveau = 3 where NumeroRoute = ('D327');
+update Troncon set Niveau = 3 where NumeroRoute = ('D328');
+update Troncon set Niveau = 3 where NumeroRoute = ('D329');
+update Troncon set Niveau = 3 where NumeroRoute = ('D329A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D32A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D32B');
+update Troncon set Niveau = 3 where NumeroRoute = ('D330');
+update Troncon set Niveau = 3 where NumeroRoute = ('D330A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D331');
+update Troncon set Niveau = 3 where NumeroRoute = ('D332');
+update Troncon set Niveau = 3 where NumeroRoute = ('D333');
+update Troncon set Niveau = 3 where NumeroRoute = ('D334');
+update Troncon set Niveau = 3 where NumeroRoute = ('D334A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D335');
+update Troncon set Niveau = 3 where NumeroRoute = ('D336');
+update Troncon set Niveau = 3 where NumeroRoute = ('D336A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D337');
+update Troncon set Niveau = 3 where NumeroRoute = ('D338');
+update Troncon set Niveau = 3 where NumeroRoute = ('D339');
+update Troncon set Niveau = 3 where NumeroRoute = ('D340');
+update Troncon set Niveau = 3 where NumeroRoute = ('D341');
+update Troncon set Niveau = 3 where NumeroRoute = ('D341A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D343');
+update Troncon set Niveau = 3 where NumeroRoute = ('D344');
+update Troncon set Niveau = 3 where NumeroRoute = ('D345');
+update Troncon set Niveau = 3 where NumeroRoute = ('D345A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D346');
+update Troncon set Niveau = 3 where NumeroRoute = ('D347');
+update Troncon set Niveau = 3 where NumeroRoute = ('D348');
+update Troncon set Niveau = 3 where NumeroRoute = ('D349');
+update Troncon set Niveau = 3 where NumeroRoute = ('D349A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D350');
+update Troncon set Niveau = 3 where NumeroRoute = ('D350A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D350B');
+update Troncon set Niveau = 3 where NumeroRoute = ('D351');
+update Troncon set Niveau = 3 where NumeroRoute = ('D351A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D352');
+update Troncon set Niveau = 3 where NumeroRoute = ('D353');
+update Troncon set Niveau = 3 where NumeroRoute = ('D354');
+update Troncon set Niveau = 3 where NumeroRoute = ('D355');
+update Troncon set Niveau = 3 where NumeroRoute = ('D356');
+update Troncon set Niveau = 3 where NumeroRoute = ('D357');
+update Troncon set Niveau = 3 where NumeroRoute = ('D357A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D359');
+update Troncon set Niveau = 3 where NumeroRoute = ('D35A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D360');
+update Troncon set Niveau = 3 where NumeroRoute = ('D361');
+update Troncon set Niveau = 3 where NumeroRoute = ('D361A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D362');
+update Troncon set Niveau = 3 where NumeroRoute = ('D363');
+update Troncon set Niveau = 3 where NumeroRoute = ('D364');
+update Troncon set Niveau = 3 where NumeroRoute = ('D365');
+update Troncon set Niveau = 3 where NumeroRoute = ('D366');
+update Troncon set Niveau = 3 where NumeroRoute = ('D367');
+update Troncon set Niveau = 3 where NumeroRoute = ('D367A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D368');
+update Troncon set Niveau = 3 where NumeroRoute = ('D369');
+update Troncon set Niveau = 3 where NumeroRoute = ('D370');
+update Troncon set Niveau = 3 where NumeroRoute = ('D371');
+update Troncon set Niveau = 3 where NumeroRoute = ('D372');
+update Troncon set Niveau = 3 where NumeroRoute = ('D374');
+update Troncon set Niveau = 3 where NumeroRoute = ('D375');
+update Troncon set Niveau = 3 where NumeroRoute = ('D376');
+update Troncon set Niveau = 3 where NumeroRoute = ('D378');
+update Troncon set Niveau = 3 where NumeroRoute = ('D378A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D37A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D37B');
+update Troncon set Niveau = 3 where NumeroRoute = ('D380');
+update Troncon set Niveau = 3 where NumeroRoute = ('D381');
+update Troncon set Niveau = 3 where NumeroRoute = ('D383');
+update Troncon set Niveau = 3 where NumeroRoute = ('D383A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D384');
+update Troncon set Niveau = 3 where NumeroRoute = ('D386');
+update Troncon set Niveau = 3 where NumeroRoute = ('D387');
+update Troncon set Niveau = 3 where NumeroRoute = ('D391');
+update Troncon set Niveau = 3 where NumeroRoute = ('D394');
+update Troncon set Niveau = 3 where NumeroRoute = ('D395');
+update Troncon set Niveau = 3 where NumeroRoute = ('D39A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D39B');
+update Troncon set Niveau = 3 where NumeroRoute = ('D39C');
+update Troncon set Niveau = 3 where NumeroRoute = ('D3A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D3B');
+update Troncon set Niveau = 3 where NumeroRoute = ('D4');
+update Troncon set Niveau = 3 where NumeroRoute = ('D401');
+update Troncon set Niveau = 3 where NumeroRoute = ('D402');
+update Troncon set Niveau = 3 where NumeroRoute = ('D403');
+update Troncon set Niveau = 3 where NumeroRoute = ('D404');
+update Troncon set Niveau = 3 where NumeroRoute = ('D405');
+update Troncon set Niveau = 3 where NumeroRoute = ('D406');
+update Troncon set Niveau = 3 where NumeroRoute = ('D407');
+update Troncon set Niveau = 3 where NumeroRoute = ('D408');
+update Troncon set Niveau = 3 where NumeroRoute = ('D409');
+update Troncon set Niveau = 3 where NumeroRoute = ('D40A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D40B');
+update Troncon set Niveau = 3 where NumeroRoute = ('D40C');
+update Troncon set Niveau = 3 where NumeroRoute = ('D40D');
+update Troncon set Niveau = 3 where NumeroRoute = ('D412');
+update Troncon set Niveau = 3 where NumeroRoute = ('D413');
+update Troncon set Niveau = 3 where NumeroRoute = ('D416');
+update Troncon set Niveau = 3 where NumeroRoute = ('D418');
+update Troncon set Niveau = 3 where NumeroRoute = ('D420');
+update Troncon set Niveau = 3 where NumeroRoute = ('D420A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D422');
+update Troncon set Niveau = 3 where NumeroRoute = ('D424');
+update Troncon set Niveau = 3 where NumeroRoute = ('D427');
+update Troncon set Niveau = 3 where NumeroRoute = ('D430');
+update Troncon set Niveau = 3 where NumeroRoute = ('D432');
+update Troncon set Niveau = 3 where NumeroRoute = ('D432A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D432B');
+update Troncon set Niveau = 3 where NumeroRoute = ('D434A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D435');
+update Troncon set Niveau = 3 where NumeroRoute = ('D437');
+update Troncon set Niveau = 3 where NumeroRoute = ('D44');
+update Troncon set Niveau = 3 where NumeroRoute = ('D440');
+update Troncon set Niveau = 3 where NumeroRoute = ('D447');
+update Troncon set Niveau = 3 where NumeroRoute = ('D448');
+update Troncon set Niveau = 3 where NumeroRoute = ('D450');
+update Troncon set Niveau = 3 where NumeroRoute = ('D451');
+update Troncon set Niveau = 3 where NumeroRoute = ('D452');
+update Troncon set Niveau = 3 where NumeroRoute = ('D453');
+update Troncon set Niveau = 3 where NumeroRoute = ('D454');
+update Troncon set Niveau = 3 where NumeroRoute = ('D46');
+update Troncon set Niveau = 3 where NumeroRoute = ('D47');
+update Troncon set Niveau = 3 where NumeroRoute = ('D47A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D47B');
+update Troncon set Niveau = 3 where NumeroRoute = ('D47C');
+update Troncon set Niveau = 3 where NumeroRoute = ('D48A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D48N');
+update Troncon set Niveau = 3 where NumeroRoute = ('D48S');
+update Troncon set Niveau = 3 where NumeroRoute = ('D49');
+update Troncon set Niveau = 3 where NumeroRoute = ('D5');
+update Troncon set Niveau = 3 where NumeroRoute = ('D50');
+update Troncon set Niveau = 3 where NumeroRoute = ('D500');
+update Troncon set Niveau = 3 where NumeroRoute = ('D500A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D501');
+update Troncon set Niveau = 3 where NumeroRoute = ('D502');
+update Troncon set Niveau = 3 where NumeroRoute = ('D504');
+update Troncon set Niveau = 3 where NumeroRoute = ('D505');
+update Troncon set Niveau = 3 where NumeroRoute = ('D509');
+update Troncon set Niveau = 3 where NumeroRoute = ('D50A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D50B');
+update Troncon set Niveau = 3 where NumeroRoute = ('D50C');
+update Troncon set Niveau = 3 where NumeroRoute = ('D50D');
+update Troncon set Niveau = 3 where NumeroRoute = ('D512');
+update Troncon set Niveau = 3 where NumeroRoute = ('D513');
+update Troncon set Niveau = 3 where NumeroRoute = ('D514');
+update Troncon set Niveau = 3 where NumeroRoute = ('D518');
+update Troncon set Niveau = 3 where NumeroRoute = ('D51A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D51B');
+update Troncon set Niveau = 3 where NumeroRoute = ('D51C');
+update Troncon set Niveau = 3 where NumeroRoute = ('D51D');
+update Troncon set Niveau = 3 where NumeroRoute = ('D51F');
+update Troncon set Niveau = 3 where NumeroRoute = ('D51G');
+update Troncon set Niveau = 3 where NumeroRoute = ('D52');
+update Troncon set Niveau = 3 where NumeroRoute = ('D522');
+update Troncon set Niveau = 3 where NumeroRoute = ('D52A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D532');
+update Troncon set Niveau = 3 where NumeroRoute = ('D537');
+update Troncon set Niveau = 3 where NumeroRoute = ('D540'); 
+update Troncon set Niveau = 3 where NumeroRoute = ('D546');
+update Troncon set Niveau = 3 where NumeroRoute = ('D548');
+update Troncon set Niveau = 3 where NumeroRoute = ('D548A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D550');
+update Troncon set Niveau = 3 where NumeroRoute = ('D551');
+update Troncon set Niveau = 3 where NumeroRoute = ('D553');
+update Troncon set Niveau = 3 where NumeroRoute = ('D58E');
+update Troncon set Niveau = 3 where NumeroRoute = ('D59B');
+update Troncon set Niveau = 3 where NumeroRoute = ('D59EX');
+update Troncon set Niveau = 3 where NumeroRoute = ('D5A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D603');
+update Troncon set Niveau = 3 where NumeroRoute = ('D607');
+update Troncon set Niveau = 3 where NumeroRoute = ('D607A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D609');
+update Troncon set Niveau = 3 where NumeroRoute = ('D60A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D618');
+update Troncon set Niveau = 3 where NumeroRoute = ('D622');
+update Troncon set Niveau = 3 where NumeroRoute = ('D632');
+update Troncon set Niveau = 3 where NumeroRoute = ('D642');
+update Troncon set Niveau = 3 where NumeroRoute = ('D643');
+update Troncon set Niveau = 3 where NumeroRoute = ('D648');
+update Troncon set Niveau = 3 where NumeroRoute = ('D649');
+update Troncon set Niveau = 3 where NumeroRoute = ('D650');
+update Troncon set Niveau = 3 where NumeroRoute = ('D677');
+update Troncon set Niveau = 3 where NumeroRoute = ('D680');
+update Troncon set Niveau = 3 where NumeroRoute = ('D686');
+update Troncon set Niveau = 3 where NumeroRoute = ('D687');
+update Troncon set Niveau = 3 where NumeroRoute = ('D6A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D6C');
+update Troncon set Niveau = 3 where NumeroRoute = ('D6D');
+update Troncon set Niveau = 3 where NumeroRoute = ('D701');
+update Troncon set Niveau = 3 where NumeroRoute = ('D702');
+update Troncon set Niveau = 3 where NumeroRoute = ('D703');
+update Troncon set Niveau = 3 where NumeroRoute = ('D706');
+update Troncon set Niveau = 3 where NumeroRoute = ('D710');
+update Troncon set Niveau = 3 where NumeroRoute = ('D712');
+update Troncon set Niveau = 3 where NumeroRoute = ('D713');
+update Troncon set Niveau = 3 where NumeroRoute = ('D714');
+update Troncon set Niveau = 3 where NumeroRoute = ('D715');
+update Troncon set Niveau = 3 where NumeroRoute = ('D716');
+update Troncon set Niveau = 3 where NumeroRoute = ('D718');
+update Troncon set Niveau = 3 where NumeroRoute = ('D720');
+update Troncon set Niveau = 3 where NumeroRoute = ('D722');
+update Troncon set Niveau = 3 where NumeroRoute = ('D723');
+update Troncon set Niveau = 3 where NumeroRoute = ('D724');
+update Troncon set Niveau = 3 where NumeroRoute = ('D728');
+update Troncon set Niveau = 3 where NumeroRoute = ('D736');
+update Troncon set Niveau = 3 where NumeroRoute = ('D736A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D737');
+update Troncon set Niveau = 3 where NumeroRoute = ('D742');
+update Troncon set Niveau = 3 where NumeroRoute = ('D746');
+update Troncon set Niveau = 3 where NumeroRoute = ('D747');
+update Troncon set Niveau = 3 where NumeroRoute = ('D754');
+update Troncon set Niveau = 3 where NumeroRoute = ('D755');
+update Troncon set Niveau = 3 where NumeroRoute = ('D757');
+update Troncon set Niveau = 3 where NumeroRoute = ('D763');
+update Troncon set Niveau = 3 where NumeroRoute = ('D764');
+update Troncon set Niveau = 3 where NumeroRoute = ('D779');
+update Troncon set Niveau = 3 where NumeroRoute = ('D780');
+update Troncon set Niveau = 3 where NumeroRoute = ('D787');
+update Troncon set Niveau = 3 where NumeroRoute = ('D789');
+update Troncon set Niveau = 3 where NumeroRoute = ('D790');
+update Troncon set Niveau = 3 where NumeroRoute = ('D790A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D792');
+update Troncon set Niveau = 3 where NumeroRoute = ('D7A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D8');
+update Troncon set Niveau = 3 where NumeroRoute = ('D803');
+update Troncon set Niveau = 3 where NumeroRoute = ('D812');
+update Troncon set Niveau = 3 where NumeroRoute = ('D813');
+update Troncon set Niveau = 3 where NumeroRoute = ('D814');
+update Troncon set Niveau = 3 where NumeroRoute = ('D823');
+update Troncon set Niveau = 3 where NumeroRoute = ('D842');
+update Troncon set Niveau = 3 where NumeroRoute = ('D842A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D843');
+update Troncon set Niveau = 3 where NumeroRoute = ('D865');
+update Troncon set Niveau = 3 where NumeroRoute = ('D892');
+update Troncon set Niveau = 3 where NumeroRoute = ('D900');
+update Troncon set Niveau = 3 where NumeroRoute = ('D901A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D916');
+update Troncon set Niveau = 3 where NumeroRoute = ('D926');
+update Troncon set Niveau = 3 where NumeroRoute = ('D926A');
+update Troncon set Niveau = 3 where NumeroRoute = ('D983');
+update Troncon set Niveau = 3 where NumeroRoute = ('D986A');
 update Troncon set Niveau = 3 where NumeroRoute = ('D998');
+update Troncon set Niveau = 3 where NumeroRoute = ('D999B');
 
--- RD de niveau 4
-update Troncon set Niveau = 4 where NumeroRoute = ('D102'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D103'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D104'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D105'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D106'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D106A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D107'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D107A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D108'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D109'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D10A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D110'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D110A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D110B'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D110C'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D110D'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D110E'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D110F'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D110G'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D111'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D112'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D114A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D115'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D115A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D116'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D116A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D117'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D118'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D118A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D12'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D120'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D120B'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D120C'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D121'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D122'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D123'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D123A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D123B'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D123C'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D124'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D125A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D129A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D131B'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D131C'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D132A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D133'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D133A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D133B'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D134'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D134A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D135A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D136'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D136B'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D136D'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D137'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D138B'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D138C'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D140'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D141'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D142A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D143'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D143A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D143B'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D144'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D144A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D145A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D146'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D146A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D147'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D147A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D147B'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D148'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D148A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D149'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D151'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D151A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D151B'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D151C'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D152'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D152A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D152B'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D152C'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D153'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D153A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D153B'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D153C'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D153D'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D154'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D154A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D155'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D155A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D156'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D156A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D156B'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D158A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D158B'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D158C'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D159'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D159A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D159B'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D159C'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D161'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D162'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D164'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D165'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D166'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D166A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D166B'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D166C'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D167'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D167A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D168'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D169'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D169A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D16B'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D17'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D170'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D170B'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D170C'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D170D'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D170E'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D170F'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D171'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D171A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D172'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D174'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D175'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D176'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D178'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D179'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D180'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D182'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D184'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D185'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D185A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D186'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D186A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D187'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D187A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D187C'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D188'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D188A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D188B'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D189'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D189A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D18C'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D18D'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D190'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D190A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D191'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D191A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D193'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D194'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D194A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D194B'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D194C'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D194D'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D195'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D196'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D196A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D197'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D198'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D199'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D20'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D200'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D201'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D203'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D204'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D205'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D206'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D207'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D207A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D208'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D208A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D209'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D209A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D20A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D20B'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D20C'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D20D'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D21'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D210'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D210A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D211'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D212'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D213'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D215'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D215A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D215B'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D216'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D216A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D217'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D217A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D217B'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D218'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D218A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D219'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D220'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D221'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D222'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D223'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D226'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D227'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D228'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D229'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D230'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D231'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D232'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D233'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D234'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D236'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D237'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D238'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D238A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D239'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D239B'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D23A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D23B'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D240'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D243'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D243A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D244'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D245'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D245A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D246'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D246A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D247'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D248'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D249'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D250'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D251'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D252'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D253'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D254'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D255B'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D256'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D257'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D258'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D259'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D261'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D264'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D265'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D266'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D266A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D266B'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D266C'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D267'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D268'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D269B'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D269C'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D270'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D270A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D270B'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D271'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D272'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D272A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D272B'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D272C'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D272D'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D272E'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D272F'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D272G'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D272H'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D273'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D273A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D274'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D275'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D276'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D276A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D277'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D278'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D27A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D27B'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D27C'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D27D'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D280'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D282'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D283'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D283A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D283B'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D283C'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D284'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D284A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D284B'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D285'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D286'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D287'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D288'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D289'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D289A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D29'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D290'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D291'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D292'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D292A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D293'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D294'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D295'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D296'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D297'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D297A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D297B'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D297C'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D298'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D298A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D299A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D29A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D2A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D300'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D301'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D302'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D303'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D304'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D305'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D306'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D307'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D308'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D309'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D31'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D310'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D311'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D312'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D313'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D314'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D315'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D315A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D316'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D317'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D318'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D318A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D318B'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D319'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D32'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D320'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D321'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D322'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D323'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D325'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D326'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D326A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D326B'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D327'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D328'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D329'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D329A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D32A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D32B'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D330'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D330A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D331'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D332'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D333'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D334'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D334A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D335'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D336'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D336A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D337'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D338'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D339'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D341'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D341A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D344'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D345'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D345A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D347'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D348'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D349'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D349A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D350A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D350B'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D351A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D352'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D353'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D354'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D355'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D356'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D357'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D357A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D359'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D35A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D360'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D361'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D361A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D362'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D363'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D364'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D365'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D366'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D367'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D367A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D368'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D369'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D370'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D371'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D372'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D374'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D375'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D376'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D377'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D378'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D378A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D37A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D37B'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D380'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D381'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D383'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D383A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D384'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D386'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D387'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D391'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D394'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D39A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D39B'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D39C'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D3A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D401'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D403'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D406'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D408'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D409'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D40B'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D412'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D413'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D416'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D420'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D420A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D422'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D424'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D430'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D432'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D432A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D432B'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D434A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D435'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D437'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D44'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D440'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D447'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D448'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D450'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D451'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D452'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D453'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D454'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D48A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D500'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D500A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D501'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D504'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D505'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D509'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D50D'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D512'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D513'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D514'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D518'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D51D'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D51G'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D52'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D522'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D52A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D532'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D537'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D546'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D548'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D548A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D550'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D551'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D553'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D59B'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D59EX'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D5A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D603'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D607'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D607A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D609'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D60A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D618'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D622'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D632'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D642'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D643'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D648'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D649'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D650'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D677'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D680'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D686'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D687'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D701'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D702'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D703'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D706'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D710'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D713'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D714'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D715'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D716'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D718'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D720'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D722'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D723'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D724'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D728'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D736'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D736A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D737'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D742'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D746'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D747'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D754'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D755'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D757'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D763'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D764'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D779'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D787'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D789'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D790'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D790A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D792'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D803'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D812'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D813'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D823'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D842'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D842A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D843'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D865'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D892'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D901A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D986A'); 
-update Troncon set Niveau = 4 where NumeroRoute = ('D999B');
-
--- remise à null pour les tronçons fictifs
+-- Remise à null pour les tronçons fictifs.
 update Troncon
 set Niveau = null
 where Fictif;

@@ -1,11 +1,10 @@
 /*==============================================================*/
 /* Nom de SGBD :  PostgreSQL SI3P0                              */
-/* Date de création :  02/02/2023 17:02:40                      */
+/* Date de création :  03/05/2023 21:23:16                      */
 /*==============================================================*/
 
 
--- NDLR : schémas spécifiques SI3P0 (m = modèle)
--- TODO : adapter le search_path en fonction de la structure de la BDD cible
+-- schémas spécifiques SI3P0 (m = modèle)
 set search_path to m, public;
 
 
@@ -33,6 +32,27 @@ idgiratoire
 /*==============================================================*/
 create  index giratoire_route_fk on giratoire (
 numeroroute
+);
+
+/*==============================================================*/
+/* Table : niveauroute                                          */
+/*==============================================================*/
+create table niveauroute (
+   niveau               INT4                 not null,
+   denomination         VARCHAR              null,
+   constraint pkniveauroute primary key (niveau)
+);
+
+insert into NiveauRoute (Niveau, Denomination) values
+(1, 'Réseau structurant'),
+(2, 'Réseau de liaison'),
+(3, 'Réseau de proximité');
+
+/*==============================================================*/
+/* Index : niveauroute_pk                                       */
+/*==============================================================*/
+create unique index niveauroute_pk on niveauroute (
+niveau
 );
 
 /*==============================================================*/
@@ -194,6 +214,13 @@ sirenvh
 );
 
 /*==============================================================*/
+/* Index : troncon_niveauroute_fk                               */
+/*==============================================================*/
+create  index troncon_niveauroute_fk on troncon (
+niveau
+);
+
+/*==============================================================*/
 /* Index : troncon_idign_idx                                    */
 /*==============================================================*/
 create  index troncon_idign_idx on troncon (
@@ -216,12 +243,12 @@ alter table troncon
       on delete restrict on update restrict;
 
 alter table troncon
-   add constraint fk_troncon_route foreign key (numeroroute)
-      references route (numeroroute)
+   add constraint fk_troncon_niveauroute foreign key (niveau)
+      references niveauroute (niveau)
       on delete restrict on update restrict;
 
 alter table troncon
-   add constraint fk_troncon_vh foreign key (sirenvh)
-      references unitelegale (siren)
+   add constraint fk_troncon_route foreign key (numeroroute)
+      references route (numeroroute)
       on delete restrict on update restrict;
 
