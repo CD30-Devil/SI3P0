@@ -21,7 +21,8 @@ with AccidentAIgnorer as (
 )
 select p._NumeroRoute as NumeroRoute, PRAEnTexte(p._PRA) as PRA, IdSousTypeAlerteWaze, DateCreation, Fiabilite, h.Geom
 from HistoAlerteWaze h
-cross join PointVersPRA(h.Geom, 1) p
+cross join PointVersPRA(h.Geom, 10) p
+inner join TronconReel t on (t.SirenProprietaire = '223000019' or t.SirenGestionCourante = '223000019' or t.SirenVH = '223000019') and ST_DWithin(t.Geom, h.Geom, 10)
 where IdTypeAlerteWaze = 'ACCIDENT'
 and IdHistoAlerteWaze not in (
     select IdHistoAlerteWaze
@@ -46,7 +47,8 @@ with DegradationAIgnorer as (
 )
 select p._NumeroRoute as NumeroRoute, PRAEnTexte(p._PRA) as PRA, DateCreation, Fiabilite, h.Geom
 from HistoAlerteWaze h
-cross join PointVersPRA(h.Geom, 1) p
+cross join PointVersPRA(h.Geom, 10) p
+inner join TronconReel t on (t.SirenProprietaire = '223000019' or t.SirenGestionCourante = '223000019' or t.SirenVH = '223000019') and ST_DWithin(t.Geom, h.Geom, 10)
 where IdSousTypeAlerteWaze = 'HAZARD_ON_ROAD_POT_HOLE'
 and IdHistoAlerteWaze not in (
     select IdHistoAlerteWaze

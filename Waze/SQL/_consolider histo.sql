@@ -28,6 +28,6 @@ where IdHistoAlerteWaze in (
     and (
         aconserver.Fiabilite > asupprimer.Fiabilite -- pour ne conserver que la plus fiable...
         or (aconserver.Fiabilite = asupprimer.Fiabilite and aconserver.DateCreation < asupprimer.DateCreation) -- ...ou la plus ancienne...
-        or (aconserver.Fiabilite = asupprimer.Fiabilite and aconserver.DateCreation = asupprimer.DateCreation and aconserver.IdHistoAlerteWaze < asupprimer.IdHistoAlerteWaze) -- ...ou celle avec l'Id le plus petit	
+        or (aconserver.Fiabilite = asupprimer.Fiabilite and aconserver.DateCreation = asupprimer.DateCreation and aconserver.IdHistoAlerteWaze < asupprimer.IdHistoAlerteWaze) -- ...ou celle avec l'Id le plus petit
     )
 );

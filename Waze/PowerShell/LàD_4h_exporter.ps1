@@ -15,8 +15,8 @@ SIg-Executer-Fichier -fichier "$dossierSQL4Layer\4Layer (create).sql" -sortie "$
 $parametresJobs = [Collections.ArrayList]::new()
 
 # gpkg
-[void]$parametresJobs.Add((Parametrer-Job-SIg-Exporter-GPKG -requetes "select * from AccidentProcheRD_4Layer" -gpkg "$PSScriptRoot\..\QGis\Couches\Accidentologie.gpkg" -couche "AccidentProcheRD" -ecraserGPKG $true -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - Export Accidentologie.gpkg.txt"))
-[void]$parametresJobs.Add((Parametrer-Job-SIg-Exporter-GPKG -requetes "select * from DegradationProcheRD_4Layer" -gpkg "$PSScriptRoot\..\QGis\Couches\Dégradations.gpkg" -couche "DegradationProcheRD" -ecraserGPKG $true -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - Export Dégradations.gpkg.txt"))
+[void]$parametresJobs.Add((Parametrer-Job-SIg-Exporter-GPKG -requetes "select * from AccidentProcheRD_4Layer" -gpkg "$si3p0DossierExportGPKG\Waze\Accidents.gpkg" -couche "AccidentProcheRD" -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - Export Accidents.gpkg.txt"))
+[void]$parametresJobs.Add((Parametrer-Job-SIg-Exporter-GPKG -requetes "select * from DegradationProcheRD_4Layer" -gpkg "$si3p0DossierExportGPKG\Waze\Dégradations.gpkg" -couche "DegradationProcheRD" -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - Export Dégradations.gpkg.txt"))
 
 # exécution des jobs d'export
 Executer-Jobs -parametresJobs $parametresJobs
