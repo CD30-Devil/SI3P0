@@ -17,6 +17,9 @@ SQL.4Qlik/
 # Cartes décoratives
 !/Cartes décoratives/Données/
 
+# OSM
+!/OSM/Documents/
+
 # Référentiel routier
 /Référentiel routier/PowerShell/générer graflex.ps1
 /Référentiel routier/PowerShell/préparer construction qualif.ps1
