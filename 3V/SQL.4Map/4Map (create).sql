@@ -1,4 +1,4 @@
-﻿-- schémas spécifiques SI3P0 (tmp = temporaire, m = modèle, f = fonctions)
+﻿-- schémas spécifiques SI3P0 (tmp = temporaire, m = modèle)
 set search_path to tmp, m, public;
 
 create view D30_3VSegmentEtatAvancement_4Map as

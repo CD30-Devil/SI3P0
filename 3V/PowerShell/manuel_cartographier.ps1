@@ -31,10 +31,9 @@ Cette carte présente les portions cyclables et indique les itinéraires auxquel
 Elle donne également pour chaque portion la longueur par état d\'avancement et par statut.
 
 Les états possibles sont :
-- 1 - Tracé d'intention
-- 2 - Etudes en cours
-- 3 - Travaux en cours
-- 4 - Ouvert
+- 1 - En service
+- 2 - Partiellement en service
+- 3 - Hors service
 '@
 
 # paramétrage des jobs de génération des cartes

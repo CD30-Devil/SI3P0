@@ -2,8 +2,8 @@
 set search_path to tmp, public;
 
 drop materialized view if exists D30_3VAvecDoublons_4Layer;
-drop materialized view if exists D30_3VSansDoublons_4Layer;
-drop materialized view if exists D30_3VSegmentCyclableGard_4Layer;
+drop view if exists D30_3VSansDoublons_4Layer;
+drop view if exists D30_3VSegmentCyclableGard_4Layer;
 
 drop view if exists D30_3VModesDoux_4Layer;
 

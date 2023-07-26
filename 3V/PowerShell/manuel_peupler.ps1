@@ -4,7 +4,7 @@ $dossierDonnees = "$PSScriptRoot\..\Données"
 $dossierRapports = "$PSScriptRoot\..\Rapports\manuel_peupler"
 $dossierSQL = "$PSScriptRoot\..\SQL"
 
-$dateBDTopo = '2022-12-15'
+$dateBDTopo = '2023-03-15'
 $dateComplement3V = '2023-02-17'
 
 # nettoyage préalable

@@ -1,4 +1,6 @@
-﻿-- schémas spécifiques SI3P0 (tmp = temporaire, m = modèle, d = données)
+﻿\timing
+
+-- schémas spécifiques SI3P0 (tmp = temporaire, m = modèle, d = données)
 set search_path to tmp, m, d, public;
 
 -- véloroutes et voies vertes avec doublons lorsqu'un même segment participe à plusieurs itinéraires
@@ -44,8 +46,10 @@ left join UniteLegale prop on prop.Siren = scp.Siren
 left join bdtopo_troncon_de_route t on sc.SourceGeometrie = 'bdtopo.troncon_de_route' and sc.IdGeometrie = t.cleabs
 group by sc.IdSegmentCyclable, ea.CodeEtatAvancement3V, r.CodeRevetement3V, s.CodeStatut3V, pc.IdPortionCyclable, ic.NumeroItineraireCyclable, tpc.CodeTypePortionCyclable, t.position_par_rapport_au_sol;
 
+create index D30_3VAvecDoublons_4Layer_NumeroItineraire_IDX on D30_3VAvecDoublons_4Layer ("NumeroItineraire");
+
 -- véloroutes et voies vertes sans doublons lorsqu'un même segment participe à plusieurs itinéraires
-create materialized view D30_3VSansDoublons_4Layer as
+create view D30_3VSansDoublons_4Layer as
 select
     ea.Description as "EtatAvancementSegment",
     r.Description as "RevetementSegment",
@@ -79,7 +83,7 @@ left join bdtopo_troncon_de_route t on sc.SourceGeometrie = 'bdtopo.troncon_de_r
 group by ea.CodeEtatAvancement3V, r.CodeRevetement3V, s.CodeStatut3V, sc.AnneeOuverture, sc.SensUnique, sc.SourceGeometrie, sc.IdGeometrie, sc.DateSource, sc.Fictif, sc.Geom, t.position_par_rapport_au_sol;
 
 -- segments cyclables dont le Gard est propriétaire
-create materialized view D30_3VSegmentCyclableGard_4Layer as
+create view D30_3VSegmentCyclableGard_4Layer as
 with SegmentCyclableGard as (
     select distinct sc.IdSegmentCyclable
     from SegmentCyclable sc
