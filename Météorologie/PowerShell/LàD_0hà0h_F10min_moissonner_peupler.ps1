@@ -4,42 +4,17 @@
 $dossierDonnees = "$PSScriptRoot\..\Données"
 $dossierRapports = "$PSScriptRoot\..\Rapports\LàD_0hà0h_F10min_moissonner_peupler"
 
-# liste des stations à moissonner
-$stationsInfoClimat = @(
-    '000UJ' # Chusclan
-    #'ME132' # Collège Paul Valéry - Roquemaure
-    '000WD' # Concoules
-    '000ZN' # Galargues
-    '000OZ' # Gallargues-le-Montueux
-    #'000F1' # Le Grau-du-Roi - Salonique
-    '00002' # Le Vigan
-    '000UL' # Lussan - Audabiac
-    '000ZW' # Lussan - La Lèque
-    '000FK' # Malbosc
-    '000OW' # Montaren-et-Saint-Médiers
-    '000BZ' # Saint-Hilaire-de-Brethmas
-    '000ZB' # Saint-Paul-les-Fonts
-    '000OB' # Sauteyrargues
-    '000GK' # Thoiras
-    '000UB' # Valleraugue
-    '000YB' # Vialas
-    '000Q4' # Villefort - Mas de la Barque
-)
-
 # nettoyage préalable
-Remove-Item "$dossierDonnees\météorologie.sql"
+Remove-Item "$dossierDonnees\relevés.sql"
 Remove-Item "$dossierRapports\*"
 
-# appel de l'API www.infoclimat.fr
-$parametres = ($stationsInfoClimat | foreach { "stations[]=$_" }) -join '&'
-$resultat = Invoke-RestMethod -Uri "https://www.infoclimat.fr/opendata/?method=get&format=json&$parametres&start=$([DateTime]::Now.AddDays(-1).ToString('yyyy-MM-dd'))&end=$([DateTime]::Now.ToString('yyyy-MM-dd'))&token=$cleInfoClimat"
+# recherche des stations à moissonner
+SIg-Exporter-CSV -csv "$dossierRapports\Stations météo.csv" -requete 'select IdSource from m.StationMeteo'
+$stationsInfoClimat = Import-Csv "$dossierRapports\Stations météo.csv"
 
-# préparation des ordres SQL d'insertion des stations
-$stations = (
-    $resultat.stations | foreach {
-        "('https://www.infoclimat.fr', '$($_.id)', '$($_.name)', TransformerEnL93(FabriquerPointWGS84('$($_.longitude)'::numeric, '$($_.latitude)'::numeric)))"
-    }
-) -join ", `n"
+# appel de l'API www.infoclimat.fr
+$parametres = ($stationsInfoClimat | foreach { "stations[]=$($_.idsource)" }) -join '&'
+$resultat = Invoke-RestMethod -Uri "https://www.infoclimat.fr/opendata/?method=get&format=json&$parametres&start=$([DateTime]::Now.AddDays(-1).ToString('yyyy-MM-dd'))&end=$([DateTime]::Now.ToString('yyyy-MM-dd'))&token=$cleInfoClimat"
 
 # préparation des ordres SQL d'insertion des relevés
 $releves = (
@@ -116,7 +91,7 @@ $releves = (
 ) -join ", `n"
 
 # construction d'un fichier SQL
-$fichierSQL = "$dossierDonnees\météorologie.sql"
+$fichierSQL = "$dossierDonnees\relevés.sql"
 $ecriture = [System.IO.StreamWriter]::new($fichierSQL, [Text.UTF8Encoding]::new($true))
 
 $ecriture.WriteLine("set search_path to m, f, public;");
@@ -124,11 +99,6 @@ $ecriture.WriteLine("start transaction;")
 $ecriture.WriteLine("")
 
 $ecriture.WriteLine("delete from ReleveMeteo;")
-$ecriture.WriteLine("delete from StationMeteo;")
-$ecriture.WriteLine("")
-
-$ecriture.WriteLine("insert into StationMeteo (Source, IdSource, Nom, Geom) values")
-$ecriture.WriteLine("$stations;")
 $ecriture.WriteLine("")
 
 $ecriture.WriteLine("insert into ReleveMeteo (Source, IdSource, DateReleve, Temperature, Pression, Humidite, PointRosee, VentMoyen, DirectionVent, Pluie1h) values")
@@ -141,4 +111,4 @@ $ecriture.Close()
 $ecriture = $null
 
 # exécution du fichier SQL construit
-SIg-Executer-Fichier -fichier $fichierSQL -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - exécution météorologie.sql.txt"
+SIg-Executer-Fichier -fichier $fichierSQL -sortie "$dossierRapports\$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss') - exécution relevés.sql.txt"
